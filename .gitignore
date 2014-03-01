@@ -1,0 +1,7 @@
+#python
+*.pyc
+
+#latex
+*.log 
+*.aux 
+*.pdf
