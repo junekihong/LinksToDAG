@@ -7,7 +7,7 @@ import re
 from pprint import pprint
 
 
-def decodeSCIPsolution(solutionFile):
+def decodeSCIPsolution(links, solutionFile):
     linkDep = {}
     f = open(solutionFile, 'r')
     lines = f.readlines()
@@ -21,23 +21,47 @@ def decodeSCIPsolution(solutionFile):
             ID = ID.split("$")[1].split("#")
             node1 = ID[0]
             node2 = ID[1]
-            #layer = int(ID[2])
-            #label = ID[3]
+            layer = ID[2]
+            label = ID[3]
 
+            # TODO
+            # The output of SCIP does not print out the direction variables that are 0.
+            # I suspect there are settings in SCIP that will not suppress these variables
+            # But for now, my solution is to find the remaining links that were not outputted by SCIP, because those are the ones set to 0.
+            # So this is why I remove those links.
+            links = [x for x in links if x[0] != node1 or x[1] != node2 or x[2] != layer or x[3] != label]
+            
             # direction right
-            if direction == 0:
+            """if direction == 0:
                 parent = node2
                 child = node1
+            """
             # direction left
-            elif direction == 1:
+            #elif
+            if direction == 1:
                 parent = node1
                 child = node2
-
 
             if child in linkDep.keys():
                 linkDep[child].append(parent)
             else:
                 linkDep[child] = [parent]
+
+    # The rest of the links that remain have direction right
+    for link in links:
+        node1 = link[0]
+        node2 = link[1]
+        layer = link[2]
+        label = link[3]
+        #print (node1, node2, layer, label)
+        
+        parent = node2
+        child = node1
+        if child in linkDep.keys():
+            linkDep[child].append(parent)
+        else:
+            linkDep[child] = [parent]
+
     return linkDep
 
 # Construct a link dependency map, given that we have already solved all the directionality assignments.
@@ -67,6 +91,16 @@ def getLinkDependencies(links, linkDir):
 
 
 def conllOutput(sentence, wordTag, linkDep, linkLabel):
+    # output this to a temp file. Strip out the non alphanumeric characters
+    """ID = "".join(sentence.split(" "))
+    ID = re.sub(r'\W+', '', ID)
+    ID = ID[:30]
+    
+    directory = "/tmp/conll_"+ID
+    linkFile = directory+".link"
+    f = open(linkFile,'w')
+    """
+
     sentence = sentence.split()
     i = 1
     while i < len(sentence)+1:
@@ -96,10 +130,13 @@ def conllOutput(sentence, wordTag, linkDep, linkLabel):
         FEATS = "_"
 
 
-        print "\t".join([str(i), word, LEMMA, CPOS, POS, FEATS, parents, labels])
+        CONLL_LINE= "\t".join([str(i), word, LEMMA, CPOS, POS, FEATS, parents, labels])
+        print CONLL_LINE
+        #f.write(CONLL_LINE+"\n")
         i = i+1
 
     print
+    #f.close()
     
 
 def dotOutput(sentence, wordTag, linkDep, linkLabel):
@@ -169,9 +206,10 @@ if __name__=="__main__":
     ZimplProgram(zplFile, linksFile)
     
     solutionFile = SCIP(zplFile)
-    linkDep = decodeSCIPsolution(solutionFile)
+    linkDep = decodeSCIPsolution(links,solutionFile)
 
-
+    #pprint(linkLabel)
+    
     # Link Edge Decoder
     #linkDep = getLinkDependencies(links, linkDir)
     conllOutput(sentence,wordTag,linkDep,linkLabel)

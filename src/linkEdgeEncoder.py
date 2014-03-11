@@ -112,46 +112,50 @@ def linksTXT(links, filename = "/tmp/links.txt"):
 # Produce the Zimpl Program to solve
 def ZimplProgram(zplFilename, linkFilename):
     f = open(zplFilename, 'w')
-    header = """# Link Edge to DAG Zimpl file.
-# Juneki Hong
-
-"""
-
+    header = "# Link Edge to DAG Zimpl file.\n# Juneki Hong\n\n"
     divider = "\n# ----------\n\n"
+
     f.write(header)
     f.write(divider)
     
-    readInData = "# Read in the data.\n"
-    readInData = readInData + "set ID := { read \""+linkFilename+"\" as \"<1s>\" };\t# set of link names\n"
-    readInData = readInData + "param i[ID] := read \""+linkFilename+"\" as \"<1s> 2n\";\t# set of first arguments to links\n"
-    readInData = readInData + "param j[ID] := read \""+linkFilename+"\" as \"<1s> 3n\";\t# set of second arguments to links\n"
-    readInData = readInData + "param level[ID] := read \""+linkFilename+"\" as \"<1s> 4n\";\t# set of the levels of links\n"
-    readInData = readInData + "param label[ID] := read \""+linkFilename+"\" as \"<1s> 5s\";\t# set of the labels of links\n"
+    readInData = "# Read in the data. (ID, node1, node2, layer, label)\n"
+    readInData += "set DATA := { read \""+linkFilename+"\" as \"<1s, 2n, 3n, 4n, 5s>\" };\n"
+    readInData += "set ID := proj(DATA, <1>);\n"
+    readInData += "set I := proj(DATA, <2>);\n"
+    readInData += "set J := proj(DATA, <3>);\n"
+    readInData += "set E := { <i,j> in I*J with i<j };\n"
 
     f.write(readInData)
     f.write(divider)
+    
+    linkData = "# Link data.\n"
+    linkData += "set IJ := proj(DATA, <2,3>);\n"
+    #linkData += "param link[<i,j> in IJ] := 1;\n"
+    linkData += "param link[<i,j> in E] := 1;\n"
 
-    constraints = "# Constraints.\n"
-    f.write(constraints)
+    f.write(linkData)
     f.write(divider)
 
     variables = "# Variables.\n"
-    variables = variables + "var direction[ID] binary;\n"
+    variables += "var direction[ID] binary;\n"
     f.write(variables)
     f.write(divider)
 
 
     linkDescriptions = "# Link descriptions\n"
-    #linkDescriptions = linkDescriptions + "param llink[ID] := direction[ID];\n"
-    #linkDescriptions = linkDescriptions + "param rlink[ID] := 1 - direction[ID];\n"
-    #linkDescriptions = linkDescriptions + "param \n"
+    linkDescriptions = ""
+    #linkDescriptions += "var llink[<i,j> in IJ] := link[<i,j>];\n"
+    linkDescriptions += "\n"
 
     f.write(linkDescriptions)
     f.write(divider)
 
 
-    tempObjective = "# temp objective\n"
-    tempObjective = "maximize totalvalue : sum<id> in ID : direction[id];"
+    tempObjective = "# Objective.\n"
+
+    tempObjective = tempObjective+"minimize cycles : sum<id> in ID : -direction[id];\n"
+    tempObjective += "subto constraint : sum <id,i,j,layer,label> in DATA : (j-i)*direction[id] <= 5;\n"
+
 
     f.write(tempObjective)
     f.write(divider)
@@ -170,7 +174,7 @@ if __name__=="__main__":
     linksTXT(links,linksFile)
 
     zplFile = "/tmp/links.zpl"
-    ZimplProgram(links,zplFile, linksFile)
+    ZimplProgram(zplFile, linksFile)
 
 
     

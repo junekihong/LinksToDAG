@@ -34,7 +34,12 @@ def getLinkDirections_naive(links):
 
 
 def SCIP(zplFile, solutionFile = "/tmp/tempSolution"):
-    theCall =["scip","-c","read "+zplFile+" opt", "-c", "write solution "+solutionFile, "-c", "quit"]
+    #theCall =["scip", "-f", zplFile]
+    theCall =["scip","-c", "read "+zplFile+" opt", "-c", "write solution "+solutionFile, "-c", "quit"]
+
+    
+    theCall.append("-l")
+    theCall.append("/tmp/logFile")
 
     call(theCall)
     #scip -c "read knapsack.zpl opt" -c "write solution temp" -c "quit"
