@@ -159,7 +159,7 @@ def ZimplProgram(zplFilename, linkFilename):
     readInData += "set NODE1 := { read \""+linkFilename+"\" as \"<1n, 5n>\" };\n"
     readInData += "set NODE2 := { read \""+linkFilename+"\" as \"<2n, 5n>\" };\n"
     readInData += "set NODE := NODE1 union NODE2;\n"
-    readInData += "set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == sentence2};"
+    readInData += "set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == sentence2 and i < j };"
 
     
     f.write(readInData)

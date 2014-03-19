@@ -35,24 +35,18 @@ if __name__=="__main__":
     for i in xrange(len(sentences)):
         wordTags.append(getWordTags(processedSentences[i]))
         linkLabels.append(getLinkLabelMap(links[i]))
-
         linksTXT(links[i],linksFile, i)
 
-
-
-    """
-    # Link Edge Solver
-    #linkDir = getLinkDirections_naive(links)
-    """
 
     ZimplProgram(zplFile, linksFile)    
     solutionFile = SCIP(zplFile, solutionFile)
 
-
+    """
     print "SOLUTION FILE:"
     print solutionFile
     call(["cat", solutionFile])
     print
+    """
 
     f = open(linksConllFile, 'a')
 
