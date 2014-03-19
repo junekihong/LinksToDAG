@@ -1,17 +1,24 @@
 #!/bin/sh
 
-while read line; do
+LINKPARSES="/tmp/LinksToDAG_linkparses.txt"
+rm -f $LINKPARSES
+touch $LINKPARSES
 
+while read line; do
     echo $line 1>&2
     #echo $line | link-parser -\!echo=0 2> /dev/null
-    echo $line | link-parser -\!graphics=0 -\!links=0 -\!echo=1 -\!postscript=1 2> /dev/null > /tmp/linkparses
-    python main.py /tmp/linkparses
+    echo $line | link-parser -\!graphics=0 -\!links=0 -\!echo=1 -\!postscript=1 2> /dev/null >> $LINKPARSES
+    #python linkEdgeEncoder.py $LINKPARSES #>> $ZIMPL_FILE
 
     #cat /tmp/linkparses
-
 
     if [ $? != 0 ]; then
         exit
     fi
 
 done < $1
+
+
+python main.py $LINKPARSES
+
+

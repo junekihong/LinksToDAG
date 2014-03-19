@@ -7,29 +7,53 @@ import re
 from pprint import pprint
 
 
+# Given a list of all the links for each sentence and a solution file, we decode the solution.
 def decodeSCIPsolution(links, solutionFile):
-    linkDep = {}
+    linkDeps = {}
+
     f = open(solutionFile, 'r')
     lines = f.readlines()
     
+    decodedSolutions = {}
+
+
     for line in lines:
-        if line.find("direction$") != -1:
+        if line.find("direction#") != -1:
             line = line.split()
             ID = line[0]
             direction = int(line[1])
-            
-            ID = ID.split("$")[1].split("#")
+
+
+            ID = ID.split("#")[1:]
+            layer_label = ID[2].split("$")
             node1 = ID[0]
             node2 = ID[1]
-            layer = ID[2]
-            label = ID[3]
-
+            layer = layer_label[0]
+            label = layer_label[1]
+            sentence = int(ID[3])
+            
+            if decodedSolutions.get(sentence, None) == None:
+                decodedSolutions[sentence] = [(node1,node2,layer,label,direction)]
+            else:
+                decodedSolutions[sentence].append((node1,node2,layer,label,direction))
+            
+    for sentence in decodedSolutions:
+        linkDep = {}
+        processedLinks = decodedSolutions[sentence]
+        originalLinks = links[sentence]
+        
+        for link in processedLinks:
+            node1 = link[0]
+            node2 = link[1]
+            layer = link[2]
+            label = link[3]
+            direction = link[4]
             # TODO
             # The output of SCIP does not print out the direction variables that are 0.
             # I suspect there are settings in SCIP that will not suppress these variables
             # But for now, my solution is to find the remaining links that were not outputted by SCIP, because those are the ones set to 0.
             # So this is why I remove those links.
-            links = [x for x in links if x[0] != node1 or x[1] != node2 or x[2] != layer or x[3] != label]
+            originalLinks = [x for x in originalLinks if x[0] != node1 or x[1] != node2 or x[2] != layer or x[3] != label]
             
             # direction right
             """if direction == 0:
@@ -47,22 +71,22 @@ def decodeSCIPsolution(links, solutionFile):
             else:
                 linkDep[child] = [parent]
 
-    # The rest of the links that remain have direction right
-    for link in links:
-        node1 = link[0]
-        node2 = link[1]
-        layer = link[2]
-        label = link[3]
-        #print (node1, node2, layer, label)
-        
-        parent = node2
-        child = node1
-        if child in linkDep.keys():
-            linkDep[child].append(parent)
-        else:
-            linkDep[child] = [parent]
+        # The rest of the links that remain have direction right
+        for link in originalLinks:
+            node1 = link[0]
+            node2 = link[1]
+            layer = link[2]
+            label = link[3]
+            
+            parent = node2
+            child = node1
+            if child in linkDep.keys():
+                linkDep[child].append(parent)
+            else:
+                linkDep[child] = [parent]
+        linkDeps[sentence] = linkDep
 
-    return linkDep
+    return linkDeps
 
 # Construct a link dependency map, given that we have already solved all the directionality assignments.
 def getLinkDependencies(links, linkDir):
@@ -91,15 +115,17 @@ def getLinkDependencies(links, linkDir):
 
 
 def conllOutput(sentence, wordTag, linkDep, linkLabel):
+    """
     # output this to a temp file. Strip out the non alphanumeric characters
-    """ID = "".join(sentence.split(" "))
+    ID = "".join(sentence.split(" "))
     ID = re.sub(r'\W+', '', ID)
     ID = ID[:30]
     
-    directory = "/tmp/conll_"+ID
+    directory = "/tmp/LinksToDAG_conll_"+ID
     linkFile = directory+".link"
     f = open(linkFile,'w')
     """
+    output = ""
 
     sentence = sentence.split()
     i = 1
@@ -131,12 +157,15 @@ def conllOutput(sentence, wordTag, linkDep, linkLabel):
 
 
         CONLL_LINE= "\t".join([str(i), word, LEMMA, CPOS, POS, FEATS, parents, labels])
-        print CONLL_LINE
+        #print CONLL_LINE
         #f.write(CONLL_LINE+"\n")
+        output += CONLL_LINE+"\n"
         i = i+1
 
-    print
+    #print
+    output += "\n"
     #f.close()
+    return output
     
 
 def dotOutput(sentence, wordTag, linkDep, linkLabel):
@@ -148,7 +177,7 @@ def dotOutput(sentence, wordTag, linkDep, linkLabel):
     sentence = sentence.split()
     
 
-    directory = "/tmp/dot_"+ID
+    directory = "/tmp/LinksToDAG_dot_"+ID
     dotFile = directory+".dot"
     
     f = open(dotFile,'w')
