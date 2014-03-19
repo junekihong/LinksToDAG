@@ -159,38 +159,10 @@ def ZimplProgram(zplFilename, linkFilename):
     readInData += "set NODE1 := { read \""+linkFilename+"\" as \"<1n, 5n>\" };\n"
     readInData += "set NODE2 := { read \""+linkFilename+"\" as \"<2n, 5n>\" };\n"
     readInData += "set NODE := NODE1 union NODE2;\n"
-
-    # Sentence LINKs
-    readInData += "set SENTENCES := { read \""+linkFilename+"\" as \"<5n>\" };\n"
-
-    # TODO. Remove the pairs with different sentence indexes! We'll never use those. But I don't know how to express the set difference.
     readInData += "set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == sentence2};"
 
     
     f.write(readInData)
-    f.write(divider)
-    
-    
-    printOuts = "do print \"LINK:\";\n" 
-    printOuts += "do print LINK;\n"
-    printOuts += "do print \"LABELS:\";\n"
-    printOuts += "do print LABELS;\n"
-    printOuts += "do print \"DIRECTIONS:\";\n"
-    printOuts += "do print DIRECTIONS;\n"
-    printOuts += "do print \"POSSIBLE_LABELS:\";\n"
-    printOuts += "do print POSSIBLE_LABELS;\n"
-    printOuts += "do print \"NODE:\";\n"
-    printOuts += "do print NODE1;\n"
-    printOuts += "do print NODE2;\n"
-    printOuts += "do print NODE;\n"
-    #printOuts += "do print NODE_PAIR;\n"
-    
-    #f.write(printOuts)
-    #f.write(divider)
-
-    
-    linkData = "# Link data.\n"
-    f.write(linkData)
     f.write(divider)
 
     variables = "# Variables.\n"
@@ -198,7 +170,7 @@ def ZimplProgram(zplFilename, linkFilename):
     variables += "var allowedLabel[POSSIBLE_LABELS] binary;\n"
     variables += "var slackLabel[POSSIBLE_LABELS] binary;\n"
 
-    variables += "var depth[NODE] integer >= -infinity;\n"
+    variables += "var depth[NODE] >= -infinity;\n"
 
     variables += "\n# Left and Right links\n"
     variables += "var llink[NODE_PAIR] binary;\n"
@@ -223,18 +195,7 @@ def ZimplProgram(zplFilename, linkFilename):
 
     objective += "\n# Specify the left and right links.\n"
     objective += "subto assign_llink : forall <i,j,layer,label,sentence> in LINK : llink[i,sentence, j, sentence] == 1 - direction[i,j,layer,label,sentence];\n"
-    objective += "subto assign_rlink : forall <i,j,layer,label,sentence> in LINK : rlink[i,sentence, j, sentence] == direction[i,j,layer,label,sentence];\n"    
-
-    #this is pretty hard. 
-    """
-    objective += "\n# Reachability.\n"
-    objective += "subto lreachability_trivial : forall <i,sentence> in NODE : lreachable[i,sentence,i,sentence] == 1;\n"
-    objective += "subto rreachability_trivial : forall <i,sentence> in NODE : rreachable[i,sentence,i,sentence] == 1;\n"
-
-
-    objective += "subto lreachability_extended : forall <i,sentence,j,k,layer,label,sentence> in NODE*LINK with i <= j : lreachable[i,sentence,k,sentence] >= (llink[j,sentence,k,sentence]*lreachable[i,sentence,j,sentence]);\n"
-    """
-    
+    objective += "subto assign_rlink : forall <i,j,layer,label,sentence> in LINK : rlink[i,sentence, j, sentence] == direction[i,j,layer,label,sentence];\n"        
 
     
     # Uses depth to enforce acyclicity.
