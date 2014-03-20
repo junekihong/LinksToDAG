@@ -9,7 +9,7 @@ if __name__=="__main__":
     linksFile = "/tmp/LinksToDAG_links.txt"
     zplFile = "/tmp/LinksToDAG_links.zpl"    
     solutionFile = "/tmp/LinksToDAG_solutions.txt"
-    linksConllFile = "/tmp/LinksToDAG_links.conll"
+    linksConllFile = "LinksToDAG_links.conll"
     open(linksFile, 'w+').close()
     open(zplFile, 'w+').close()
     open(solutionFile, 'w+').close()
