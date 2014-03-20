@@ -6,7 +6,7 @@ touch $LINKPARSES
 
 while read line; do
     echo $line 1>&2
-    #echo $line | link-parser -\!echo=0 2> /dev/null
+    echo $line | link-parser -\!echo=0 2> /dev/null
     echo $line | link-parser -\!graphics=0 -\!links=0 -\!echo=1 -\!postscript=1 2> /dev/null >> $LINKPARSES
     #python linkEdgeEncoder.py $LINKPARSES #>> $ZIMPL_FILE
 
@@ -19,6 +19,6 @@ while read line; do
 done < $1
 
 
-python main.py $LINKPARSES
+python src/main.py $LINKPARSES
 
 
