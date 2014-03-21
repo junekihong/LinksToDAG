@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from conll_utils import *
+from utils import *
 
 def printSentences():
     lines = readInput()
