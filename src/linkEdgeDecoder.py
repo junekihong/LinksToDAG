@@ -21,7 +21,7 @@ def decodeSCIPsolution(links, solutionFile):
         if line.find("direction#") != -1:
             line = line.split()
             ID = line[0]
-            direction = int(line[1])
+            direction = 1#int(line[1])
 
 
             ID = ID.split("#")[1:]
@@ -115,6 +115,7 @@ def getLinkDependencies(links, linkDir):
 
 
 def conllOutput(sentence, wordTag, linkDep, linkLabel):
+    BLANK = "-"
     """
     # output this to a temp file. Strip out the non alphanumeric characters
     ID = "".join(sentence.split(" "))
@@ -140,23 +141,25 @@ def conllOutput(sentence, wordTag, linkDep, linkLabel):
         labels = ",".join(labels)
 
         if not parents:
-            parents = "_"
+            parents = BLANK
         if not labels:
-            labels = "_"
+            labels = BLANK
 
         #print "children",children
         #print "labels",labels
         
         word = sentence[i-1]
-        LEMMA = "_"
-        CPOS = "_"
-        POS = "_"
+        LEMMA = BLANK
+        CPOS = BLANK
+        POS = BLANK
         if word in wordTag.keys():
             CPOS = wordTag[word]
-        FEATS = "_"
+        FEATS = BLANK
+        
+        VPARENTS = BLANK
+        VLABELS = BLANK
 
-
-        CONLL_LINE= "\t".join([str(i), word, LEMMA, CPOS, POS, FEATS, parents, labels])
+        CONLL_LINE= "\t".join([str(i), word, LEMMA, CPOS, POS, FEATS, parents, labels, VPARENTS, VLABELS])
         #print CONLL_LINE
         #f.write(CONLL_LINE+"\n")
         output += CONLL_LINE+"\n"
@@ -218,29 +221,49 @@ def dotOutput(sentence, wordTag, linkDep, linkLabel):
 
 
 if __name__=="__main__":
+    solutionFile = "/tmp/LinksToDAG_solutions.txt"
+    linksConllFile = "LinksToDAG_links.conll"
+    open(solutionFile, 'w+').close()
+    open(linksConllFile, 'w+').close()
+
     # Link Edge Encoder
     lines = readInput()
-    (sentence, processedSentence, links) = getDataFromLinkParse(lines)
+    (sentences, processedSentences, links) = getBatchDataFromLinkParses(lines)
 
-    wordTag = getWordTags(processedSentence)
-    linkLabel = getLinkLabelMap(links)
+    wordTags = []
+    linkLabels = []
+    for i in xrange(len(sentences)):
+        wordTags.append(getWordTags(processedSentences[i]))
+        linkLabels.append(getLinkLabelMap(links[i]))
+        linksTXT(links[i],linksFile, i)
 
-    # Link Edge Solver
-    #linkDir = getLinkDirections_naive(links)
-    
-    linksFile = "/tmp/links.txt"
-    linksTXT(links,linksFile)
-    
-    zplFile = "/tmp/links.zpl"
-    ZimplProgram(zplFile, linksFile)
-    
-    solutionFile = SCIP(zplFile)
-    linkDep = decodeSCIPsolution(links,solutionFile)
 
-    #pprint(linkLabel)
+    ZimplProgram(zplFile, linksFile)    
+    solutionFile = SCIP(zplFile, solutionFile)
+
+    """
+    print "SOLUTION FILE:"
+    print solutionFile
+    call(["cat", solutionFile])
+    print
+    """
+
+    f = open(linksConllFile, 'a')
+
+    linkDeps = decodeSCIPsolution(links,solutionFile)
     
-    # Link Edge Decoder
-    #linkDep = getLinkDependencies(links, linkDir)
-    conllOutput(sentence,wordTag,linkDep,linkLabel)
-    dotOutput(sentence,wordTag,linkDep,linkLabel)
-    
+    for i in linkDeps:
+        sentence = sentences[i]
+        linkDep = linkDeps[i]
+        linkLabel = linkLabels[i]
+        wordTag = wordTags[i]
+
+        # Link Edge Decoder
+        #linkDep = getLinkDependencies(links, linkDir)
+
+        output = conllOutput(sentence,wordTag,linkDep,linkLabel)
+        #dotOutput(sentence,wordTag,linkDep,linkLabel)
+        
+        f.write(output)
+        
+    f.close()

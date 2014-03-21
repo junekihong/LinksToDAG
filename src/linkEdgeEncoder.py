@@ -151,13 +151,17 @@ def ZimplProgram(zplFilename, linkFilename):
     readInData += "set LINK := { read \""+linkFilename+"\" as \"<1n, 2n, 3n, 4s, 5n>\" };\n"
 
     # Possible Labels
-    readInData += "set LABELS := { read \""+linkFilename+"\" as \"<4s>\" };\n"
+    readInData += "set LABELS := proj(LINK,<4>);\n"
+    #readInData += "set LABELS := { read \""+linkFilename+"\" as \"<4s>\" };\n"
     readInData += "set DIRECTIONS := { 0, 1 };\n"
     readInData += "set POSSIBLE_LABELS := LABELS * DIRECTIONS;\n"
 
     # List of Nodes
-    readInData += "set NODE1 := { read \""+linkFilename+"\" as \"<1n, 5n>\" };\n"
-    readInData += "set NODE2 := { read \""+linkFilename+"\" as \"<2n, 5n>\" };\n"
+    readInData += "set NODE1 := proj(LINK,<1,5>);\n"
+    readInData += "set NODE2 := proj(LINK,<2,5>);\n"
+
+    #readInData += "set NODE1 := { read \""+linkFilename+"\" as \"<1n, 5n>\" };\n"
+    #readInData += "set NODE2 := { read \""+linkFilename+"\" as \"<2n, 5n>\" };\n"
     readInData += "set NODE := NODE1 union NODE2;\n"
     readInData += "set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == sentence2 and i < j };"
 
@@ -216,9 +220,6 @@ def ZimplProgram(zplFilename, linkFilename):
 
     objective += "subto everyOneHasParent : forall<i,sentence> in NODE with i > 0 : hasParent[i,sentence] == 1;\n"
     objective += "subto rootHasNoParent : forall<0,sentence> in NODE : hasParent[0,sentence] == 0;\n"
-
-
-
 
 
     # temporary constraint.

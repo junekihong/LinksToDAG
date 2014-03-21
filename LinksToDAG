@@ -4,6 +4,10 @@ LINKPARSES="/tmp/LinksToDAG_linkparses.txt"
 rm -f $LINKPARSES
 touch $LINKPARSES
 
+if [ $2 ]; then
+    COUNTER=1
+fi
+
 while read line; do
     echo $line 1>&2
     #echo $line | link-parser -\!echo=0 2> /dev/null
@@ -12,6 +16,15 @@ while read line; do
 
     if [ $? != 0 ]; then
         exit
+    fi
+
+
+    if [ $2 ]; then
+        if [ $COUNTER -ge $2 ]; then
+            break
+        else
+            COUNTER=$((COUNTER+1))
+        fi
     fi
 
 done < $1
