@@ -63,9 +63,7 @@ def getDataFromLinkParse(lines):
         links[i] = links[i].strip("[]").split()
         links[i][3] = links[i][3].strip("()")
         
-    return (sentence, processedSentence, links)
-
-
+    return (processedSentence, links)
 
 
 # Gives all the links and the sentences from a given wholesale batch link parse.
@@ -78,25 +76,53 @@ def getBatchDataFromLinkParses(lines):
     for j in xrange(len(lines)):
         if not lines[j]:
             singleParse = lines[i:j]
-            (sentence, processedSentence, links) = getDataFromLinkParse(singleParse)
+            (processedSentence, links) = getDataFromLinkParse(singleParse)
             
-            sentences.append(sentence)
+            #sentences.append(sentence)
             processedSentences.append(processedSentence)
             linkData.append(links)
             i = j+1
-    return (sentences, processedSentences, linkData)
+    return (processedSentences, linkData)
+
+
+# Gets the original sentence from the processed sentence.
+# Because of how link-parser outputs its links, it is not necessarily aligned with the original sentence.
+def getSentencesFromProcessedSentences(processedSentences):
+    sentences = []    
+    for processed in processedSentences:
+        # Get rid of LEFT-WALL
+        processed = processed[1:]
+        
+        for i in xrange(len(processed)):
+            if processed[i][0] == "[" and processed[i][-1] == "]":
+                continue
+            index = processed[i].rfind(".")
+            
+            if index != -1:
+                processed[i] = processed[i][:index]
+                index = processed[i].rfind("[")
+                index2 = processed[i].rfind("]")
+                if index != -1 and index2 != -1 and index2 > index:
+                    processed[i] = processed[i][:index]
+
+        sentence =" ".join(processed)
+        sentences.append(sentence)
+    return sentences
 
 
 # extract out the link-parser tag for each word in the sentence. 
 # We'll stick it into the conll output later in the CPOS field
-def getWordTags(processedSentence):    
+def getWordTags(processedSentence):
     wordTag = {}
     i = 0
     for i in xrange(len(processedSentence)):
+        if processedSentence[i][0] == "[" and processedSentence[i][-1] == "]":
+            continue
+
         index = processedSentence[i].rfind(".")
         if index != -1:
             word = processedSentence[i][:index]
-            tag = processedSentence[i][index+1:]
+            tag = processedSentence[i][index+1:] 
             wordTag[word] = tag
     return wordTag
 
@@ -235,26 +261,21 @@ if __name__=="__main__":
     # Link Edge Encoder
     lines = readInput()
 
-    (sentences, processedSentence, links) = getBatchDataFromLinkParses(lines)
-
+    (processedSentence, links) = getBatchDataFromLinkParses(lines)
+    sentences = getSentencesFromProcessedSentences(processedSentence)
+    
+    print "sentences:"
+    pprint(sentences)
+    
     for i in xrange(len(sentences)):
-        print sentences[i]
-        pprint(processedSentence[i])
-        pprint(links[i])
-
+        #print sentences[i]
+        #pprint(processedSentence[i])
+        #pprint(links[i])
 
         wordTag = getWordTags(processedSentence[i])
         linkLabel = getLinkLabelMap(links[i])
 
         pprint(wordTag)
-        pprint(linkLabel)
+        #pprint(linkLabel)
+        
 
-
-    """
-    linksFile = "/tmp/links.txt"
-    linksTXT(links,linksFile)
-
-    zplFile = "/tmp/links.zpl"
-    ZimplProgram(zplFile, linksFile)
-    """
-    

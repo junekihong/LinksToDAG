@@ -28,7 +28,8 @@ if __name__=="__main__":
 
     # Link Edge Encoder
     lines = readInput()
-    (sentences, processedSentences, links) = getBatchDataFromLinkParses(lines)
+    (processedSentences, links) = getBatchDataFromLinkParses(lines)
+    sentences = getSentencesFromProcessedSentences(processedSentences)
 
     wordTags = []
     linkLabels = []

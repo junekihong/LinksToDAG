@@ -23,7 +23,6 @@ def decodeSCIPsolution(links, solutionFile):
             ID = line[0]
             direction = 1#int(line[1])
 
-
             ID = ID.split("#")[1:]
             layer_label = ID[2].split("$")
             node1 = ID[0]
