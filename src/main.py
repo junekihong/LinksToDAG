@@ -7,6 +7,7 @@ import argparse
 
 if __name__=="__main__":
     linksFile = "/tmp/LinksToDAG_links.txt"
+    corpusSizeFile = "/tmp/LinksToDAG_corpusSize.txt"
     zplFile = "/tmp/LinksToDAG_links.zpl"    
     solutionFile = "/tmp/LinksToDAG_solutions.txt"
     linksConllFile = "LinksToDAG_links.conll"
@@ -29,8 +30,8 @@ if __name__=="__main__":
     # Link Edge Encoder
     lines = readInput()
     (processedSentences, links) = getBatchDataFromLinkParses(lines)
-    sentences = getSentencesFromProcessedSentences(processedSentences)
-
+    (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
+    
     wordTags = []
     linkLabels = []
     for i in xrange(len(sentences)):
@@ -39,7 +40,7 @@ if __name__=="__main__":
         linksTXT(links[i],linksFile, i)
 
 
-    ZimplProgram(zplFile, linksFile)    
+    ZimplProgram(zplFile, linksFile, sizeOfCorpus)
     solutionFile = SCIP(zplFile, solutionFile)
 
     """

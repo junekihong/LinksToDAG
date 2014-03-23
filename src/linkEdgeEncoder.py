@@ -27,8 +27,9 @@ def getDataFromLinkParse(lines):
     for line in lines:
         if not line:
             break
-            
-        # extract the original sentence
+
+        
+        # extract the original sentence. Populate the corpus.
         if line.find("linkparser>") == 0:
             sentence = (line[len("linkparser>"):]).strip()
 
@@ -68,7 +69,7 @@ def getDataFromLinkParse(lines):
 
 # Gives all the links and the sentences from a given wholesale batch link parse.
 def getBatchDataFromLinkParses(lines):
-    sentences = []
+    #sentences = []
     processedSentences = []
     linkData = []
     
@@ -87,8 +88,10 @@ def getBatchDataFromLinkParses(lines):
 
 # Gets the original sentence from the processed sentence.
 # Because of how link-parser outputs its links, it is not necessarily aligned with the original sentence.
+# We also calculate the size of the corpus here.
 def getSentencesFromProcessedSentences(processedSentences):
     sentences = []    
+    corpus = {}
     for processed in processedSentences:
         # Get rid of LEFT-WALL
         processed = processed[1:]
@@ -107,7 +110,13 @@ def getSentencesFromProcessedSentences(processedSentences):
 
         sentence =" ".join(processed)
         sentences.append(sentence)
-    return sentences
+        
+        # Add the unique words to the corpus
+        for word in sentence.split():
+            corpus[word] = True
+
+    sizeOfCorpus = len(corpus)
+    return (sentences, sizeOfCorpus)
 
 
 # extract out the link-parser tag for each word in the sentence. 
@@ -140,7 +149,7 @@ def getLinkLabelMap(links):
 
 
 # Produce the list of links out to a file
-def linksTXT(links, filename = "/tmp/links.txt", index = 0):
+def linksTXT(links, filename = "/tmp/LinksToDAG_links.txt", index = 0):
     index = str(index)
     DELIMITER = "#"
     f = open(filename, 'a')
@@ -166,7 +175,7 @@ def linksTXT(links, filename = "/tmp/links.txt", index = 0):
 
 
 # Produce the Zimpl Program to solve
-def ZimplProgram(zplFilename, linkFilename):
+def ZimplProgram(zplFilename, linkFilename, corpusSize):
     f = open(zplFilename, 'a')
     header = "# Link Edge to DAG Zimpl file.\n# Juneki Hong\n\n"
     divider = "\n# ----------\n\n"
@@ -190,7 +199,6 @@ def ZimplProgram(zplFilename, linkFilename):
     #readInData += "set NODE2 := { read \""+linkFilename+"\" as \"<2n, 5n>\" };\n"
     readInData += "set NODE := NODE1 union NODE2;\n"
     readInData += "set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == sentence2 and i < j };"
-
     
     f.write(readInData)
     f.write(divider)
@@ -211,9 +219,15 @@ def ZimplProgram(zplFilename, linkFilename):
     f.write(variables)
     f.write(divider)
 
+    
+    parameters = "\n# Parameters.\n"
+    parameters += "param corpusSize := "+str(corpusSize)+";\n"
+    f.write(parameters)
+    f.write(divider)
+
     objective = "# Objective and Constraints.\n"
     objective += "\n# Minimize the number of allowed labels used.\n"
-    objective += "minimize labelsUsed : sum<label, dir> in POSSIBLE_LABELS : (allowedLabel[label,dir] + 10000*slackLabel[label,dir]);\n"
+    objective += "minimize labelsUsed : sum<label, dir> in POSSIBLE_LABELS : (allowedLabel[label,dir] + corpusSize*slackLabel[label,dir]);\n"
 
     objective += "\n# Every link gets an allowed label.\n"
     objective += "subto atLeastOneLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel[label,0] + allowedLabel[label, 1] +slackLabel[label,0] + slackLabel[label,1]>= 1;\n"
@@ -262,7 +276,7 @@ if __name__=="__main__":
     lines = readInput()
 
     (processedSentence, links) = getBatchDataFromLinkParses(lines)
-    sentences = getSentencesFromProcessedSentences(processedSentence)
+    (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentence)
     
     print "sentences:"
     pprint(sentences)
