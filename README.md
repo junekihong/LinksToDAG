@@ -34,11 +34,11 @@ SCIP relies on GMP in order to read ZIMPL programs.
 
 * Install GMP
 
-**With sudo: **
+**With sudo:**
 
 sudo apt-get install libgmp10
 
-**Without sudo: **
+**Without sudo:**
 
 download source from https://gmplib.org/ 
 
