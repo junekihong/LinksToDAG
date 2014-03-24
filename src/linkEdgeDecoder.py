@@ -8,9 +8,10 @@ from pprint import pprint
 
 
 # Given a list of all the links for each sentence and a solution file, we decode the solution.
-def decodeSCIPsolution(links, solutionFile):
+def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
     linkDeps = {}
-
+    allowedLabels = []
+    
     f = open(solutionFile, 'r')
     lines = f.readlines()
     
@@ -35,7 +36,17 @@ def decodeSCIPsolution(links, solutionFile):
                 decodedSolutions[sentence] = [(node1,node2,layer,label,direction)]
             else:
                 decodedSolutions[sentence].append((node1,node2,layer,label,direction))
+
+        elif line.find("allowedLabel$") != -1:
+            line = line.split()
+            ID = line[0]
             
+            ID = ID.split("$")[1]
+            ID = ID.split("#")
+            label = ID[0]
+            direction = ID[1]
+            allowedLabels.append((label,direction))
+
     for sentence in decodedSolutions:
         linkDep = {}
         processedLinks = decodedSolutions[sentence]
@@ -85,7 +96,11 @@ def decodeSCIPsolution(links, solutionFile):
                 linkDep[child] = [parent]
         linkDeps[sentence] = linkDep
 
-    return linkDeps
+
+    if getAllowedLabels:
+        return (linkDeps, allowedLabels)
+    else:
+        return (linkDeps)
 
 # Construct a link dependency map, given that we have already solved all the directionality assignments.
 def getLinkDependencies(links, linkDir):

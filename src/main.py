@@ -3,7 +3,8 @@
 from linkEdgeEncoder import *
 from linkEdgeSolver import *
 from linkEdgeDecoder import *
-import argparse
+import argparse, sys
+
 
 if __name__=="__main__":
     linksFile = "/tmp/LinksToDAG_links.txt"
@@ -52,8 +53,15 @@ if __name__=="__main__":
 
     f = open(linksConllFile, 'a')
 
-    linkDeps = decodeSCIPsolution(links,solutionFile)
+    (linkDeps, allowedLabels) = decodeSCIPsolution(links,solutionFile, True)
     
+    # print out the allowed labels list to standard error. Something nice for us to have.
+    allowedLabels.sort()
+    for allowedLabel in allowedLabels:
+        print >> sys.stderr, '{0:5} {1:5}'.format(allowedLabel[0], allowedLabel[1])
+    print >> sys.stderr
+
+
     for i in linkDeps:
         sentence = sentences[i]
         linkDep = linkDeps[i]
