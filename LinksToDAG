@@ -11,7 +11,9 @@ fi
 while read line; do
     #echo $line 1>&2
     #echo $line | link-parser -\!echo=0 2> /dev/null
-    echo $line | link-parser -\!graphics=0 -\!links=0 -\!echo=1 -\!postscript=1 2> /dev/null >> $LINKPARSES
+
+    # TODO. Handle parses in panic mode. In other words, handle disconnected graphs. Turning panic mode off for now.
+    echo $line | link-parser -\!graphics=0 -\!links=0 -\!echo=1 -\!postscript=1 -\!panic=0 2> /dev/null >> $LINKPARSES
 
 
     if [ $? != 0 ]; then
