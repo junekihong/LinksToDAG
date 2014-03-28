@@ -58,7 +58,7 @@ subto assignLabel_R : forall <i,j,layer,label,sentence> in LINK : sum <label, 1>
 subto assign_llink : forall <i,j,layer,label,sentence> in LINK : llink[i,sentence, j, sentence] == 1 - direction[i,j,layer,label,sentence];
 subto assign_rlink : forall <i,j,layer,label,sentence> in LINK : rlink[i,sentence, j, sentence] == direction[i,j,layer,label,sentence];
 
-# Constraints: depth of the nodes.
+# Constraints: depth of the nodes. Used to handle acyclicity.
 subto depth_zeroInitialization: forall <0,sentence> in NODE: depth[0,sentence] == 1;
 subto depth_recursive_L: forall <i,sentence,j,sentence> in NODE_PAIR: depth[i,sentence] >= llink[i,sentence,j,sentence]*(depth[j,sentence] + 1);
 subto depth_recursive_R: forall <i,sentence,j,sentence> in NODE_PAIR: depth[j,sentence] >= rlink[i,sentence,j,sentence]*(depth[i,sentence] + 1);
