@@ -176,7 +176,21 @@ def linksTXT(links, filename = "/tmp/LinksToDAG_links.txt", index = 0):
 
 # Produce the Zimpl Program to solve
 def ZimplProgram(zplFilename, linkFilename, corpusSize):
-    f = open(zplFilename, 'a')
+    f = open(zplFilename, 'w')
+    keyword = {}
+    keyword["$LINKFILENAME$"] = linkFilename
+    keyword["$CORPUSSIZE$"] = str(corpusSize)
+
+    # Read in our Zimpl file template
+    z = open("src/zimpl_template.zpl",'r')
+    z = z.readlines()
+    for line in z:
+        for key in keyword:
+            line = line.replace(key,keyword[key])
+        #print line
+        f.write(line)
+
+    """
     header = "# Link Edge to DAG Zimpl file.\n# Juneki Hong\n\n"
     divider = "\n# ----------\n\n"
     f.write(header)
@@ -268,18 +282,24 @@ def ZimplProgram(zplFilename, linkFilename, corpusSize):
 
     f.write(objective)
     f.write(divider)
+    """
+
     f.close()
 
 
 if __name__=="__main__":
+    linksFile = "/tmp/LinksToDAG_links.txt"
+    zplFile = "/tmp/LinksToDAG_links.zpl"    
+
+
     # Link Edge Encoder
     lines = readInput()
 
     (processedSentence, links) = getBatchDataFromLinkParses(lines)
     (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentence)
     
-    print "sentences:"
-    pprint(sentences)
+    #print "sentences:"
+    #pprint(sentences)
     
     for i in xrange(len(sentences)):
         #print sentences[i]
@@ -288,8 +308,10 @@ if __name__=="__main__":
 
         wordTag = getWordTags(processedSentence[i])
         linkLabel = getLinkLabelMap(links[i])
+        linksTXT(links[i], linksFile, i)
 
-        pprint(wordTag)
+        #pprint(wordTag)
         #pprint(linkLabel)
         
 
+    ZimplProgram(zplFile, linksFile, sizeOfCorpus)
