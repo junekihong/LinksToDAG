@@ -72,7 +72,7 @@ if __name__=="__main__":
         #linkDep = getLinkDependencies(links, linkDir)
 
         output = conllOutput(sentence,wordTag,linkDep,linkLabel)
-        dotOutput(sentence,wordTag,linkDep,linkLabel)
+        #dotOutput(sentence,wordTag,linkDep,linkLabel)
         
         f.write(output)
         
