@@ -39,6 +39,8 @@ python src/main.py $LINKPARSES
 
 
 if [ $2 ]; then
+    echo
     echo "FINISHED" $2 "SENTENCES"
+    echo
     echo
 fi
