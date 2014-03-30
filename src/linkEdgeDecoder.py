@@ -5,6 +5,7 @@ from linkEdgeSolver import *
 from subprocess import call
 import re
 from pprint import pprint
+import os
 
 
 # Given a list of all the links for each sentence and a solution file, we decode the solution.
@@ -19,7 +20,7 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
 
 
     for line in lines:
-        if line.find("direction#") != -1:
+        if line.find("direction#") == 0:
             line = line.split()
             ID = line[0]
             direction = 1#int(line[1])
@@ -37,7 +38,7 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
             else:
                 decodedSolutions[sentence].append((node1,node2,layer,label,direction))
 
-        elif line.find("allowedLabel$") != -1:
+        elif line.find("allowedLabel$") == 0:
             line = line.split()
             ID = line[0]
             
@@ -194,9 +195,13 @@ def dotOutput(sentence, wordTag, linkDep, linkLabel):
     sentence = sentence.split()
     
 
-    directory = "/tmp/LinksToDAG_dot_"+ID
-    dotFile = directory+".dot"
-    
+    directory = "/tmp/LinksToDAG_dot/"
+    # If needed, make the directory to put all of our dot files. 
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    File = directory+"LinksToDAG_dot_"+ID
+    dotFile = File+".dot"    
     f = open(dotFile,'w')
     f.write("digraph "+ID+" {\n")
 
@@ -227,7 +232,7 @@ def dotOutput(sentence, wordTag, linkDep, linkLabel):
     f.close()
 
     # call dot on the temp file. Store the image.
-    pngFile = directory+".png"
+    pngFile = File+".png"
     f = open(pngFile,'w')
     call(["dot","-Tpng",dotFile],stdout=f)
     f.close()
