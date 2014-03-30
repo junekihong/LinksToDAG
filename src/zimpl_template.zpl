@@ -12,8 +12,6 @@ set LABELS := proj(LINK,<4>);
 set DIRECTIONS := { 0, 1 };
 set POSSIBLE_LABELS := LABELS * DIRECTIONS;
 
-#set NODE1 := proj(LINK,<1,5>);
-#set NODE2 := proj(LINK,<2,5>);
 set NODE := proj(LINK,<1,5>) union proj(LINK,<2,5>);
 set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == sentence2 and i < j };
 
@@ -21,9 +19,14 @@ set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == se
 # Variables.
 # ----------
 
+# Direction, allowed labels
 var direction[LINK] binary;
 var allowedLabel[POSSIBLE_LABELS] binary;
-var slackLabel[POSSIBLE_LABELS] binary;
+
+# Slack
+var slack[LABELS] >= 0;
+
+# Node depth
 var depth[NODE] >= -infinity;
 
 # Left and Right links
@@ -36,22 +39,35 @@ var hasParent[NODE] binary;
 # ----------
 
 param corpusSize := $CORPUSSIZE$;
-
+param size[<label> in LABELS] := sum <i,j,layer,label,sentence> in LINK: 1;
+param cost[<label> in LABELS] := 100 / size[label];
 
 # Objective and Constraints.
 # ----------
 
 # Minimize the number of allowed labels used.
 #minimize labelsUsed : sum<label, dir> in POSSIBLE_LABELS : (allowedLabel[label,dir] + 100*slackLabel[label,dir]/size[label]);
-minimize labelsUsed : sum<label, dir> in POSSIBLE_LABELS : (allowedLabel[label,dir] + slackLabel[label,dir]/corpusSize);
+minimize labelsUsed : sum<label> in LABELS : (allowedLabel[label,0] + allowedLabel[label,1] + cost[label]*slack[label]);
+
 
 # Constraint: Every link gets an allowed label. The minimization objective should try to use the least amount of unique allowed labels.
-subto atLeastOneLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel[label,0] + allowedLabel[label, 1] +slackLabel[label,0] + slackLabel[label,1]>= 1;
+#subto atLeastOneLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel[label,0] + allowedLabel[label, 1] + slackLabel[label,0] + slackLabel[label,1]>= 1;
 #subto onlyOneAllowedLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel[label,0] == 1-allowedLabel[label,1];
 
+subto atLeastOneLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel[label,0] + allowedLabel[label, 1] >= 1;
+
+
+
 # Constraint: Set the direction variable to match the direction specified in allowedLabel
-subto assignLabel_L : forall <i,j,layer,label,sentence> in LINK : sum <label, 0> in POSSIBLE_LABELS : allowedLabel[label,0]+slackLabel[label,0] >= 1 - direction[i,j,layer,label,sentence];
-subto assignLabel_R : forall <i,j,layer,label,sentence> in LINK : sum <label, 1> in POSSIBLE_LABELS : allowedLabel[label,1]+slackLabel[label,1] >= direction[i,j,layer,label,sentence];
+#subto assignLabel_L : forall <i,j,layer,label,sentence> in LINK : sum <label, 0> in POSSIBLE_LABELS : allowedLabel[label,0]+slackLabel[label,0] >= 1 - direction[i,j,layer,label,sentence];
+#subto assignLabel_R : forall <i,j,layer,label,sentence> in LINK : sum <label, 1> in POSSIBLE_LABELS : allowedLabel[label,1]+slackLabel[label,1] >= direction[i,j,layer,label,sentence];
+
+subto assignment : forall <label> in LABELS : size[label] == slack[label] + sum <i,j,layer,label,sentence> in LINK : (allowedLabel[label,0]*(1-direction[i,j,layer,label,sentence]) + allowedLabel[label,1]*direction[i,j,layer,label,sentence]);
+
+# If there are no links with the label that go in a direction, then we force allowedLabel in that direction to be 0.
+# I think this isn't necessary for the program, but it may help the solver prune the search space a little better.
+subto assignment_L : forall <label> in LABELS : allowedLabel[label,0] <= sum<i,j,layer,label,sentence> in LINK : (1 - direction[i,j,layer,label,sentence]);
+subto assignment_R : forall <label> in LABELS : allowedLabel[label,1] <= sum<i,j,layer,label,sentence> in LINK : (direction[i,j,layer,label,sentence]);
 
 
 # Constraints: left and right links in terms of the assigned direction
