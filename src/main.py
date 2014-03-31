@@ -8,25 +8,21 @@ import argparse, sys
 
 if __name__=="__main__":
     linksFile = "/tmp/LinksToDAG_links.txt"
-    corpusSizeFile = "/tmp/LinksToDAG_corpusSize.txt"
     zplFile = "/tmp/LinksToDAG_links.zpl"    
     solutionFile = "/tmp/LinksToDAG_solutions.txt"
-    linksConllFile = "LinksToDAG_links.conll"
+    
+    solutionsDirectory = "sol/"
+    if not os.path.exists(solutionsDirectory):
+        os.makedirs(solutionsDirectory)
+
+    linksConllFile = solutionsDirectory+"links.conll"
+    allowedLinksFile = solutionsDirectory+"allowedLinks.txt"
+
     open(linksFile, 'w+').close()
     open(zplFile, 'w+').close()
     open(solutionFile, 'w+').close()
     open(linksConllFile, 'w+').close()
-
-    """parser = argparse.ArgumentParser(description='Link Edge to DAG Solver.')
-    parser.add_argument("--dot", dest="dot", default=False, action="store_true",
-                        help="Outputs the solution in .dot format.")
-    parser.add_argument("--conll", dest="conll", default=True, action="store_true",
-                        help="Outputs the solution in .conll format.")
-    
-    parser.add_argument("strings",nargs="*")
-
-    args = parser.parse_args()
-    """
+    open(allowedLinksFile, 'w+').close()
 
     # Link Edge Encoder
     lines = readInput()
@@ -57,10 +53,13 @@ if __name__=="__main__":
     
     # print out the allowed labels list to standard error. Something nice for us to have.
     allowedLabels.sort()
-    for allowedLabel in allowedLabels:
-        print >> sys.stderr, '{0:5} {1:5}'.format(allowedLabel[0], allowedLabel[1])
-    print >> sys.stderr
 
+    allowedLinks = open(allowedLinksFile, 'w')
+    for allowedLabel in allowedLabels:
+        allowedLinks.write('{0:5} {1:5}\n'.format(allowedLabel[0], allowedLabel[1]))
+    
+    allowedLinks.write("\n")
+    allowedLinks.close()
 
     for i in linkDeps:
         sentence = sentences[i]
@@ -77,3 +76,4 @@ if __name__=="__main__":
         f.write(output)
         
     f.close()
+

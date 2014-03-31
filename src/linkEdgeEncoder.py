@@ -161,11 +161,6 @@ def linksTXT(links, filename = "/tmp/LinksToDAG_links.txt", index = 0):
         layer = link[2]
         label = link[3]
         
-        # The name is all of the data and an index combined together. 
-        # The index represents which sentence this link came from. 
-        # This will be used as indentification later. 
-        # From the ID, we can determine any particular link from a particular sentence.
-        #name = node1+DELIMITER+node2+DELIMITER+layer+DELIMITER+label+DELIMITER+index
         string = ""
         #string = name+", "+
         string += node1+", "+node2+", "+layer+", "+label+", "+index+"\n"
