@@ -24,7 +24,7 @@ for line in lines:
 plt.figure()
 ax = plt.subplot(111)
 ax.set_xlabel('Sentences')
-ax.set_ylabel('Run time')
+ax.set_ylabel('Run time (seconds)')
 
 plt.plot(Xs,Ys)
 plt.xlim(xmin=0)
