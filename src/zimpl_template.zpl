@@ -19,12 +19,17 @@ set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == se
 # Variables.
 # ----------
 
-# Direction, allowed labels
-var direction[LINK] binary;
+
+# Allowed Labels
 var allowedLabel[POSSIBLE_LABELS] binary;
+# Direction
+var direction[LINK] binary;
 
 # Slack
 var slack[LABELS] >= 0;
+
+# Node has Parent
+var hasParent[NODE] binary;
 
 # Node depth
 var depth[NODE] >= -infinity;
@@ -32,7 +37,7 @@ var depth[NODE] >= -infinity;
 # Left and Right links
 var llink[NODE_PAIR] binary;
 var rlink[NODE_PAIR] binary;
-var hasParent[NODE] binary;
+
 
 
 # Parameters.
