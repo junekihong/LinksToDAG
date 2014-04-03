@@ -25,14 +25,14 @@ var allowedLabel[POSSIBLE_LABELS] binary;
 # Direction
 var direction[LINK] binary;
 
-# Slack
-var slack[LABELS] >= 0;
-
 # Node has Parent
 var hasParent[NODE] binary;
 
 # Node depth
-var depth[NODE] >= -infinity;
+var depth[NODE] >= 0;
+
+# Slack
+var slack[LABELS] >= 0;
 
 # Left and Right links
 var llink[NODE_PAIR] binary;
@@ -67,8 +67,8 @@ subto atLeastOneLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel
 #subto assignLabel_L : forall <i,j,layer,label,sentence> in LINK : sum <label, 0> in POSSIBLE_LABELS : allowedLabel[label,0]+slackLabel[label,0] >= 1 - direction[i,j,layer,label,sentence];
 #subto assignLabel_R : forall <i,j,layer,label,sentence> in LINK : sum <label, 1> in POSSIBLE_LABELS : allowedLabel[label,1]+slackLabel[label,1] >= direction[i,j,layer,label,sentence];
 
-subto assignment : forall <label> in LABELS : size[label] == slack[label] + sum <i,j,layer,label,sentence> in LINK : (allowedLabel[label,0]*(1-direction[i,j,layer,label,sentence]) + allowedLabel[label,1]*direction[i,j,layer,label,sentence]);
-
+subto assignment : forall <label> in LABELS : size[label] == slack[label] + sum <i,j,layer,label,sentence> in LINK : (allowedLabel[label,0]*(1-direction[i,j,layer,label,sentence]) + allowedLabel[label,1]*direction[i,j,layer,label,sentence])
+;
 # If there are no links with the label that go in a direction, then we force allowedLabel in that direction to be 0.
 # I think this isn't necessary for the program, but it may help the solver prune the search space a little better.
 subto assignment_L : forall <label> in LABELS : allowedLabel[label,0] <= sum<i,j,layer,label,sentence> in LINK : (1 - direction[i,j,layer,label,sentence]);
