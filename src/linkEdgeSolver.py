@@ -3,6 +3,8 @@
 from linkEdgeEncoder import *
 from linklabel_table import *
 from subprocess import call
+import os
+
 
 # I handcoded a few rules in the linklabel_table in order to get our naive solver.
 # This function exists mainly to give us a solver in order to test out the whole encoder-solver-decoder pipeline
@@ -52,23 +54,53 @@ def SCIP(zplFile, solutionFile = "/tmp/tempSolution"):
     return solutionFile
 
 if __name__=="__main__":
+    linksFile = "/tmp/LinksToDAG_links.txt"
+    zplFile = "/tmp/LinksToDAG_links.zpl"    
+    solutionFile = "/tmp/LinksToDAG_solutions.txt"
+    
+    solutionsDirectory = "sol/"
+    if not os.path.exists(solutionsDirectory):
+        os.makedirs(solutionsDirectory)
+
+    linksConllFile = solutionsDirectory+"links.conll"
+    allowedLinksFile = solutionsDirectory+"allowedLinks.txt"
+
+    open(linksFile, 'w+').close()
+    open(zplFile, 'w+').close()
+    open(solutionFile, 'w+').close()
+    open(linksConllFile, 'w+').close()
+    open(allowedLinksFile, 'w+').close()
+
     # Link Edge Encoder
     lines = readInput()
-    (sentence, processedSentence, links) = getDataFromLinkParse(lines)
+    (processedSentences, links) = getBatchDataFromLinkParses(lines)
+    (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
 
-    wordTag = getWordTags(processedSentence)
-    linkLabel = getLinkLabelMap(links)
 
-    # Link Edge Solver
-    #linkDir = getLinkDirections_naive(links)    
-    
-    #zplFile = "knapsack.zpl"
-    #SCIP(zplFile)
+    print sentences
+    print sizeOfCorpus
 
-    linksFile = "/tmp/links.txt"
-    linksTXT(links,linksFile)
     
-    zplFile = "/tmp/links.zpl"
-    ZimplProgram(zplFile, linksFile)
+    wordTags = []
+    linkLabels = []
+    for i in xrange(len(sentences)):
+        wordTags.append(getWordTags(processedSentences[i]))
+        linkLabels.append(getLinkLabelMap(links[i]))
+        linksTXT(links[i],linksFile, i)
+
+
+    ZimplProgram(zplFile, linksFile, sizeOfCorpus)
+    solutionFile = SCIP(zplFile, solutionFile)
+
     
-    solutionFile = SCIP(zplFile)
+    print "SOLUTION FILE:"
+    print solutionFile
+    call(["cat", solutionFile])
+    print
+    
+
+
+
+
+
+
