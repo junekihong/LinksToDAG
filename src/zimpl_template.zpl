@@ -21,12 +21,12 @@ set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == se
 
 
 # Allowed Labels
-var allowedLabel[POSSIBLE_LABELS] binary;
+var allowedLabel[POSSIBLE_LABELS];# binary;
 # Direction
 var direction[LINK] binary;
 
 # Node has Parent
-var hasParent[NODE] binary;
+var hasParent[NODE];# binary;
 
 # Node depth
 var depth[NODE] >= 0;
@@ -35,8 +35,8 @@ var depth[NODE] >= 0;
 var slack[LABELS] >= 0;
 
 # Left and Right links
-var llink[NODE_PAIR] binary;
-var rlink[NODE_PAIR] binary;
+var llink[NODE_PAIR];# binary;
+var rlink[NODE_PAIR];# binary;
 
 
 
@@ -71,8 +71,8 @@ subto assignment : forall <label> in LABELS : size[label] == slack[label] + sum 
 ;
 # If there are no links with the label that go in a direction, then we force allowedLabel in that direction to be 0.
 # I think this isn't necessary for the program, but it may help the solver prune the search space a little better.
-subto assignment_L : forall <label> in LABELS : allowedLabel[label,0] <= sum<i,j,layer,label,sentence> in LINK : (1 - direction[i,j,layer,label,sentence]);
-subto assignment_R : forall <label> in LABELS : allowedLabel[label,1] <= sum<i,j,layer,label,sentence> in LINK : (direction[i,j,layer,label,sentence]);
+#subto assignment_L : forall <label> in LABELS : allowedLabel[label,0] <= sum<i,j,layer,label,sentence> in LINK : (1 - direction[i,j,layer,label,sentence]);
+#subto assignment_R : forall <label> in LABELS : allowedLabel[label,1] <= sum<i,j,layer,label,sentence> in LINK : (direction[i,j,layer,label,sentence]);
 
 
 # Constraints: left and right links in terms of the assigned direction

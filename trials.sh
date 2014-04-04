@@ -4,9 +4,14 @@ rm -f /tmp/LinksToDAG_times
 
 
 #trials=( 1 10 25 50 75 100 125 150 175 200 )
-trials=( 1 2 3 )
+#trials=( )
+typeset -i i END
 
-for i in "${trials[@]}"
+
+END=50
+
+#for i in "${trials[@]}"
+for ((i=1;i<=$END;i++));
 do
     bash tools/trial.sh data/mini.sentences $i
 done

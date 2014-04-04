@@ -77,8 +77,8 @@ if __name__=="__main__":
     (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
 
 
-    print sentences
-    print sizeOfCorpus
+    #print sentences
+    #print sizeOfCorpus
 
     
     wordTags = []
@@ -92,12 +92,12 @@ if __name__=="__main__":
     ZimplProgram(zplFile, linksFile, sizeOfCorpus)
     solutionFile = SCIP(zplFile, solutionFile)
 
-    
+    """
     print "SOLUTION FILE:"
     print solutionFile
     call(["cat", solutionFile])
     print
-    
+    """
 
 
 
