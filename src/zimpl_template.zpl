@@ -69,6 +69,7 @@ subto atLeastOneLabel : forall <i,j,layer,label,sentence> in LINK : allowedLabel
 
 subto assignment : forall <label> in LABELS : size[label] == slack[label] + sum <i,j,layer,label,sentence> in LINK : (allowedLabel[label,0]*(1-direction[i,j,layer,label,sentence]) + allowedLabel[label,1]*direction[i,j,layer,label,sentence])
 ;
+
 # If there are no links with the label that go in a direction, then we force allowedLabel in that direction to be 0.
 # I think this isn't necessary for the program, but it may help the solver prune the search space a little better.
 #subto assignment_L : forall <label> in LABELS : allowedLabel[label,0] <= sum<i,j,layer,label,sentence> in LINK : (1 - direction[i,j,layer,label,sentence]);

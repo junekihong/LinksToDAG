@@ -33,7 +33,7 @@ done < $1
 
 
 
-
+#python src/linkEdgeSolver.py $LINKPARSES
 python src/main.py $LINKPARSES
 
 
