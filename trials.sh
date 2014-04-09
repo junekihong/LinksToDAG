@@ -22,7 +22,7 @@ rm -f $RUNTIMES
 
 
 typeset -i i END
-END=50
+END=130
 
 #for i in "${trials[@]}"
 for ((i=1;i<=$END;i++));
@@ -40,4 +40,4 @@ python src/plotter.py $RUNTIMES
 
 
 
-echo | mutt -a $RUNTIMES -- junekihong@gmail.com
+echo $RUNTIMES | mutt -s $END -a $RUNTIMES -- junekihong@gmail.com
