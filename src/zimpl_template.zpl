@@ -43,8 +43,8 @@ var depth[NODE] >= 0;
 var slack[LABELS] >= 0;
 
 # Left and Right links
-var llink[NODE_PAIR];# binary;
-var rlink[NODE_PAIR];# binary;
+var llink[NODE_PAIR]; # binary;
+var rlink[NODE_PAIR]; # binary;
 
 
 

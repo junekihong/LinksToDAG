@@ -35,8 +35,8 @@ done < $1
 
 
 
-#python src/main.py $LINKPARSES
-python src/linkEdgeSolver.py $LINKPARSES
+python src/main.py $LINKPARSES
+#python src/linkEdgeSolver.py $LINKPARSES
 
 
 
@@ -47,3 +47,8 @@ if [ $2 ]; then
     echo
     echo
 fi
+
+
+
+#echo "sol/links.conll" | mutt -s 
+wc -l $1 | mutt -s "sol/links.conll" -a sol/links.conll -a sol/allowedLinks.txt -- junekihong@gmail.com
