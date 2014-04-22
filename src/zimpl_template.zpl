@@ -8,6 +8,14 @@
 # Read in the data. (node1, node2, layer, label, sentence)
 set LINK := { read "$LINKFILENAME$" as "<1n, 2n, 3n, 4s, 5n>" };
 
+
+# Plan: (node1, node2, layer, coarseLabel, label, sentence)
+# set LINK := { read "$LINKFILENAME$" as "<1n, 2n, 3n, 4s, 5s, 6n>" };
+# set COARSE_LABELS := proj(LINK<4>)
+# set COARSE_TO_FINE := proj(LINK<4,5>)
+# param cost2[<coarse>]
+
+
 set LABELS := proj(LINK,<4>);
 set DIRECTIONS := { 0, 1 };
 set POSSIBLE_LABELS := LABELS * DIRECTIONS;
@@ -21,9 +29,9 @@ set NODE_PAIR := { <i,sentence1,j,sentence2> in NODE * NODE with sentence1 == se
 
 
 # Allowed Labels
-var allowedLabel[POSSIBLE_LABELS];# binary;
+var allowedLabel[POSSIBLE_LABELS];
 # Direction
-var direction[LINK] binary;
+var direction[LINK] implicit binary;
 
 # Node has Parent
 var hasParent[NODE];# binary;
