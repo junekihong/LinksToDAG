@@ -21,8 +21,6 @@ if __name__=="__main__":
     open(linksFile, 'w+').close()
     open(zplFile, 'w+').close()
     open(solutionFile, 'w+').close()
-    open(linksConllFile, 'w+').close()
-    open(allowedLinksFile, 'w+').close()
 
     # Link Edge Encoder
     lines = readInput()
@@ -47,6 +45,8 @@ if __name__=="__main__":
     print
     """
 
+
+    open(linksConllFile, 'w+').close()
     f = open(linksConllFile, 'a')
 
     (linkDeps, allowedLabels) = decodeSCIPsolution(links,solutionFile, True)
@@ -54,6 +54,8 @@ if __name__=="__main__":
     # print out the allowed labels list to standard error. Something nice for us to have.
     allowedLabels.sort()
 
+
+    open(allowedLinksFile, 'w+').close()
     allowedLinks = open(allowedLinksFile, 'w')
     for allowedLabel in allowedLabels:
         allowedLinks.write('{0:5} {1:5}\n'.format(allowedLabel[0], allowedLabel[1]))
