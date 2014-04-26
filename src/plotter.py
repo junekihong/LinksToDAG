@@ -12,6 +12,9 @@ Ys = []
 
 
 for line in lines:
+    if not line:
+        continue
+
     line = line.split()
     x = float(line[0])
     y = float(line[1])
