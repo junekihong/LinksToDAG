@@ -8,6 +8,11 @@ if [ $2 ]; then
     COUNTER=1
 fi
 
+
+python src/linkParser.py $1 $2 2> /dev/null
+
+
+<<'BLOCK_COMMENT'
 while read line; do
     #echo $line 1>&2
     #echo $line | link-parser -\!echo=0 2> /dev/null
@@ -30,7 +35,7 @@ while read line; do
     fi
 
 done < $1
-
+BLOCK_COMMENT
 
 
 
@@ -51,4 +56,4 @@ fi
 
 
 #echo "sol/links.conll" | mutt -s 
-wc -l $1 | mutt -s "sol/links.conll" -a sol/links.conll -a sol/allowedLinks.txt -- junekihong@gmail.com
+#wc -l $1 | mutt -s "sol/links.conll" -a sol/links.conll -a sol/allowedLinks.txt -- junekihong@gmail.com
