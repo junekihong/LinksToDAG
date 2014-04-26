@@ -20,10 +20,10 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
 
 
     for line in lines:
-        if line.find("direction#") == 0:
+        if line.find("rlink#") == 0:
             line = line.split()
             ID = line[0]
-            direction = 1#int(line[1])
+            direction = int(round(float(line[1])))
 
             ID = ID.split("#")[1:]
             layer_label = ID[2].split("$")
@@ -39,14 +39,18 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
                 decodedSolutions[sentence].append((node1,node2,layer,label,direction))
 
         elif line.find("allowedLabel$") == 0:
+            #print line
+
             line = line.split()
             ID = line[0]
+            variableValue = int(round(float(line[1])))
             
-            ID = ID.split("$")[1]
-            ID = ID.split("#")
-            label = ID[0]
-            direction = ID[1]
-            allowedLabels.append((label,direction))
+            if variableValue == 1:
+                ID = ID.split("$")[1]
+                ID = ID.split("#")
+                label = ID[0]
+                direction = ID[1]
+                allowedLabels.append((label,direction))
 
     for sentence in decodedSolutions:
         linkDep = {}
@@ -66,14 +70,13 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
             # So this is why I remove those links.
             originalLinks = [x for x in originalLinks if x[0] != node1 or x[1] != node2 or x[2] != layer or x[3] != label]
             
-            # direction right
-            """if direction == 0:
+            # direction left
+            if direction == 0:
                 parent = node2
                 child = node1
-            """
-            # direction left
-            #elif
-            if direction == 1:
+            
+            # direction right
+            elif direction == 1:
                 parent = node1
                 child = node2
 
@@ -82,7 +85,7 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
             else:
                 linkDep[child] = [parent]
 
-        # The rest of the links that remain have direction right
+        # The rest of the links that remain
         for link in originalLinks:
             node1 = link[0]
             node2 = link[1]
