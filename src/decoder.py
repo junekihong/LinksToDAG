@@ -3,9 +3,8 @@
 from encoder import *
 from solver import *
 from subprocess import call
-import re
 from pprint import pprint
-import os
+import re, os
 
 
 # Given a list of all the links for each sentence and a solution file, we decode the solution.

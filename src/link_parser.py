@@ -1,11 +1,10 @@
 #!/usr/bin/python
 
 from tools.cache import *
-import subprocess
+from tools.iterview import *
 from subprocess import *
-import sys
-import os
 from pprint import pprint
+import subprocess, sys, os
 
 
 class linkParser:
@@ -15,11 +14,11 @@ class linkParser:
         self.cache = cache()
 
     def parse_all(self,sentences, outputFile = "/tmp/LinksToDAG_linkparses.txt"):
-        parses = []
         output = open(outputFile, "wb")
 
-        for sentence in sentences:       
-            sentence = sentence.strip()
+        # Thanks to Tim Vieira and his arsenal for this neat loading bar visualization.
+        for x in iterview(xrange(len(sentences)), msg='Sentences Processed',every=1):
+            sentence = sentences[x].strip()
 
             # In the cache
             if self.cache.check(sentence): 
@@ -29,11 +28,7 @@ class linkParser:
                 parse = self.parse(sentence)
                 self.cache.store(sentence,parse)
 
-            #parses.append(parse)
             output.write(parse)
-
-            #print parse
-        #return parses
         output.close()
 
         
@@ -43,40 +38,28 @@ class linkParser:
     def parse(self,sentence):
 
         echo_process = Popen(["echo",sentence], stdout=PIPE)
-        linkparser_process = Popen(["link-parser", "-!graphics=0", "-!links=0", "-!echo=1", "-!postscript=1", "-!panic=0"], stdin=echo_process.stdout, stdout=PIPE)
-
+        linkparser_process = Popen(["link-parser", "-!graphics=0", "-!links=0", "-!echo=1", "-!postscript=1", "-!panic=0"], stdin=echo_process.stdout, stdout=PIPE, stderr=subprocess.PIPE)
         echo_process.stdout.close()
 
-        output = linkparser_process.communicate()[0]
-        
+        output, err = linkparser_process.communicate()        
         linkparser_process.stdout.close()
-
         return output
-
 
 
 if __name__ == "__main__":
     parser = linkParser()
-
-
     inputfile = open(sys.argv[1], "rb")
     sample = -1
 
     if len(sys.argv) > 2:
         sample = int(sys.argv[2])
     
-
     if sample == -1:
         sentences = inputfile.readlines()
     else:
-        sentences = inputfile.readlines()[:sample]
-
-    #pprint(sentences)
-
-    
+        sentences = inputfile.readlines()[:sample]    
 
     parser.parse_all(sentences)
-
 
     inputfile.close()
     parser.closeParser()

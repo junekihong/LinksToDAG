@@ -11,3 +11,5 @@ ITERATIONS=$2
 
 echo -n $ITERATIONS " " >> /tmp/LinksToDAG_times
 tail --lines 1 output_error >> /tmp/LinksToDAG_times
+
+rm -f output_error

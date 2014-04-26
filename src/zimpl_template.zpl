@@ -46,7 +46,7 @@ param maxlen := max <i,sentence> in NODE: i;                                    
 # ------------------------------------------------------------------------------
 
 var allowedLabel[POSSIBLE_LABELS];                                              # Allowed Labels
-var rlink[LINK];                                                       # Direction: 0 for left, 1 for right
+var rlink[LINK];                                                         # Direction: 0 for left, 1 for right
 var depth[NODE] >= 0;                                                           # Node depth
 var tokenslack[LINK] >= 0;                                                      # Slack
 
