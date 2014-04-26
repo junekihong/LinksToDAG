@@ -56,4 +56,6 @@ fi
 
 
 #echo "sol/links.conll" | mutt -s 
-#wc -l $1 | mutt -s "sol/links.conll" -a sol/links.conll -a sol/allowedLinks.txt -- junekihong@gmail.com
+
+wc -l $1 | mutt -s "sol/links.conll" -a sol/links.conll -a sol/allowedLinks.txt -- junekihong@gmail.com
+
