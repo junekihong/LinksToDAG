@@ -9,7 +9,7 @@ if [ $2 ]; then
 fi
 
 
-python src/linkParser.py $1 $2 2> /dev/null
+python src/link_parser.py $1 $2 2> /dev/null
 
 
 <<'BLOCK_COMMENT'

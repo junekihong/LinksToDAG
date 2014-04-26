@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from linkEdgeEncoder import *
+from encoder import *
 from linklabel_table import *
 from subprocess import call
 import os

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from cache import *
+from tools.cache import *
 import subprocess
 from subprocess import *
 import sys

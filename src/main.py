@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from linkEdgeEncoder import *
-from linkEdgeSolver import *
-from linkEdgeDecoder import *
+from encoder import *
+from solver import *
+from decoder import *
 import argparse, sys
 
 

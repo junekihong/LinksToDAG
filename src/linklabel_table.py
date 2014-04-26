@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# a hard coded table for a temporary mock-up solver.
+# This was used to help prototype the project pipeline.
 
 #label table
 lt = {}

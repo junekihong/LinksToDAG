@@ -22,12 +22,13 @@ rm -f $RUNTIMES
 
 
 typeset -i i END
-END=130
+#END=130
+END=20
 
 #for i in "${trials[@]}"
 for ((i=1;i<=$END;i++));
 do
-    bash tools/trial.sh data/mini.sentences $i
+    bash src/tools/trial.sh data/mini.sentences $i
 done
 
 
@@ -36,7 +37,7 @@ done
 
 
 #cat /tmp/LinksToDAG_times
-python src/plotter.py $RUNTIMES
+python src/tools/plotter.py $RUNTIMES
 
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from linkEdgeEncoder import *
-from linkEdgeSolver import *
+from encoder import *
+from solver import *
 from subprocess import call
 import re
 from pprint import pprint
