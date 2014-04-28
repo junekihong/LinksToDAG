@@ -14,16 +14,11 @@ set LINK := { read "$LINKFILENAME$" as "<1n, 2n, 3n, 4s, 5n>" };    # An identif
 # TODO: Slack Hierarchy 
 # Plan: (node1, node2, layer, coarseLabel, label, sentence)
 # set LINK := { read "$LINKFILENAME$" as "<1n, 2n, 3n, 4s, 5s, 6n>" };
-# set COARSE_LABELS := proj(LINK<4>)
-# set COARSE_TO_FINE := proj(LINK<4,5>)
-# param cost2[<coarse>]
 
 set LABELS := proj(LINK,<4>);                                                   # The labels of all the links.
 set DIRECTIONS := { 0, 1 };                                                     # Possible directions for a link.
 set POSSIBLE_LABELS := LABELS * DIRECTIONS;                                     # Possible (label,direction) pairs
 set NODE := proj(LINK,<1,5>) union proj(LINK,<2,5>);                            # All possible tokens for each sentence.
-
-
 
 
 # ------------------------------------------------------------------------------
@@ -34,11 +29,6 @@ param corpusSize := sum <node,sentence> in NODE: 1;#$CORPUSSIZE$;               
 param size[<label> in LABELS] := sum <i,j,layer,label,sentence> in LINK: 1;     # The number of links that have a given label. For each label.
 param tokencost[<label> in LABELS] := 100 / size[label];                        # The slack cost of a label given as a portion of size[label]
 param maxlen := max <i,sentence> in NODE: i;                                    # Maximum length of a sentence
-
-#param node_parents[<i,sentence> in NODE] := 
-#    (sum<i,j,layer,label,sentence> in LINK: 1) + 
-#    (sum<j,i,layer,label,sentence> in LINK: 1)                                     # The number of links that connect to a given node
-
 
 
 # ------------------------------------------------------------------------------
@@ -91,8 +81,8 @@ subto depth_recursive_R:
     forall <i,j,layer,label,sentence> in LINK: 
         depth[j,sentence] + maxlen*(1-rlink[i,j,layer,label,sentence]) >= depth[i,sentence] + 1;  # skip constraint on j if left link i <-- j
 
-# may need to rewrite in terms of indexed sets if the pattern matching doesn't work
-# rewritten.
+# Jason: may need to rewrite in terms of indexed sets if the pattern matching doesn't work
+# Juneki: Constraint rewritten in terms of rlink.
 subto every_token_has_parent: 
     forall <i,sentence> in NODE with i >= 1: 
         1 <= 
