@@ -4,31 +4,13 @@
 RUNTIMES="/tmp/LinksToDAG_times"
 rm -f $RUNTIMES
 
-#trials=( 1 10 25 50 75 100 125 150 175 200 )
-
-
-
-#trials=( 1 10 25 50 75 100 110 120 )
-#125 150 175 200 )
-
-#if [ $1 ]; 
-#then 
-#    trials=( $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 )
-#else
-#    trials=( 100 100 100 100 100 100 100 100 100 100 )
-#fi
-
-#trials=( 1 2 )
-
 
 typeset -i i END
-#END=130
-END=20
+END=100
 
-#for i in "${trials[@]}"
 for ((i=1;i<=$END;i++));
 do
-    bash src/tools/trial.sh data/mini.sentences $i
+    bash src/tools/trial.sh data/english_bnews_train.sentences $i
 done
 
 
@@ -41,4 +23,4 @@ python src/tools/plotter.py $RUNTIMES
 
 
 
-echo $RUNTIMES | mutt -s $END -a $RUNTIMES -- junekihong@gmail.com
+echo $RUNTIMES $END | mutt -s $END -a $RUNTIMES -- junekihong@gmail.com
