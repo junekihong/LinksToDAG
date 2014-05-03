@@ -2,10 +2,31 @@
 
 import math
 import matplotlib.pyplot as plt
-from utils import readInput
+import argparse
+import sys
 
 
-lines = readInput()
+parser = argparse.ArgumentParser(description="Plots a list of x,y points.")
+parser.add_argument("-o", "--output", dest="output", default="sol/runtimes.png",
+                    help="Specify an output file for the plot.")
+parser.add_argument("-x","--x", dest="xLabel", default="Sentences",
+                    help="Specify the x axis.")
+parser.add_argument("-y","--y", dest="yLabel", default="Run Time (seconds)", 
+                    help="Speciyf the y axis.")
+parser.add_argument("strings", nargs="*")
+
+args = parser.parse_args()
+
+
+lines = []
+for f in args.strings:
+    f = open(f)
+    f = f.readlines()
+    for line in f:
+        line = line.strip()
+        lines.append(line)
+
+
 
 Xs = []
 Ys = []
@@ -26,8 +47,8 @@ for line in lines:
 
 plt.figure()
 ax = plt.subplot(111)
-ax.set_xlabel('Sentences')
-ax.set_ylabel('Run time (seconds)')
+ax.set_xlabel(args.xLabel)
+ax.set_ylabel(args.yLabel)
 
 plt.plot(Xs,Ys)
 plt.xlim(xmin=0)
@@ -36,5 +57,7 @@ plt.ylim(ymin=0)
 
 
 #plt.show()
-plt.savefig('sol/runtimes.png', bbox_inches='tight')
+    
+
+plt.savefig(args.output, bbox_inches='tight')
 
