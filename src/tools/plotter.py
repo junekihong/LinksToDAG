@@ -35,6 +35,9 @@ Ys = []
 for line in lines:
     if not line:
         continue
+    if line[0] == "#":
+        continue
+
 
     line = line.split()
     x = float(line[0])
