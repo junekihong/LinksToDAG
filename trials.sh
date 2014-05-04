@@ -20,14 +20,16 @@ rm -rf /tmp/LinksToDAG_trial_sol/
 
 typeset -i i END
 
-END=10
-#END=60030
+#END=30
+END=60030
+INCREMENT=10
 
-
-for ((i=1;i<=$END;i++));
+for ((i=1;i<=$END;i=$((i+$INCREMENT))));
 do
     bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i
 done
+bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $END
+
 
 
 python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIME $RUNTIMES
