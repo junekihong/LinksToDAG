@@ -46,6 +46,8 @@ for line in biggest_result:
 # For each link type group, find the majority classification 
 # and then store the fraction of the link types in that group that agree with that majority.
 type_analysis = []
+marginal_denominator = 0
+marginal_numerator = 0
 for t in type_set:
     analysis = [t,"",""]
 
@@ -63,7 +65,9 @@ for t in type_set:
         analysis[1] = "LEFT"
         majority = two
     
-    analysis[2] = str(float(majority) / (one+two))
+    analysis[2] = str(majority)+"/"+str(one+two)+" =\t"+str(float(majority) / (one+two))
+    marginal_denominator += one+two
+    marginal_numerator += majority
     type_analysis.append(tuple(analysis))
 
 
@@ -78,6 +82,8 @@ type_analysis_file = "type_analysis.txt"
 f = open(result_directory+type_analysis_file, "w+")
 for t in type_analysis:
     f.write("\t".join(t)+"\n")
+
+f.write("\n# MARGINAL: "+str(marginal_numerator)+"/"+str(marginal_denominator))
 f.close()
 
 
