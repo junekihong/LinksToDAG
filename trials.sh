@@ -19,7 +19,10 @@ rm -f $RUNTIMES $TXT_RUNTIME $SOL_RUNTIME $TXT_PRECISION $SOL_PRECISION $SOL_REC
 rm -rf /tmp/LinksToDAG_trial_sol/
 
 typeset -i i END
+
 END=10
+#END=60030
+
 
 for ((i=1;i<=$END;i++));
 do
