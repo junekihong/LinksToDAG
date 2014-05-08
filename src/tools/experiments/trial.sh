@@ -5,7 +5,7 @@ ITERATIONS=$2
 
 mkdir -p /tmp/LinksToDAG_trial_sol/
 
-/usr/bin/time -f "%e" timeout 1800 ./LinksToDAG $DATA $ITERATIONS 2> output_error
+/usr/bin/time -f "%e" ./LinksToDAG $DATA $ITERATIONS 2> output_error
 
 echo -n $ITERATIONS " " >> /tmp/LinksToDAG_times
 tail --lines 1 output_error >> /tmp/LinksToDAG_times
