@@ -1,4 +1,0 @@
-#!/bin/sh
-
-
-conll_printsentence.py $*
