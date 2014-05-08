@@ -22,11 +22,12 @@ typeset -i i END
 
 #END=30
 END=60030
-INCREMENT=10
+INCREMENT=1
 
-for ((i=1;i<=$END;i=$((i+$INCREMENT))));
+for ((i=1;i<=$END;i=$((i*2))));
 do
     bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i
+    #INCREMENT=$((INCREMENT+1))
 done
 bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $END
 
