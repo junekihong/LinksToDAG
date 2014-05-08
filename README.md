@@ -3,6 +3,8 @@ LinksToDAG
 
 Convert Link Parses to a DAG
 
+
+
 Software Dependencies
 ---------------------
 
@@ -42,7 +44,7 @@ sudo apt-get install libgmp10
 
 download source from https://gmplib.org/ 
 
-./configure --prefix=/home/user/gmp/, make, make check
+./configure --prefix=/home/user/gmp/; make; make check
 
 You will need to add the include and lib directories.
 
@@ -52,6 +54,8 @@ export LIBRARY_PATH=/home/user/gmp/lib
 
 
 * Install Graphviz
+
+Optionally, our program can output all of the link parses into graphviz dotfile to be viewed as a graph.
 
 sudo apt-get install graphviz
 
