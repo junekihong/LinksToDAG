@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from tools.utils import readInput
-from linklabel_table import *
 from pprint import pprint
 
 

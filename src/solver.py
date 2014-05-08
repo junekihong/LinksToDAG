@@ -1,38 +1,8 @@
 #!/usr/bin/env python
 
 from encoder import *
-from linklabel_table import *
 from subprocess import call
 import os
-
-
-# I handcoded a few rules in the linklabel_table in order to get our naive solver.
-# This function exists mainly to give us a solver in order to test out the whole encoder-solver-decoder pipeline
-def getLinkDirections_naive(links):
-    linkDir = {}
-    
-    for i in xrange(len(links)):
-        link = links[i]
-
-        node1 = link[0]
-        node2 = link[1]
-        #level = link[2]
-        label = link[3]
-        
-        decision = childParentLookup(node1, node2, label)
-        
-        if decision == None:
-            #TODO
-            #print node1, node2, label
-            #exit(1)
-            decision = True
-
-        linkDir[tuple(link)] = decision
-
-    return linkDir
-
-
-
 
 
 def SCIP(zplFile, solutionFile = "/tmp/tempSolution"):
