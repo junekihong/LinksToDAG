@@ -3,10 +3,14 @@
 from encoder import *
 from solver import *
 from decoder import *
+from tools.cache import *
 import argparse, sys
 
 
 if __name__=="__main__":
+    cache = cache("/tmp/LinksToDAG_SCIP_cache.p")
+
+
     linksFile = "/tmp/LinksToDAG_links.txt"
     zplFile = "/tmp/LinksToDAG_links.zpl"    
     solutionFile = "/tmp/LinksToDAG_solutions.txt"
@@ -22,39 +26,58 @@ if __name__=="__main__":
     open(zplFile, 'w+').close()
     open(solutionFile, 'w+').close()
 
-    # Link Edge Encoder
-    lines = readInput()
-    (processedSentences, links) = getBatchDataFromLinkParses(lines)
-    (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
+
+    # Argument parser. To support command line flags
+    parser = argparse.ArgumentParser(description="Runs the LinksToDAG project")
+    parser.add_argument("-id", "--ID", dest="ID", default=None,
+                       help="Set the ID, this is used to cache results")
+    parser.add_argument("strings", nargs="*")
+    args = parser.parse_args()
+
+
+
+    # already in the cache
+    if args.ID != None and cache.check(args.ID):
+        print "SCIP SOLUTION FOUND IN CACHE"
+        (sentences, linkLabels, wordTags, allowedLabels, linkDeps) = cache.get(args.ID)
+    else:            
+        lines = []
+        for filename in args.strings:
+            f = open(filename)
+            f = f.readlines()
+            for line in f:
+                line = line.strip()
+                lines.append(line)
+        #lines = readInput()
+
+        # Link Edge Encoder
+        (processedSentences, links) = getBatchDataFromLinkParses(lines)
+        (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
     
-    wordTags = []
-    linkLabels = []
-    for i in xrange(len(sentences)):
-        wordTags.append(getWordTags(processedSentences[i]))
-        linkLabels.append(getLinkLabelMap(links[i]))
-        linksTXT(links[i],linksFile, i)
+        wordTags = []
+        linkLabels = []
+        for i in xrange(len(sentences)):
+            wordTags.append(getWordTags(processedSentences[i]))
+            linkLabels.append(getLinkLabelMap(links[i]))
+            linksTXT(links[i],linksFile, i)
+        
+        ZimplProgram(zplFile, linksFile, sizeOfCorpus)
+        solutionFile = SCIP(zplFile, solutionFile)
+        
+        """
+        print "SOLUTION FILE:"
+        print solutionFile
+        call(["cat", solutionFile])
+        print
+        """
+
+        (linkDeps, allowedLabels) = decodeSCIPsolution(links,solutionFile, True)
+        allowedLabels.sort()
+        cache.store(args.ID, (sentences, linkLabels, wordTags, allowedLabels, linkDeps))
 
 
-    ZimplProgram(zplFile, linksFile, sizeOfCorpus)
-    solutionFile = SCIP(zplFile, solutionFile)
 
-    """
-    print "SOLUTION FILE:"
-    print solutionFile
-    call(["cat", solutionFile])
-    print
-    """
-
-
-    open(linksConllFile, 'w+').close()
-    f = open(linksConllFile, 'a')
-
-    (linkDeps, allowedLabels) = decodeSCIPsolution(links,solutionFile, True)
-    
-    # print out the allowed labels list to standard error. Something nice for us to have.
-    allowedLabels.sort()
-
-
+    # Save the allowed links solution file.
     open(allowedLinksFile, 'w+').close()
     allowedLinks = open(allowedLinksFile, 'w')
     for allowedLabel in allowedLabels:
@@ -63,19 +86,20 @@ if __name__=="__main__":
     allowedLinks.write("\n")
     allowedLinks.close()
 
+    # Save the links conll solution file.
+    open(linksConllFile, 'w+').close()
+    linksConll = open(linksConllFile, 'w')
     for i in linkDeps:
         sentence = sentences[i]
         linkDep = linkDeps[i]
         linkLabel = linkLabels[i]
         wordTag = wordTags[i]
 
-        # Link Edge Decoder
-        #linkDep = getLinkDependencies(links, linkDir)
-
         output = conllOutput(sentence,wordTag,linkDep,linkLabel)
         #dotOutput(sentence,wordTag,linkDep,linkLabel)
         
-        f.write(output)
+        linksConll.write(output)
         
-    f.close()
+    linksConll.close()
 
+    cache.save()
