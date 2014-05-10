@@ -43,7 +43,7 @@ BLOCK_COMMENT
 if [ $2 ]; then
     python src/main.py $LINKPARSES -id $1$2
 else    
-    python src/main.py $LINKPARSES 
+    python src/main.py $LINKPARSES -id $1
 fi
 
 
