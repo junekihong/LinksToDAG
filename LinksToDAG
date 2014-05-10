@@ -9,8 +9,8 @@ if [ $2 ]; then
 fi
 
 
-
-/usr/bin/time --output=parse_time.txt python src/link_parser.py $1 $2 
+#/usr/bin/time --output=parse_time.txt 
+python src/link_parser.py $1 $2 
 
 
 <<'BLOCK_COMMENT'
@@ -40,8 +40,13 @@ BLOCK_COMMENT
 
 
 
+if [ $2 ]; then
+    python src/main.py $LINKPARSES -id $1$2
+else    
+    python src/main.py $LINKPARSES 
+fi
 
-python src/main.py $LINKPARSES
+
 #python src/linkEdgeSolver.py $LINKPARSES
 
 
