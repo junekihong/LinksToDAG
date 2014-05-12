@@ -20,10 +20,13 @@ rm -rf /tmp/LinksToDAG_trial_sol/
 
 typeset -i i END
 
+
 #END=10000
 #END=60030
 END=10000
 INCREMENT=1000
+
+
 
 for ((i=1;i<=$END;i=$((i*2))));
 do

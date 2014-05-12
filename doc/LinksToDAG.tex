@@ -14,7 +14,7 @@
 %% and that of ACL 08 by Joakim Nivre and Noah Smith
 
 \documentclass[11pt]{article}
-\usepackage{acl2014}
+\usepackage{LinksToDAG}
 \usepackage{times}
 \usepackage{url}
 \usepackage{latexsym}
@@ -31,16 +31,11 @@
 
 \title{Link Parses to Directed Acyclic Graphs}
 
-\author{Juneki Hong \\
+\author{Juneki Hong and Jason Eisner\\
   Department of Computer Science \\
   Johns Hopkins University \\
   Baltimore, MD 21218, USA \\ 
-  {\tt juneki@cs.jhu.edu} \\\And
-  Jason Eisner \\
-  Department of Computer Science \\
-  Johns Hopkins University \\
-  Baltimore, MD 21218, USA \\
-  {\tt jason@cs.jhu.edu} \\
+  {\tt \{juneki,jason\}@cs.jhu.edu} \\
 }
 
 \date{}
@@ -77,8 +72,18 @@ Link Grammars are a formalism that describes the links, or relationships between
 
 
 
+\section{ILP Encoding}
+We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. 
 
-\bibliographystyle{acl}
+\section{Conll-Link analysis}
+
+
+
+
+
+
+
+\bibliographystyle{LinksToDAG}
 \bibliography{LinksToDAG}
 
 \end{document}
