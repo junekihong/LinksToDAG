@@ -13,3 +13,8 @@ tail --lines 1 output_error >> /tmp/LinksToDAG_times
 
 cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS.txt
 rm -f output_error
+
+
+python src/tools/experiments/conll_analysis.py
+mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS.txt
+
