@@ -174,6 +174,15 @@ for linkSentence in link_results:
 
 
 
+match_percent = str(0)
+mismatch_percent = str(0)
+if final_total != 0:
+    match_percent = str(float(match_total)/final_total)
+    mismatch_percent = str(float(mismatch_total)/final_total)
+
+directional_percent = str(0)
+if mismatch_total != 0:
+    directional_percent = str(float(dir_mismatch_total)/mismatch_total)
 
 
 result= """------------------------------------------------------------
@@ -182,15 +191,15 @@ TOTALS
 
 How many conll arcs match a link. In both attachment and directionality.
 Match Total:\t\t\t"""+ str(match_total)+""" 
-Percent of all arcs:\t\t"""+ str(float(match_total)/final_total)+"""
+Percent of all arcs:\t\t"""+ match_percent +"""
 
 How many conll arcs do not match a link. In either attachment or directionality.
 Mismatch Total:\t\t\t"""+str(mismatch_total)+"""\t
-Percent of all arcs:\t\t"""+ str(float(mismatch_total)/final_total)+"""
+Percent of all arcs:\t\t"""+ mismatch_percent +"""
 
 How many conll arcs do not match a link in only directionality?
 Directional Mismatch Total:\t"""+str(dir_mismatch_total)+"""
-Percent of all mismatches:\t"""+str(float(dir_mismatch_total)/mismatch_total)+"""
+Percent of all mismatches:\t"""+ directional_percent +"""
 
 
 How many links attach to a word when there is already a matching link to the conll data. How many "extra" arcs.

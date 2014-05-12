@@ -20,17 +20,26 @@ rm -rf /tmp/LinksToDAG_trial_sol/
 
 typeset -i i END
 
-#END=30
-END=60030
-INCREMENT=1
+#END=10000
+#END=60030
+END=10000
+INCREMENT=1000
 
 for ((i=1;i<=$END;i=$((i*2))));
 do
     bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i
     #INCREMENT=$((INCREMENT+1))
 done
-bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $END
 
+
+# Lets sample the last section more densely.
+i=$((i/2))
+for ((i=$((i/2));i<=$END;i=$((i+$INCREMENT))));
+do
+    bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i
+done
+
+bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $END
 
 
 python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIME $RUNTIMES
@@ -38,7 +47,7 @@ python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIM
 
 
 
-python src/tools/experiments/analysis.py
+python src/tools/experiments/type_analysis.py
 python src/tools/plotter.py -x "Sentences" -y "Precision" -o $SOL_PRECISION $TXT_PRECISION
 python src/tools/plotter.py -x "Sentences" -y "Recall" -o $SOL_RECALL $TXT_RECALL
 

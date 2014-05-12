@@ -11,7 +11,7 @@ class linkParser:
     """ Will call the link-parser on a sentence and output the result"""
     
     def __init__(self):
-        self.cache = cache()
+        self.cache = cache("/tmp/LinksToDAG_linkparses_cache.p")
 
     def parse_all(self,sentences, outputFile = "/tmp/LinksToDAG_linkparses.txt"):
         output = open(outputFile, "wb")

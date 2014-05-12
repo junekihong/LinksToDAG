@@ -5,14 +5,14 @@ ITERATIONS=$2
 
 mkdir -p /tmp/LinksToDAG_trial_sol/
 
-/usr/bin/time -f "%e" ./LinksToDAG $DATA $ITERATIONS 2> output_error
+/usr/bin/time -f "%e" -o runtime ./LinksToDAG $DATA $ITERATIONS #2> output_error
 
 echo -n $ITERATIONS " " >> /tmp/LinksToDAG_times
-tail --lines 1 output_error >> /tmp/LinksToDAG_times
+tail --lines 1 runtime >> /tmp/LinksToDAG_times
 
 
 cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS.txt
-rm -f output_error
+rm -f runtime
 
 
 python src/tools/experiments/conll_analysis.py
