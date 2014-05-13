@@ -34,9 +34,9 @@ do
     bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i
 done
 
+
 <<BLOCK_COMMENT
-# Sampling the last section more densely.
-i=$((i/2))
+# Lets sample the last section more densely.
 for ((i=$((i/2));i<=$END;i=$((i+$INCREMENT))));
 do
     bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i

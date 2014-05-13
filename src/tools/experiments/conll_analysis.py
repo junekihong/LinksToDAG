@@ -57,23 +57,16 @@ for line in f:
 
 
 
-def analysis(conlls, links):
-    # How many links match the conll corpus
+# Analysis on the matches.
+def analysis_match(conlls, links):
     matches = 0
-    mismatches = 0
     extras = 0
     total = 0
-
     label_match = {}
     label_match_count = {}
-
     label_extra_count = {}
 
-    # Directionality mismatch
-    dir_miss = 0
-    dir_miss_labels = {}
-    dir_miss_labels_count = {}
-
+    total = len(conlls)
     for conll,link in zip(conlls, links):
         conll = conll.split()
         link = link.split()
@@ -84,45 +77,97 @@ def analysis(conlls, links):
         link_labels = link[7].split(",")
 
         if conll_head not in link_heads:
-            head = int(conll[6])-1
+            continue
 
-            candidate = links[head]
-            candidate = candidate.split()
-            candidate_heads = candidate[6].split(",")
-            candidate_labels = candidate[7].split(",")
-
-            index = conll[0]
-            
-            for head,label in zip(candidate_heads,candidate_labels):
-                if head == index:
-                    dir_miss += 1
-                    dir_miss_labels[conll_label] = dir_miss_labels.get(conll_label,set([])).union(set([label]))
-                    dir_miss_labels_count[(conll_label,label)] = dir_miss_labels_count.get((conll_label,label),0)+1
-
-            mismatches += 1
-        else:
-            for head,label in zip(link_heads, link_labels):
-                if head == conll_head:
-                    #print conll[0], conll[1], head
-                    matches += 1 
-                    label_match[conll_label] = label_match.get(conll_label, set([])).union(set([label]))
-                    label_match_count[(conll_label,label)] = label_match_count.get((conll_label,label), 0) + 1
-                else:
-                    extras += 1
-                    #label_extra = label_extra.union(set([label]))
-                    label_extra_count[label] = label_extra_count.get(label, 0) + 1
-
-        total += 1
+        for head,label in zip(link_heads, link_labels):
+            if head == conll_head:
+                matches += 1 
+                label_match[conll_label] = label_match.get(conll_label, set([])).union(set([label]))
+                label_match_count[(conll_label,label)] = label_match_count.get((conll_label,label), 0) + 1
+            else:
+                extras += 1
+                label_extra_count[label] = label_extra_count.get(label, 0) + 1
 
     match_data = (matches, label_match, label_match_count)
+    extra_data = (extras, label_extra_count)
+
+    return (match_data, extra_data, total)
+
+
+# Analysis on the mismatches.
+def analysis_mismatch(conlls, links):
+    mismatches = 0
+
+    # Directionality mismatch
+    dir_miss = 0
+    dir_miss_labels = {}
+    dir_miss_labels_count = {}
+
+    mismatch_extras = 0
+    mismatch_extra_count = {}
+
+    for conll,link in zip(conlls, links):
+        conll = conll.split()
+        link = link.split()
+
+        index = conll[0]
+        conll_head = conll[6]
+        link_heads = link[6].split(",")
+        conll_label = conll[7]
+        link_labels = link[7].split(",")
+
+        if conll_head not in link_heads:
+            mismatches += 1
+            head = int(conll[6])-1
+
+            candidate = links[head].split()
+            candidate_heads = candidate[6].split(",")
+            candidate_labels = candidate[7].split(",")
+            
+
+            if index not in candidate_heads:
+                continue
+
+            dir_miss += 1
+
+            # Iterate through the head index of the conll arc. Looking for the link pointing in the wrong direction
+            for head,label in zip(candidate_heads,candidate_labels):
+                if head == index:
+                    dir_miss_labels[conll_label] = dir_miss_labels.get(conll_label,set([])).union(set([label]))
+                    dir_miss_labels_count[(conll_label,label)] = dir_miss_labels_count.get((conll_label,label),0)+1
+                    break
+
+
+            for head,label in zip(link_heads, link_labels):
+                mismatch_extras += 1
+                mismatch_extra_count[label] = mismatch_extra_count.get(label, 0) + 1
+
+
 
     dir_miss_data = (dir_miss, dir_miss_labels, dir_miss_labels_count)
-    mismatch_data = (mismatches, dir_miss_data)
+    mismatch_extra_data = (mismatch_extras, mismatch_extra_count)    
+    mismatch_data = (mismatches, dir_miss_data, mismatch_extra_data)
+    
+    return mismatch_data
 
-    extra_data = (extras, label_extra_count)
-    return (match_data, mismatch_data, extra_data, total)
 
 
+# All the analysis put together.
+# Plus the extra links
+def analysis(conlls, links):
+    
+    # How many links match the conll corpus
+    (match_data, extra_data, total) = analysis_match(conlls, links)
+    (matches, label_match, label_match_count) = match_data
+    (extras, label_extra_count) = extra_data
+
+    # Mismatch data. Including directionality mismatches
+    mismatch_data = analysis_mismatch(conlls,links)
+    (mismatches, dir_miss_data, mismatch_extra_data) = mismatch_data
+    (dir_miss, dir_miss_labels, dir_miss_labels_count) = dir_miss_data
+    (mismatch_extras, mismatch_extra_count) = mismatch_extra_data
+    
+    return (match_data, mismatch_data, extra_data, mismatch_extra_data, total)
 
 
 
@@ -138,21 +183,29 @@ dir_mismatch_total = 0
 mismatch_directionality = {}
 mismatch_directionality_counts = {}
 
+mismatch_extra_total = 0
+mismatch_extra_counts = {}
+
 for linkSentence in link_results:
     #print link_results[linkSentence]
 
     if linkSentence in conll_results:
         
-        (match_data, mismatch_data, extra_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
+        (match_data, mismatch_data, extra_data, mismatch_extra_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
+
         (matches, label_match, label_match_count) = match_data
-        (mismatches, dir_miss_data) = mismatch_data
+        (extras, label_extra_count) = extra_data
+
+        (mismatches, dir_miss_data, mismatch_extra_data) = mismatch_data
         (dir_miss, dir_miss_labels, dir_miss_labels_count) = dir_miss_data
 
-        (extras, label_extra_count) = extra_data
+        (mismatch_extras, mismatch_extra_count) = mismatch_extra_data
+
 
         match_total += matches
         mismatch_total += mismatches
         dir_mismatch_total += dir_miss
+        mismatch_extra_total += mismatch_extras
 
         extra_total += extras
         final_total += total
@@ -170,7 +223,9 @@ for linkSentence in link_results:
 
         for pair in dir_miss_labels_count:
             mismatch_directionality_counts[pair] = mismatch_directionality_counts.get(pair,0) + dir_miss_labels_count[pair]
-
+        
+        for label in mismatch_extra_count:
+            mismatch_extra_counts[label] = mismatch_extra_counts.get(label,0) + mismatch_extra_count[label]
 
 
 
@@ -190,23 +245,25 @@ TOTALS
 ------------------------------------------------------------
 
 How many conll arcs match a link. In both attachment and directionality.
-Match Total:\t\t\t"""+ str(match_total)+""" 
+Match Total:\t\t\t\t"""+ str(match_total)+""" 
 Percent of all arcs:\t\t"""+ match_percent +"""
 
+How many links attach to a word when there is already a matching link to the conll data. How many "extra" arcs.
+Extra Total:\t\t\t\t"""+str(extra_total)+"""
+
 How many conll arcs do not match a link. In either attachment or directionality.
-Mismatch Total:\t\t\t"""+str(mismatch_total)+"""\t
+Mismatch Total:\t\t\t\t"""+str(mismatch_total)+"""\t
 Percent of all arcs:\t\t"""+ mismatch_percent +"""
 
 How many conll arcs do not match a link in only directionality?
 Directional Mismatch Total:\t"""+str(dir_mismatch_total)+"""
 Percent of all mismatches:\t"""+ directional_percent +"""
 
-
-How many links attach to a word when there is already a matching link to the conll data. How many "extra" arcs.
-Extra Total:\t\t\t"""+str(extra_total)+"""
+How many other links attach to a word when there is a directional mis-matching link to the conll data ?
+Directional Mismatch Extra Total:\t"""+str(mismatch_extra_total)+"""
 
 How many conll arcs in total.
-Final Total:\t\t\t""" +str(final_total)+"""
+Final Total:\t\t\t\t""" +str(final_total)+"""
 
 ------------------------------------------------------------
 MATCHES
@@ -275,6 +332,21 @@ for pair in pairs:
 result += "\n"
 
 
+result += """------------------------------------------------------------
+THE EXTRA LINKS IN THE DIRECTIONAL MISMATCH CASES
+------------------------------------------------------------
+Of the cases where the links had different directionality, what are the "extra" links?
+"""
+mismatch_extras = list(mismatch_extra_counts.keys())
+mismatch_extras.sort()
+
+for mismatch_extra in mismatch_extras:
+    result += str(mismatch_extra)+":\t"
+    temp = str(mismatch_extra_counts[mismatch_extra])
+    result += temp+"\n"
+result += "\n"
+
+print mismatch_extra_total
 
 f = open(ANALYSIS_FILE, "w+")
 f.write(result)

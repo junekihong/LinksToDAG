@@ -8,36 +8,7 @@ if [ $2 ]; then
     COUNTER=1
 fi
 
-
-#/usr/bin/time --output=parse_time.txt 
-python src/link_parser.py $1 $2 
-
-
-<<'BLOCK_COMMENT'
-while read line; do
-    #echo $line 1>&2
-    #echo $line | link-parser -\!echo=0 2> /dev/null
-
-    # TODO. Handle parses in panic mode. In other words, handle disconnected graphs. Turning panic mode off for now.
-    echo $line | link-parser -\!graphics=0 -\!links=0 -\!echo=1 -\!postscript=1 -\!panic=0 2> /dev/null >> $LINKPARSES
-
-
-    if [ $? != 0 ]; then
-        exit
-    fi
-
-
-    if [ $2 ]; then
-        if [ $COUNTER -ge $2 ]; then
-            break
-        else
-            COUNTER=$((COUNTER+1))
-        fi
-    fi
-
-done < $1
-BLOCK_COMMENT
-
+python src/link_parser.py $1 $2 $3
 
 
 if [ $2 ]; then
