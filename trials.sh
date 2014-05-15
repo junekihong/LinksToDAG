@@ -1,5 +1,22 @@
 #!/bin/sh
 
+typeset -i i END
+
+
+#END=10000
+#END=60030
+END=2
+#INCREMENT=1
+
+DATA="data/english_bnews_train.sentences"
+if [ $1 ]; then
+    DATA=$1
+fi
+LANGUAGE=""
+if [ $2 ]; then
+    LANGUAGE=$2
+fi
+
 
 RUNTIMES="/tmp/LinksToDAG_times"
 SOL_RUNTIME="sol/runtimes.png"
@@ -19,19 +36,12 @@ TYPE_ANALYSIS=$TYPE_AGREEMENT"type_analysis.txt"
 rm -f $RUNTIMES $TXT_RUNTIME $SOL_RUNTIME $TXT_PRECISION $SOL_PRECISION $SOL_RECALL
 rm -rf /tmp/LinksToDAG_trial_sol/
 
-typeset -i i END
-
-
-#END=10000
-#END=60030
-END=10000
-INCREMENT=1000
 
 CONLL_ANALYSIS="sol/conll_analysis/conll_analysis_"$END".txt"
 
 for ((i=1;i<=$END;i=$((i*2))));
 do
-    bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $i
+    bash src/tools/experiments/trial.sh $DATA $i $LANGUAGE
 done
 
 
@@ -43,7 +53,7 @@ do
 done
 BLOCK_COMMENT
 
-bash src/tools/experiments/trial.sh data/english_bnews_train.sentences $END
+bash src/tools/experiments/trial.sh $DATA $END $LANGUAGE
 
 
 python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIME $RUNTIMES

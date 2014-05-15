@@ -11,6 +11,7 @@ fi
 python src/link_parser.py $1 $2 $3
 
 
+
 if [ $2 ]; then
     python src/main.py $LINKPARSES -id $1$2
 else    

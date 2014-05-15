@@ -9,8 +9,10 @@ def getDataFromLinkParse(lines):
     #data format: (index1, index2, layer, label)
     links = []
 
+    #pprint(lines)
+
     # get rid of the beginning statements
-    i = 0
+    i = 2
     while True:
         line = lines[i].split()
         if line[0] == "linkparser>":
@@ -18,15 +20,23 @@ def getDataFromLinkParse(lines):
         i = i + 1
     lines = lines[i:]
 
+
+
     sentence = ""
     processedSentence = []
     pSentFlag = False
     linkFlag = False
 
+    emptyStringCounter = 0
     for line in lines:
         if not line:
-            break
+            emptyStringCounter += 1
 
+            # Take at most 2 empty strings, and then stop parsing the links.
+            if emptyStringCounter == 2:
+                break
+            else:
+                continue
         
         # extract the original sentence. Populate the corpus.
         if line.find("linkparser>") == 0:
@@ -62,7 +72,7 @@ def getDataFromLinkParse(lines):
     for i in xrange(len(links)):
         links[i] = links[i].strip("[]").split()
         links[i][3] = links[i][3].strip("()")
-        
+
     return (processedSentence, links)
 
 
@@ -71,17 +81,24 @@ def getBatchDataFromLinkParses(lines):
     #sentences = []
     processedSentences = []
     linkData = []
-    
+
+ 
+
     i = 0
+    temp = 0
     for j in xrange(len(lines)):
-        if not lines[j]:
+
+        if lines[j] == "linkparser> Bye.":
             singleParse = lines[i:j]
+            
             (processedSentence, links) = getDataFromLinkParse(singleParse)
             
-            #sentences.append(sentence)
+                #sentences.append(sentence)
             processedSentences.append(processedSentence)
             linkData.append(links)
             i = j+1
+
+        
     return (processedSentences, linkData)
 
 
@@ -92,11 +109,13 @@ def getSentencesFromProcessedSentences(processedSentences):
     sentences = []    
     corpus = {}
     for processed in processedSentences:
+        
         # Get rid of LEFT-WALL
         processed = processed[1:]
         
         for i in xrange(len(processed)):
-            if processed[i][0] == "[" and processed[i][-1] == "]":
+
+            if not processed[i] or (processed[i][0] == "[" and processed[i][-1] == "]"):
                 continue
             index = processed[i].rfind(".")
             
@@ -124,7 +143,7 @@ def getWordTags(processedSentence):
     wordTag = {}
     i = 0
     for i in xrange(len(processedSentence)):
-        if processedSentence[i][0] == "[" and processedSentence[i][-1] == "]":
+        if not processedSentence[i] or (processedSentence[i][0] == "[" and processedSentence[i][-1] == "]"):
             continue
 
         index = processedSentence[i].rfind(".")

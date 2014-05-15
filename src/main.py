@@ -31,11 +31,14 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Runs the LinksToDAG project")
     parser.add_argument("-id", "--ID", dest="ID", default=None,
                        help="Set the ID, this is used to cache results")
+    #parser.add_argument("-lang","--language", dest="language", default="en"
+    #                    help="Set the language that we will parse in")
     parser.add_argument("strings", nargs="*")
     args = parser.parse_args()
 
 
 
+    # TODO
     # already in the cache
     if args.ID != None and cache.check(args.ID):
         print "SCIP SOLUTION FOUND IN CACHE"
@@ -48,7 +51,7 @@ if __name__=="__main__":
             for line in f:
                 line = line.strip()
                 lines.append(line)
-        #lines = readInput()
+
 
         # Link Edge Encoder
         (processedSentences, links) = getBatchDataFromLinkParses(lines)

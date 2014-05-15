@@ -34,7 +34,7 @@ class linkParser:
                 parse = self.parse(sentence)
                 self.cache.store(ID,parse)
 
-            print parse
+            #print parse
 
             output.write(parse)
         output.close()
@@ -71,6 +71,7 @@ if __name__ == "__main__":
         sentences = inputfile.readlines()
     else:
         sentences = inputfile.readlines()[:sample]    
+
 
 
     

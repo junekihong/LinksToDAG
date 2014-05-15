@@ -346,7 +346,7 @@ for mismatch_extra in mismatch_extras:
     result += temp+"\n"
 result += "\n"
 
-print mismatch_extra_total
+#print mismatch_extra_total
 
 f = open(ANALYSIS_FILE, "w+")
 f.write(result)
