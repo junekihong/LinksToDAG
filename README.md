@@ -18,7 +18,7 @@ sudo apt-get install link-grammar
 
 Download the source at http://www.abisource.com/projects/link-grammar/
 
-configure --prefix=/home/user/link-grammar/, make, make install
+./configure --prefix=/home/user/link-grammar/; make; make install; ldconfig
 
 add the binary in the link-grammar/bin directory to the PATH environment variable, or make a symbolic link using ln -s.
 
