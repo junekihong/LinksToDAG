@@ -4,8 +4,8 @@ typeset -i i END
 
 
 #END=10000
-#END=60030
-END=100
+END=60030
+#END=100
 #INCREMENT=1
 
 SENTENCES="data/english_bnews_train.sentences"
@@ -40,7 +40,6 @@ TYPE_ANALYSIS=$TYPE_AGREEMENT"type_analysis.txt"
 
 rm -f $RUNTIMES $TXT_RUNTIME $SOL_RUNTIME $TXT_PRECISION $SOL_PRECISION $SOL_RECALL
 rm -rf /tmp/LinksToDAG_trial_sol/
-
 
 CONLL_ANALYSIS="sol/conll_analysis/conll_analysis_"$END".txt"
 
