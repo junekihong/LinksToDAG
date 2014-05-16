@@ -5,6 +5,9 @@ clean_cache_SCIP:
 clean_cache_linkparses:
 	rm -f /tmp/LinksToDAG_linkparses_cache.p
 
+clean: clean_cache_SCIP clean_cache_linkparses
+
+
 
 # Paper
 paper:
