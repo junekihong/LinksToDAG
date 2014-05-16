@@ -9,7 +9,7 @@ def getDataFromLinkParse(lines):
     #data format: (index1, index2, layer, label)
     links = []
 
-    #pprint(lines)
+    #pprint(lines) 
 
     # get rid of the beginning statements
     i = 2
@@ -21,6 +21,14 @@ def getDataFromLinkParse(lines):
     lines = lines[i:]
 
 
+
+    # Get rid of the last couple of lines because its just junk to us.
+    # We don't want to process the "Press RETURN for the next linkage" message
+    endString = "Press RETURN for the next linkage."
+    if endString in lines:
+        index = lines.index(endString)
+        lines = lines[:index-1]
+    
 
     sentence = ""
     processedSentence = []
@@ -38,6 +46,9 @@ def getDataFromLinkParse(lines):
             else:
                 continue
         
+
+        
+
         # extract the original sentence. Populate the corpus.
         if line.find("linkparser>") == 0:
             sentence = (line[len("linkparser>"):]).strip()
