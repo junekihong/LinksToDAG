@@ -146,6 +146,7 @@ def conllOutput(sentence, wordTag, linkDep, linkLabel):
     output = ""
 
     sentence = sentence.split()
+
     i = 1
     while i < len(sentence)+1:
         parents = []

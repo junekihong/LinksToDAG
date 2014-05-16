@@ -34,8 +34,6 @@ class linkParser:
                 parse = self.parse(sentence)
                 self.cache.store(ID,parse)
 
-            #print parse
-
             output.write(parse)
         output.close()
 

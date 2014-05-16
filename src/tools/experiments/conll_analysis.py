@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os
+import sys, os
 from pprint import pprint
 
 CONLL_DIR = "data/"
@@ -9,10 +9,14 @@ SOL_DIR = "sol/"
 CONLL_LOC = CONLL_DIR+"english_bnews_train.conll"
 SOL_LOC = SOL_DIR+"links.conll"
 
+if len(sys.argv) > 2:
+    CONLL_LOC = sys.argv[2]
+
 ANALYSIS_DIR = "sol/conll_analysis/"
 if not os.path.exists(ANALYSIS_DIR):
     os.makedirs(ANALYSIS_DIR)
 ANALYSIS_FILE = ANALYSIS_DIR+"conll_analysis.txt"
+
 
 
 # The result maps will map a sentence to its conll representation.
@@ -25,13 +29,20 @@ f = open(CONLL_LOC)
 f = f.readlines()
 sentence = []
 conll = []
+
 for line in f:
     line = line.strip()
+
     if not line:
-        conll_results[" ".join(sentence)] = tuple(conll)
+        # The sentence is stored as lower case, because link-parser will sometimes lowercase the words that it does not know.
+        ID = " ".join(sentence)
+        ID = ID.lower()
+        
+        conll_results[ID] = tuple(conll)
         sentence = []
         conll = []
     else:
+
         conll.append(line)
         word = line.split()[1]
         sentence.append(word)
@@ -43,15 +54,26 @@ sentence = []
 conll = []
 for line in f:
     line = line.strip()
+    #print line
+    
     if not line:
-        link_results[" ".join(sentence)] = tuple(conll)
+        # The sentence is stored as lower case.
+        ID = " ".join(sentence)
+        ID = ID.lower()
+        link_results[ID] = tuple(conll)
         sentence = []
         conll = []
     else:
         conll.append(line)
         word = line.split()[1]
-        
-        # Get rid of the [] brackets around words that the link-parser could not attach.
+            
+        # Remove the [!] at the end of words that link parser could not recognize
+        index = -1
+        index = word.rfind("[!]")
+        if index != -1:
+            word = word[:(index)]
+
+        # Get rid of the [] brackets around words that the link-parser could not attach.        
         word = word.strip("[]")
         sentence.append(word)
 
@@ -59,6 +81,9 @@ for line in f:
 
 # Analysis on the matches.
 def analysis_match(conlls, links):
+    #pprint(conlls)
+    #pprint(links)
+
     matches = 0
     extras = 0
     total = 0
@@ -186,8 +211,18 @@ mismatch_directionality_counts = {}
 mismatch_extra_total = 0
 mismatch_extra_counts = {}
 
+
+
+
+
 for linkSentence in link_results:
-    #print link_results[linkSentence]
+
+
+    #print linkSentence.lower()
+    #pprint(link_results[linkSentence])
+
+
+    #print conll_results.get(linkSentence, None)
 
     if linkSentence in conll_results:
         

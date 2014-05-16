@@ -56,6 +56,7 @@ if __name__=="__main__":
         # Link Edge Encoder
         (processedSentences, links) = getBatchDataFromLinkParses(lines)
         (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
+
     
         wordTags = []
         linkLabels = []
@@ -75,6 +76,7 @@ if __name__=="__main__":
         """
 
         (linkDeps, allowedLabels) = decodeSCIPsolution(links,solutionFile, True)
+        
         allowedLabels.sort()
         cache.store(args.ID, (sentences, linkLabels, wordTags, allowedLabels, linkDeps))
 
@@ -100,7 +102,8 @@ if __name__=="__main__":
 
         output = conllOutput(sentence,wordTag,linkDep,linkLabel)
         #dotOutput(sentence,wordTag,linkDep,linkLabel)
-        
+
+
         linksConll.write(output)
         
     linksConll.close()

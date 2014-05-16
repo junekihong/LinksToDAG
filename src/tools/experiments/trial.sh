@@ -1,12 +1,13 @@
 #!/bin/sh
 mkdir -p /tmp/LinksToDAG_trial_sol/
 
-DATA=$1
-ITERATIONS=$2
-LANGUAGE=$3
+SENTENCES=$1
+CONLL=$2
+ITERATIONS=$3
+LANGUAGE=$4
 
 
-/usr/bin/time -f "%e" -o runtime ./LinksToDAG $DATA $ITERATIONS $LANGUAGE
+/usr/bin/time -f "%e" -o runtime ./LinksToDAG $SENTENCES $ITERATIONS $LANGUAGE
 
 
 
@@ -23,15 +24,15 @@ tail --lines 1 runtime >> /tmp/LinksToDAG_times
 
 
 
-if [ $3 ]; then
+if [ $LANGUAGE ]; then
+
     cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS\_$LANGUAGE.txt
-    
-    python src/tools/experiments/conll_analysis.py
+    python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL $LANGUAGE
     mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS\_$LANGUAGE.txt
 else
     cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS.txt
     
-    python src/tools/experiments/conll_analysis.py
+    python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL
     mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS.txt
 fi
 

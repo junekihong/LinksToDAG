@@ -112,19 +112,21 @@ def getSentencesFromProcessedSentences(processedSentences):
         
         # Get rid of LEFT-WALL
         processed = processed[1:]
-        
+
         for i in xrange(len(processed)):
 
             if not processed[i] or (processed[i][0] == "[" and processed[i][-1] == "]"):
                 continue
             index = processed[i].rfind(".")
-            
-            if index != -1:
+ 
+
+            if index != -1 and len(processed[i]) > 1:
                 processed[i] = processed[i][:index]
                 index = processed[i].rfind("[")
                 index2 = processed[i].rfind("]")
                 if index != -1 and index2 != -1 and index2 > index:
                     processed[i] = processed[i][:index]
+
 
         sentence =" ".join(processed)
         sentences.append(sentence)
