@@ -10,12 +10,6 @@ Software Dependencies
 
 * Install the link grammar parser
 
-**If you have sudo:**
-
-sudo apt-get install link-grammar
-
-**If you don't have sudo:**
-
 Download the source at http://www.abisource.com/projects/link-grammar/
 
 ./configure --prefix=/home/user/link-grammar/; make; make install; ldconfig
