@@ -18,6 +18,11 @@
 \usepackage{times}
 \usepackage{url}
 \usepackage{latexsym}
+\usepackage{amsmath}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
 
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{soul}
@@ -29,7 +34,7 @@
 \newcommand{\NoteJH}[1]{\NoteSigned{JH}{YellowGreen}{#1}}
 
 
-\title{Link Parses to Directed Acyclic Graphs}
+\title{Deriving Multi-headed Planar Dependency Parses from Link Grammar Parses}
 
 \author{Juneki Hong and Jason Eisner\\
   Department of Computer Science \\
@@ -45,40 +50,98 @@
 
 \begin{abstract}
 
-We will show that any legal link grammar parse is a connected DAG, with all of the nodes reachable from the root. Every undirected edge in a link grammar parse can be assigned directionality, by specifying the task as an ILP problem given the constraints of acyclicity, connectedness, and the link grammar rules described from a dictionary.
+% Copied from the google doc
+There has been recent theoretical work on multi-headed versions of dependency grammar (cite). Such formalisms can be more syntactically and semantically expressive. However, there aren't any corpora at present (check this) except for Buch-Kromann's work on Danish (cite), so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate. To fill this gap, we observe that link grammar produces parses that are similar to multi-headed planar dependency parses except that the links are undirected. We use Integer Linear Programming to assign consistent directions to the links in a corpus of NNN parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Arabic, and ... (what statistics does it use?). We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences. We also report ...
 
 \end{abstract}
 
 
+
+
 \section{Introduction}
 
-\TODO 
-% Why would someone be interested in reading this paper?
 
 
-This can be solved as an Integer Linear program. Encoded in the Zimpl little language \cite{Koch2004}. 
-
-
-\section{Previous Work}
-
-\TODO
+Dependency Parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link Parsing in contrast produces a planar graph with undirected edges, where every edge has a label. The labels describe the relationship between two constituents in a parse, and in this paper we will analyze whether this includes dependencies as well. In order to learn the directional dependencies within the Link edge labels we will use Integer Linear Programming, encoding the problem in the Zimpl little language \cite{Koch2004}. 
 
 
 
 \section{Link Grammars}
 
-Link Grammars are a formalism that describes the links, or relationships between the constituents \cite{SleatorTemperly91}. They are represented as 
+Link Grammars are a formalism that describes the links, or relationships between the constituents \cite{SleatorTemperly91}. 
+
+
+We ran the link parser on the english bnews corpus sentences \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly NNN\% of the corpus.}
+
+
+The link grammar on which the link-parser makes its linking decisions based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the link grammar using an ILP. This approach allows us to analyze any link grammar dictionary other than English.
+
+
+\section{Integer Linear Programming}
+
+
+
+We formulated the ILP to assign directional dependencies to a link grammar parse such that it is a connected DAG, with all of the nodes reachable from the root.
+
+
+The ILP would solve it
+... given certain constraints.
 
 
 
 
-\section{ILP Encoding}
-We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. 
+\subsection{Constraints}
+
+The constraints were
+acyclicity and connectedness
+
+
+\subsection{Slack Hierarchy}
+
+
+In order to encourage the same link types to align similarly with each other,
+we came up with a slack hierarchy.
+
+
+
+
+\begin{algorithm}
+\caption{ILP Encoding}\label{ILP}
+\begin{algorithmic}[1]
+%\Procedure{MyProcedure}{}
+
+\State $\text{min} \sum_{l \in labels} allowed_L(l) + allowed_R(l)$
+\State $\text{subject to}$
+
+%\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\subsection{Stability of Results}
+
+
+
+
+\section{Other languages}
+
 
 \section{Conll-Link analysis}
 
 
 
+
+\section{Related Work}
+
+\TODO {abc} def
+
+
+
+\section{Results}
+
+
+\section{Discussion}
 
 
 
