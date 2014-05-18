@@ -79,28 +79,21 @@ The link grammar on which the link-parser makes its linking decisions based on a
 
 \section{Integer Linear Programming}
 
-
-
 We formulated the ILP to assign directional dependencies to a link grammar parse such that it is a connected DAG, with all of the nodes reachable from the root.
 
+The ILP chooses whether to set a link type to be assigned left, right, or both. For this, two label\_direction variables were made for each link type that appears in the parses, corresponding to whether all of the $l$ link edges were to be set to go left, right, or both. Because we assign a directionality to every link type, at least one of these variables must be set to true.
 
-The ILP would solve it
-... given certain constraints.
+For example, setting the variables $$l_{LEFT} = TRUE, l_{RIGHT} = FALSE$$ would mean that the directional dependency of all links with label $l$ would be set to $LEFT$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
 
-
-
-
-\subsection{Constraints}
-
-The constraints were
-acyclicity and connectedness
 
 
 \subsection{Slack Hierarchy}
 
+We introduced slack on the directional dependency variable tokens such that link types were allowed to deviate from the majority up to (1\% ?) of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for the possibility that both directions could still be assigned.
 
-In order to encourage the same link types to align similarly with each other,
-we came up with a slack hierarchy.
+\TODO{} We also introduced slack on the link types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack places a prior on rare or never-before seen link types to be assigned in the same way as other similar link types.
+
+This slack hierarchy gave the ILP the flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
 
 
 
@@ -120,7 +113,10 @@ we came up with a slack hierarchy.
 
 
 \subsection{Stability of Results}
+We tested to see how the solution changed as we increased the number of processed sentences. Taking the largest run as the answer key, we analyzed how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run, and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 
+
+\includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
 
 
 
