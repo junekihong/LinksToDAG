@@ -45,7 +45,11 @@ for line in lines:
     
     Xs.append(x)
     Ys.append(y)
-    
+
+
+# Get the minimum, maximum X values
+xmin = 0
+xmax = max(Xs)
 
 
 plt.figure()
@@ -54,7 +58,7 @@ ax.set_xlabel(args.xLabel)
 ax.set_ylabel(args.yLabel)
 
 plt.plot(Xs,Ys)
-plt.xlim(xmin=0)
+plt.xlim(xmin, xmax)
 plt.ylim(ymin=0)
 
 
