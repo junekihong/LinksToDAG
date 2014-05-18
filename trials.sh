@@ -58,6 +58,9 @@ python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIM
 
 
 python src/tools/experiments/type_analysis.py 
+cat $TXT_PRECISION | sort -V > temp; mv temp $TXT_PRECISION
+cat $TXT_RECALL | sort -V > temp; mv temp $TXT_RECALL
+
 python src/tools/plotter.py -x "Sentences" -y "Precision" -o $SOL_PRECISION $TXT_PRECISION
 python src/tools/plotter.py -x "Sentences" -y "Recall" -o $SOL_RECALL $TXT_RECALL
 
