@@ -52,6 +52,10 @@ if [ $i -ne $END -a $((i/2)) -ne $END ]; then
     bash src/tools/experiments/trial.sh $SENTENCES $CONLL $END $LANGUAGE
 fi
 
+
+
+
+
 python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIME $RUNTIMES
 
 
@@ -66,4 +70,4 @@ python src/tools/plotter.py -x "Sentences" -y "Recall" -o $SOL_RECALL $TXT_RECAL
 
 
 
-#echo $RUNTIMES $END | mutt -s $END -a $RUNTIMES -a $TXT_PRECISION -a $TXT_RECALL -a $TYPE_ANALYSIS -a $CONLL_ANALYSIS -- junekihong@gmail.com
+echo $RUNTIMES $END | mutt -s $END -a $RUNTIMES -a $TXT_PRECISION -a $TXT_RECALL -a $TYPE_ANALYSIS -a $CONLL_ANALYSIS -- junekihong@gmail.com
