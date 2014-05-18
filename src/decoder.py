@@ -19,7 +19,7 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
 
 
     for line in lines:
-        if line.find("rlink#") == 0:
+        if line.find("rLink#") == 0:
             line = line.split()
             ID = line[0]
             direction = int(round(float(line[1])))
