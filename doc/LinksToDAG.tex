@@ -34,6 +34,8 @@
 \newcommand{\NoteJH}[1]{\NoteSigned{JH}{YellowGreen}{#1}}
 
 
+
+
 \title{Deriving Multi-headed Planar Dependency Parses from Link Grammar Parses}
 
 \author{Juneki Hong and Jason Eisner\\
@@ -51,30 +53,31 @@
 \begin{abstract}
 
 % Copied from the google doc
-There has been recent theoretical work on multi-headed versions of dependency grammar (cite). Such formalisms can be more syntactically and semantically expressive. However, there aren't any corpora at present (check this) except for Buch-Kromann's work on Danish (cite), so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate. To fill this gap, we observe that link grammar produces parses that are similar to multi-headed planar dependency parses except that the links are undirected. We use Integer Linear Programming to assign consistent directions to the links in a corpus of NNN parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Arabic, and ... (what statistics does it use?). We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences. We also report ...
+There has been recent theoretical work on multi-headed versions of dependency grammar (cite). Such formalisms can be more syntactically and semantically expressive. However, there aren't any corpora at present (check this) except for Buch-Kromann's work on Danish (cite), so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate. To fill this gap, we observe that link grammar produces parses that are similar to multi-headed planar dependency parses except that the links are undirected. We use Integer Linear Programming to assign consistent directions to the links in a corpus of NNN parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and more. (what statistics does it use?). We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences. We also report ...
 
 \end{abstract}
-
 
 
 
 \section{Introduction}
 
 
+Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \TODO{}. 
 
-Dependency Parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link Parsing in contrast produces a planar graph with undirected edges, where every edge has a label. The labels describe the relationship between two constituents in a parse, and in this paper we will analyze whether this includes dependencies as well. In order to learn the directional dependencies within the Link edge labels we will use Integer Linear Programming, encoding the problem in the Zimpl little language \cite{Koch2004}. 
+%Despite this, the link parses offer additional links in addition to dependencies...
+
 
 
 
 \section{Link Grammars}
 
-Link Grammars are a formalism that describes the links, or relationships between the constituents \cite{SleatorTemperly91}. 
+Link grammars describe the links, or relationships between constituents in a parse \cite{SleatorTemperly91}. 
 
 
 We ran the link parser on the english bnews corpus sentences \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly NNN\% of the corpus.}
 
-
 The link grammar on which the link-parser makes its linking decisions based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the link grammar using an ILP. This approach allows us to analyze any link grammar dictionary other than English.
+
 
 
 \section{Integer Linear Programming}
@@ -85,6 +88,7 @@ The ILP chooses whether to set a link type to be assigned left, right, or both. 
 
 For example, setting the variables $$l_{LEFT} = TRUE, l_{RIGHT} = FALSE$$ would mean that the directional dependency of all links with label $l$ would be set to $LEFT$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
 
+\TODO{cite model minimization papers}
 
 
 \subsection{Slack Hierarchy}
@@ -105,6 +109,8 @@ This slack hierarchy gave the ILP the flexibility to handle noise and novel link
 
 \State $\text{min} \sum_{l \in labels} allowed_L(l) + allowed_R(l)$
 \State $\text{subject to}$
+\State $\text{Acyclicity}$
+\State $\text{All nodes reachable from the root.}$
 
 %\EndProcedure
 \end{algorithmic}
@@ -113,31 +119,31 @@ This slack hierarchy gave the ILP the flexibility to handle noise and novel link
 
 
 \subsection{Stability of Results}
-We tested to see how the solution changed as we increased the number of processed sentences. Taking the largest run as the answer key, we analyzed how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run, and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
+We tested to see how the solution changed over increasing numbers of processed sentences. 
+Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run, and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
+  \caption{Precision and Recall of different runs on English}
+\end{figure}
 
-\includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
+In the end, the precision values converged to 100\% while the recall values continued to grow throughout our data. This indicates that the solutions of the previous runs were consistent with the largest run. However as the data grew, we would continue to encounter novel link types.
 
 
 
 \section{Other languages}
 
 
-\section{Conll-Link analysis}
+
+
+\section{Discussion}
 
 
 
 
 \section{Related Work}
 
-
-
-
-
-\section{Results}
-
-
-\section{Discussion}
 
 
 
