@@ -76,11 +76,18 @@ def getDataFromLinkParse(lines):
         elif linkFlag:
             links.extend(line.split("]["))
 
+
+
     # I got rid of the last link item. It is always "[0]" and I don't know what its for.
     links = links[:-1]
+
+
+
     
     # clean up the '[' and ']' artifacts in the links. And store it as a list.
     for i in xrange(len(links)):
+
+
         links[i] = links[i].strip("[]").split()
         links[i][3] = links[i][3].strip("()")
 
