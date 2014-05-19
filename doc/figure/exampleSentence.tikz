@@ -1,0 +1,7 @@
+\begin{dependency}
+    \begin{deptext}
+        My \& dog \& also \& likes \& eating \& sausage \\
+    \end{deptext}
+    
+    \depedge{5}{6}{dobj}
+\end{dependency}
