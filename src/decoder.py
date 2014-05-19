@@ -195,8 +195,7 @@ def dotOutput(sentence, wordTag, linkDep, linkLabel):
     ID = "".join(sentence.split(" "))
     ID = re.sub(r'\W+', '', ID)
     ID = ID[:30]
-    sentence = sentence.split()
-    
+    sentence = sentence.split()    
 
     directory = "/tmp/LinksToDAG_dot/"
     # If needed, make the directory to put all of our dot files. 
