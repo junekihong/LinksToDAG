@@ -1,9 +1,12 @@
 
-all: graphs
+all:
 	pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error && bibtex *.aux && pdflatex LinksToDAG.tex && pdflatex LinksToDAG.tex
 
 clean:
-	./clean.sh
+	rm *.aux *.log
+	rm *.blg 
+	rm *.bbl
+
 
 # Graphs
 graph_runtime:
@@ -15,3 +18,5 @@ graph_precision_recall:
 	cp ../sol/precision_recall/precision_recall.png figure/
 
 graphs: graph_precision_recall
+
+
