@@ -4,18 +4,30 @@ import sys, os
 from pprint import pprint
 
 CONLL_DIR = "data/"
-SOL_DIR = "sol/"
-
 CONLL_LOC = CONLL_DIR+"english_bnews_train.conll"
-SOL_LOC = SOL_DIR+"links.conll"
-
 if len(sys.argv) > 2:
     CONLL_LOC = sys.argv[2]
+if not os.path.exists(CONLL_DIR):
+    os.makedirs(CONLL_DIR)
+
+SOL_DIR = "sol/"
+SOL_LOC = SOL_DIR+"links.conll"
+if not os.path.exists(SOL_DIR):
+    os.makedirs(SOL_DIR)
 
 ANALYSIS_DIR = "sol/conll_analysis/"
+ANALYSIS_FILE = ANALYSIS_DIR+"conll_analysis.txt"
 if not os.path.exists(ANALYSIS_DIR):
     os.makedirs(ANALYSIS_DIR)
-ANALYSIS_FILE = ANALYSIS_DIR+"conll_analysis.txt"
+
+TIKZ_DIR = "doc/figure/"
+TIKZ_LOC = TIKZ_DIR+"sentences.tikz"
+if not os.path.exists(TIKZ_DIR):
+    os.makedirs(TIKZ_DIR)
+TIKZ = open(TIKZ_LOC, 'w+')
+
+ALL_PARSES_LOC = TIKZ_DIR+"allparses.tikz"
+ALL_PARSES = open(ALL_PARSES_LOC, 'w+')
 
 
 
@@ -122,6 +134,7 @@ def analysis_match(conlls, links):
 # Analysis on the mismatches.
 def analysis_mismatch(conlls, links):
     mismatches = 0
+    blanks = 0
 
     # Directionality mismatch
     dir_miss = 0
@@ -142,6 +155,10 @@ def analysis_mismatch(conlls, links):
         link_labels = link[7].split(",")
 
         if conll_head not in link_heads:
+            # For all the times the link parser does [this] and fails to attach a word
+            if len(link_heads) == 1 and link_heads[0] == "-":
+                blanks += 1
+
             mismatches += 1
             head = int(conll[6])-1
 
@@ -149,12 +166,10 @@ def analysis_mismatch(conlls, links):
             candidate_heads = candidate[6].split(",")
             candidate_labels = candidate[7].split(",")
             
-
             if index not in candidate_heads:
                 continue
 
             dir_miss += 1
-
             # Iterate through the head index of the conll arc. Looking for the link pointing in the wrong direction
             for head,label in zip(candidate_heads,candidate_labels):
                 if head == index:
@@ -162,16 +177,17 @@ def analysis_mismatch(conlls, links):
                     dir_miss_labels_count[(conll_label,label)] = dir_miss_labels_count.get((conll_label,label),0)+1
                     break
 
-
             for head,label in zip(link_heads, link_labels):
                 mismatch_extras += 1
                 mismatch_extra_count[label] = mismatch_extra_count.get(label, 0) + 1
 
 
 
+
+
     dir_miss_data = (dir_miss, dir_miss_labels, dir_miss_labels_count)
     mismatch_extra_data = (mismatch_extras, mismatch_extra_count)    
-    mismatch_data = (mismatches, dir_miss_data, mismatch_extra_data)
+    mismatch_data = (mismatches, dir_miss_data, mismatch_extra_data, blanks)
     
     return mismatch_data
 
@@ -183,25 +199,31 @@ def analysis(conlls, links):
     
     # How many links match the conll corpus
     (match_data, extra_data, total) = analysis_match(conlls, links)
-    (matches, label_match, label_match_count) = match_data
-    (extras, label_extra_count) = extra_data
+    #(matches, label_match, label_match_count) = match_data
+    #(extras, label_extra_count) = extra_data
 
     # Mismatch data. Including directionality mismatches
     mismatch_data = analysis_mismatch(conlls,links)
-    (mismatches, dir_miss_data, mismatch_extra_data) = mismatch_data
-    (dir_miss, dir_miss_labels, dir_miss_labels_count) = dir_miss_data
-    (mismatch_extras, mismatch_extra_count) = mismatch_extra_data
+    #(mismatches, dir_miss_data, mismatch_extra_data, blanks) = mismatch_data
+    #(dir_miss, dir_miss_labels, dir_miss_labels_count) = dir_miss_data
+    #(mismatch_extras, mismatch_extra_count) = mismatch_extra_data
     
-    return (match_data, mismatch_data, extra_data, mismatch_extra_data, total)
+    return (match_data, mismatch_data, extra_data, total)
 
 
+
+
+final_total = 0
 
 match_total = 0
-extra_total = 0
-final_total = 0
 all_matches = {}
 all_match_counts = {}
+
+extra_total = 0
 all_extra_counts = {}
+
+blank_total = 0
+all_blank_counts = {}
 
 mismatch_total = 0
 dir_mismatch_total = 0
@@ -214,31 +236,137 @@ mismatch_extra_counts = {}
 
 
 
+# Produces a tikz_dependency string that can be redirected to a latex file for display.
+def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
+
+    result = ""
+    if subfigure:
+        ratio = "{0:.1f}".format(ratio)
+        result += "\\begin{subfigure}[b]{"+ratio+"\\textwidth}\n"
+    result += "\t\\begin{dependency}\n"
+    result += "\t\t\\begin{deptext}\n"
+        
+    indices = []
+    conll_heads = []
+    conll_labels = []
+
+    link_heads = []
+    link_labels = []
+
+    POS_conll = []
+    POS_link = []
+
+    for conll,link in zip(conlls, links):
+        conll = conll.split()
+        link = link.split()
+
+        indices.append(conll[0])
+        conll_heads.append(conll[6])
+        link_heads.append(tuple(link[6].split(",")))
+        
+        conll_labels.append(conll[7])
+        link_labels.append(tuple(link[7].split(",")))
+
+        POS = conll[3]
+        POS = POS.strip("$")
+        POS_conll.append(POS)
+        POS_link.append(link[3])
+        
+    result += "\t\t\t" + " \& ".join(POS_conll) + " \\\\\n"
+    result += "\t\t\t" + " \& ".join(sentence.split()) + " \\\\\n"
+    result += "\t\t\t" + " \& ".join(POS_link) + " \\\\\n"
+    result += "\t\t\\end{deptext}\n"
+
+
+    for index, conll_head, conll_label, link_head, link_label in zip(indices, conll_heads, conll_labels, link_heads, link_labels):
+        
+        #if conll_head in link_heads:
+        for head, label in zip(link_head, link_label):
+            if head == "-":
+                continue
+            result += tikz_draw_edge(head, index, label, "below", "thick")
+
+
+        if conll_head == "-":
+            continue
+
+        result += tikz_draw_edge(conll_head, index, label, "above", "thick")
+
+        
+    result += "\t\\end{dependency}\n"
+
+    if subfigure:
+        result += "\\end{subfigure}\n"
+
+    return result
+
+
+
+def tikz_draw_edge(parent, child, label, side, style = None):
+    color = "blue"
+    if side == "below":
+        color = "red"
+
+    edgeStyle = "edge style = {"+color
+    if style != None:
+        edgeStyle += ", "+style+"}"
+    else:
+        edgeStyle += "}"
+
+    edgeParams = "[edge "+side+", "+edgeStyle+"]"
+
+    result = "\t\t\\"
+    
+    # Root
+    if parent == "0":
+        result += "deproot"+edgeParams+"{"+child+"}{"+label+"}\n"
+    # Any other edge
+    else:
+        result += "depedge"+edgeParams+"{"+parent+"}{"+child+"}{"+label+"}\n"
+    return result
+
+
+sentenceCount = 0
+allParseCount = 0
+tikzCount = 10
 
 for linkSentence in link_results:
-
-
     #print linkSentence.lower()
     #pprint(link_results[linkSentence])
-
-
     #print conll_results.get(linkSentence, None)
 
     if linkSentence in conll_results:
+        if sentenceCount < tikzCount and len(linkSentence.split()) > 3 and len(linkSentence.split()) < 7:
+            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .8 / 2)            
+            TIKZ.write(tikz)
+            sentenceCount += 1
+            if sentenceCount % 2 == 0:
+                TIKZ.write("\n")
+
+
+
+        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
+        ALL_PARSES.write("\\begin{figure*}[ht!]\n")
+        ALL_PARSES.write(tikz)
+        ALL_PARSES.write("\\end{figure*}\n\n")
+        allParseCount += 1
+        if allParseCount % 3 == 0:
+            ALL_PARSES.write("\clearpage")
+
+
+
         
-        (match_data, mismatch_data, extra_data, mismatch_extra_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
+        (match_data, mismatch_data, extra_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
 
-        (matches, label_match, label_match_count) = match_data
-        (extras, label_extra_count) = extra_data
-
-        (mismatches, dir_miss_data, mismatch_extra_data) = mismatch_data
-        (dir_miss, dir_miss_labels, dir_miss_labels_count) = dir_miss_data
-
-        (mismatch_extras, mismatch_extra_count) = mismatch_extra_data
-
+        (matches, label_match, label_match_count)                           = match_data
+        (extras, label_extra_count)                                         = extra_data
+        (mismatches, dir_miss_data, mismatch_extra_data, blanks)                    = mismatch_data
+        (dir_miss, dir_miss_labels, dir_miss_labels_count)                  = dir_miss_data
+        (mismatch_extras, mismatch_extra_count)                             = mismatch_extra_data
 
         match_total += matches
         mismatch_total += mismatches
+        blank_total += blanks
         dir_mismatch_total += dir_miss
         mismatch_extra_total += mismatch_extras
 
@@ -263,12 +391,15 @@ for linkSentence in link_results:
             mismatch_extra_counts[label] = mismatch_extra_counts.get(label,0) + mismatch_extra_count[label]
 
 
-
 match_percent = str(0)
 mismatch_percent = str(0)
 if final_total != 0:
     match_percent = str(float(match_total)/final_total)
     mismatch_percent = str(float(mismatch_total)/final_total)
+
+blank_percent = str(0)
+if blank_total != 0:
+    blank_percent = str(float(blank_total)/mismatch_total)
 
 directional_percent = str(0)
 if mismatch_total != 0:
@@ -290,6 +421,10 @@ How many conll arcs do not match a link. In either attachment or directionality.
 Mismatch Total:\t\t\t\t"""+str(mismatch_total)+"""\t
 Percent of all arcs:\t\t"""+ mismatch_percent +"""
 
+How many conll arcs do not match a link because the link node was blank and had no attachments.
+Blank Total:\t\t\t\t"""+ str(blank_total)+"""
+Percent of all mismatches:\t"""+ blank_percent +"""
+
 How many conll arcs do not match a link in only directionality?
 Directional Mismatch Total:\t"""+str(dir_mismatch_total)+"""
 Percent of all mismatches:\t"""+ directional_percent +"""
@@ -299,7 +434,10 @@ Directional Mismatch Extra Total:\t"""+str(mismatch_extra_total)+"""
 
 How many conll arcs in total.
 Final Total:\t\t\t\t""" +str(final_total)+"""
+"""
 
+#result += 
+"""
 ------------------------------------------------------------
 MATCHES
 ------------------------------------------------------------
