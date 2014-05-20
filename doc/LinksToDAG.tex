@@ -26,6 +26,8 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \usepackage{tikz-dependency}
 
@@ -107,7 +109,7 @@ This slack hierarchy gave the ILP the flexibility to handle noise and novel link
 
 
 \begin{equation}
-  count_{L, left} = \sum_{a \in ARCS with label L} left_a
+  count_{L, left} = \sum_{a \in ARCS_L} left_a
 \end{equation}
 \begin{equation}
   count_{L, left} = M * allowed_{L,left} + slack_{L}
@@ -143,7 +145,6 @@ We tested to see how the solution changed over increasing numbers of processed s
 Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run, and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 
 \begin{figure}[ht!]
-  \centering
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
   \caption{Precision and Recall of different runs on English}
 \end{figure}
@@ -162,11 +163,11 @@ In the end, the precision values converged to 100\% while the recall values cont
 \section{Discussion}
 
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
   \centering
-  \input{figure/exampleSentence.tikz}
-  \caption{Example}
-\end{figure}
+  \input{figure/sentences.tikz}
+  \caption{Example Sentences}
+\end{figure*}
 
 
 
