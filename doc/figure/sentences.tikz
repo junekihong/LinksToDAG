@@ -1,11 +1,89 @@
 \begin{subfigure}[b]{0.4\textwidth}
 	\begin{dependency}
 		\begin{deptext}
+			UH \& PRP \& VBD \& RB \& JJ \\
+			well \& it \& was \& pretty \& big \\
+			ij \& - \& v-d \& e \& a \\
+		\end{deptext}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{COa}
+		\depedge[edge style = {blue, thick}]{3}{1}{mod}
+		\deproot[edge below, edge style = {red, thick}]{2}{Wd}
+		\depedge[edge style = {blue, thick}]{3}{2}{mod}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\depedge[edge below, edge style = {red, thick}]{2}{3}{Ss}
+		\deproot[edge style = {blue, thick}]{3}{root}
+		\depedge[edge below, edge style = {red, thick}]{5}{4}{EA}
+		\depedge[edge style = {blue, thick}]{5}{4}{mod}
+		\depedge[edge below, edge style = {red, thick}]{3}{5}{Pa}
+		\depedge[edge style = {blue, thick}]{3}{5}{adj}
+	\end{dependency}
+\end{subfigure}
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
+			PRP \& VBZ \& RBR \& VBG \& PRP \\
+			it \& 's \& more \& anticipating \& it \\
+			- \& v \& - \& v \& - \\
+		\end{deptext}
+		\deproot[edge below, edge style = {red, thick}]{1}{Wd}
+		\depedge[edge style = {blue, thick}]{2}{1}{mod}
+		\depedge[edge below, edge style = {red, thick}]{1}{2}{Ss}
+		\deproot[edge style = {blue, thick}]{2}{root}
+		\depedge[edge style = {blue, thick}]{2}{3}{mod}
+		\deproot[edge below, edge style = {red, thick}]{4}{WV}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{Pg}
+		\depedge[edge style = {blue, thick}]{2}{4}{i}
+		\depedge[edge below, edge style = {red, thick}]{4}{5}{Osx}
+		\depedge[edge style = {blue, thick}]{4}{5}{obj}
+	\end{dependency}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
+			PRP \& VBP \& DT \& NN \\
+			i \& think \& the \& passion \\
+			- \& v \& - \& s \\
+		\end{deptext}
+		\depedge[edge style = {blue, thick}]{2}{1}{mod}
+		\deproot[edge below, edge style = {red, thick}]{2}{Wi}
+		\deproot[edge style = {blue, thick}]{2}{root}
+		\depedge[edge below, edge style = {red, thick}]{4}{3}{Ds}
+		\depedge[edge style = {blue, thick}]{4}{3}{det}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{Os}
+		\depedge[edge style = {blue, thick}]{2}{4}{obj}
+	\end{dependency}
+\end{subfigure}
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
+			NN \& EX \& VBZ \& RB \& NN \& NN \\
+			today \& there \& is \& only \& finger \& pointing \\
+			- \& r \& v \& - \& n \& g \\
+		\end{deptext}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{CO*n}
+		\depedge[edge style = {blue, thick}]{3}{1}{mod}
+		\deproot[edge below, edge style = {red, thick}]{2}{Wd}
+		\depedge[edge style = {blue, thick}]{3}{2}{mod}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\depedge[edge below, edge style = {red, thick}]{2}{3}{SFst}
+		\deproot[edge style = {blue, thick}]{3}{root}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{EBm}
+		\depedge[edge style = {blue, thick}]{6}{4}{mod}
+		\depedge[edge below, edge style = {red, thick}]{6}{5}{AN}
+		\depedge[edge style = {blue, thick}]{6}{5}{mod}
+		\depedge[edge below, edge style = {red, thick}]{3}{6}{Ost}
+		\depedge[edge style = {blue, thick}]{3}{6}{obj}
+	\end{dependency}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
 			PRP \& VBP \& PRP \& VBZ \\
 			i \& think \& it \& helps \\
 			- \& v \& - \& v \\
 		\end{deptext}
-
 		\depedge[edge style = {blue, thick}]{2}{1}{mod}
 		\deproot[edge below, edge style = {red, thick}]{2}{Wi}
 		\deproot[edge style = {blue, thick}]{2}{root}
@@ -19,11 +97,68 @@
 \begin{subfigure}[b]{0.4\textwidth}
 	\begin{dependency}
 		\begin{deptext}
+			AUXP \& PRP \& VB \& DT \\
+			do \& you \& believe \& that \\
+			v \& - \& v \& j-p \\
+		\end{deptext}
+		\deproot[edge below, edge style = {red, thick}]{1}{Qd}
+		\depedge[edge style = {blue, thick}]{3}{1}{mod}
+		\depedge[edge below, edge style = {red, thick}]{1}{2}{SIp}
+		\depedge[edge style = {blue, thick}]{3}{2}{mod}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\depedge[edge below, edge style = {red, thick}]{1}{3}{I*d}
+		\deproot[edge style = {blue, thick}]{3}{root}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{Os}
+		\depedge[edge style = {blue, thick}]{3}{4}{obj}
+	\end{dependency}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
+			NN \& MD \& RB \& VB \& NN \\
+			celebration \& will \& also \& be \& commemoration \\
+			n-u \& v \& e \& v \& n-u \\
+		\end{deptext}
+		\deproot[edge below, edge style = {red, thick}]{1}{Wd}
+		\depedge[edge style = {blue, thick}]{4}{1}{mod}
+		\depedge[edge below, edge style = {red, thick}]{1}{2}{Ss}
+		\depedge[edge style = {blue, thick}]{4}{2}{mod}
+		\depedge[edge below, edge style = {red, thick}]{4}{3}{E}
+		\depedge[edge style = {blue, thick}]{4}{3}{mod}
+		\deproot[edge below, edge style = {red, thick}]{4}{WV}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{Ix}
+		\deproot[edge style = {blue, thick}]{4}{root}
+		\depedge[edge below, edge style = {red, thick}]{4}{5}{Oum}
+		\depedge[edge style = {blue, thick}]{4}{5}{obj}
+	\end{dependency}
+\end{subfigure}
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
+			NNP \& VBZ \& PRP \& NNS \\
+			roy \& has \& his \& quirks \\
+			- \& v \& - \& n \\
+		\end{deptext}
+		\deproot[edge below, edge style = {red, thick}]{1}{Wd}
+		\depedge[edge style = {blue, thick}]{2}{1}{mod}
+		\deproot[edge below, edge style = {red, thick}]{2}{WV}
+		\depedge[edge below, edge style = {red, thick}]{1}{2}{Ss}
+		\deproot[edge style = {blue, thick}]{2}{root}
+		\depedge[edge below, edge style = {red, thick}]{4}{3}{Dmc}
+		\depedge[edge style = {blue, thick}]{4}{3}{mod}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{Op}
+		\depedge[edge style = {blue, thick}]{2}{4}{obj}
+	\end{dependency}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.4\textwidth}
+	\begin{dependency}
+		\begin{deptext}
 			PRP \& VBP \& NN \& DT \& NN \& VBD \\
 			we \& want \& war \& the \& crowd \& chanted \\
 			- \& v \& n-u \& - \& n \& v-d \\
 		\end{deptext}
-
 		\deproot[edge below, edge style = {red, thick}]{1}{Wd}
 		\depedge[edge style = {blue, thick}]{2}{1}{mod}
 		\deproot[edge below, edge style = {red, thick}]{2}{WV}
@@ -40,94 +175,22 @@
 		\deproot[edge style = {blue, thick}]{6}{root}
 	\end{dependency}
 \end{subfigure}
-
 \begin{subfigure}[b]{0.4\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			DT \& JJ \& VBZ \& NNP \& NNP \\
-			the \& other \& is \& north \& korea \\
-			- \& - \& v \& a \& - \\
+			PRP \& VBZ \& RB \& JJ \\
+			it \& 's \& very \& close \\
+			- \& v \& e \& a \\
 		\end{deptext}
-
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{DD}
-		\depedge[edge style = {blue, thick}]{2}{1}{det}
-		\deproot[edge below, edge style = {red, thick}]{2}{Wd}
-		\depedge[edge style = {blue, thick}]{3}{2}{adj}
-		\deproot[edge below, edge style = {red, thick}]{3}{WV}
-		\depedge[edge below, edge style = {red, thick}]{2}{3}{Ss}
-		\deproot[edge style = {blue, thick}]{3}{root}
-		\depedge[edge below, edge style = {red, thick}]{5}{4}{A}
-		\depedge[edge style = {blue, thick}]{5}{4}{mod}
-		\depedge[edge below, edge style = {red, thick}]{3}{5}{Osm}
-		\depedge[edge style = {blue, thick}]{3}{5}{obj}
-	\end{dependency}
-\end{subfigure}
-\begin{subfigure}[b]{0.4\textwidth}
-	\begin{dependency}
-		\begin{deptext}
-			NN \& MD \& RB \& VB \& NN \\
-			celebration \& will \& also \& be \& commemoration \\
-			n-u \& v \& e \& v \& n-u \\
-		\end{deptext}
-
 		\deproot[edge below, edge style = {red, thick}]{1}{Wd}
-		\depedge[edge style = {blue, thick}]{4}{1}{mod}
+		\depedge[edge style = {blue, thick}]{2}{1}{mod}
+		\deproot[edge below, edge style = {red, thick}]{2}{WV}
 		\depedge[edge below, edge style = {red, thick}]{1}{2}{Ss}
-		\depedge[edge style = {blue, thick}]{4}{2}{mod}
-		\depedge[edge below, edge style = {red, thick}]{4}{3}{E}
+		\deproot[edge style = {blue, thick}]{2}{root}
+		\depedge[edge below, edge style = {red, thick}]{4}{3}{EA}
 		\depedge[edge style = {blue, thick}]{4}{3}{mod}
-		\deproot[edge below, edge style = {red, thick}]{4}{WV}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{Ix}
-		\deproot[edge style = {blue, thick}]{4}{root}
-		\depedge[edge below, edge style = {red, thick}]{4}{5}{Oum}
-		\depedge[edge style = {blue, thick}]{4}{5}{obj}
-	\end{dependency}
-\end{subfigure}
-
-\begin{subfigure}[b]{0.4\textwidth}
-	\begin{dependency}
-		\begin{deptext}
-			NN \& EX \& VBZ \& RB \& NN \& NN \\
-			today \& there \& is \& only \& finger \& pointing \\
-			- \& r \& v \& - \& n \& g \\
-		\end{deptext}
-
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{CO*n}
-		\depedge[edge style = {blue, thick}]{3}{1}{mod}
-		\deproot[edge below, edge style = {red, thick}]{2}{Wd}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{SFst}
-		\depedge[edge style = {blue, thick}]{3}{2}{mod}
-		\deproot[edge below, edge style = {red, thick}]{3}{WV}
-		\deproot[edge style = {blue, thick}]{3}{root}
-		\depedge[edge below, edge style = {red, thick}]{3}{4}{EBm}
-		\depedge[edge style = {blue, thick}]{6}{4}{mod}
-		\depedge[edge below, edge style = {red, thick}]{6}{5}{AN}
-		\depedge[edge style = {blue, thick}]{6}{5}{mod}
-		\depedge[edge below, edge style = {red, thick}]{3}{6}{Ost}
-		\depedge[edge style = {blue, thick}]{3}{6}{obj}
-	\end{dependency}
-\end{subfigure}
-\begin{subfigure}[b]{0.4\textwidth}
-	\begin{dependency}
-		\begin{deptext}
-			NNP \& AUXZ \& VBN \& CD \& JJ \& NN \\
-			belgrade \& has \& become \& one \& big \& party \\
-			- \& v \& v \& - \& a \& n \\
-		\end{deptext}
-
-		\deproot[edge below, edge style = {red, thick}]{1}{Wd}
-		\depedge[edge style = {blue, thick}]{3}{1}{mod}
-		\depedge[edge below, edge style = {red, thick}]{1}{2}{Ss}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{PPf}
-		\depedge[edge style = {blue, thick}]{3}{2}{mod}
-		\deproot[edge below, edge style = {red, thick}]{3}{WV}
-		\deproot[edge style = {blue, thick}]{3}{root}
-		\depedge[edge below, edge style = {red, thick}]{6}{4}{Ds}
-		\depedge[edge style = {blue, thick}]{6}{4}{num}
-		\depedge[edge below, edge style = {red, thick}]{6}{5}{A}
-		\depedge[edge style = {blue, thick}]{6}{5}{adj}
-		\depedge[edge below, edge style = {red, thick}]{3}{6}{Os}
-		\depedge[edge style = {blue, thick}]{3}{6}{obj}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{Pa}
+		\depedge[edge style = {blue, thick}]{2}{4}{adj}
 	\end{dependency}
 \end{subfigure}
 
