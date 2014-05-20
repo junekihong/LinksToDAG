@@ -19,9 +19,11 @@ args = parser.parse_args()
 labels = []
 file_lines = []
 for filename in args.strings:
-    label = filename.split(".")[0]
-    label = label.split("/")[-1]
+
+    label = filename.split("/")[-1]
+    label = label.split(".")[0]
     label = label.split("_")[0]
+
     labels.append(label)
     
     lines = []
@@ -31,6 +33,7 @@ for filename in args.strings:
         line = line.strip()
         lines.append(line)
     file_lines.append(lines)
+
 
 
 
