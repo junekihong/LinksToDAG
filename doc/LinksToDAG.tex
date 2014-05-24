@@ -70,9 +70,27 @@ There has been recent theoretical work on multi-headed versions of dependency gr
 \section{Introduction}
 
 
-Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \TODO{}. 
+Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. 
+
+
+
+To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. 
+It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \TODO{}. 
+
+
+
+Kromann 2003 Danish dependency treebank\cite{kromann2003danish}
+
+McDonald and Pereira 2006\cite{McDonald2006}
+
+Sagae and Tsujii 2008\cite{Sagae2008}
+
+Gomez-Rodriguez and Nivre 2013\cite{gomez-rodriguez_divisible_2013}
+
 
 %Despite this, the link parses offer additional links in addition to dependencies...
+
+
 
 
 \NoteJE{discuss multiheadedness.  cite Kromann 2003's danish
@@ -87,7 +105,7 @@ Dependency parsing is the task of mapping a sentence to a projective (not always
 Link grammars describe the links, or relationships between constituents in a parse \cite{SleatorTemperly91}. 
 
 
-We ran the link parser on the english bnews corpus sentences \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly NNN\% of the corpus.}
+We ran the link parser on the english bnews corpus sentences \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.}
 
 The link grammar on which the link-parser makes its linking decisions based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the link grammar using an ILP. This approach allows us to analyze any link grammar dictionary other than English.
 
@@ -98,28 +116,27 @@ We formulated the ILP to assign directional dependencies to a link grammar parse
 
 The ILP chooses whether to set a link type to be assigned left, right, or both. For this, two label\_direction variables were made for each link type that appears in the parses, corresponding to whether all of the $l$ link edges were to be set to go left, right, or both. Because we assign a directionality to every link type, at least one of these variables must be set to true.
 
-For example, setting the variables $$l_{LEFT} = TRUE, l_{RIGHT} = FALSE$$ would mean that the directional dependency of all links with label $l$ would be set to $LEFT$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
+For example, setting the variables $$l_{\textsc{LEFT}} = \textsc{TRUE}, l_{\textsc{RIGHT}} = \textsc{FALSE}$$ would mean that the directional dependency of all links with label $l$ would be set to $\textsc{LEFT}$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
 
 \TODO{cite model minimization papers}
 
 
-\subsection{Slack Hierarchy}
+\subsection{Slack}
 
 We introduced slack on the directional dependency variable tokens such that link types were allowed to deviate from the majority up to (1\% ?) of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for the possibility that both directions could still be assigned.
 
-\TODO{} We also introduced slack on the link types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack places a prior on rare or never-before seen link types to be assigned in the same way as other similar link types.
 
-This slack hierarchy gave the ILP the flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
-
+\begin{figure*}
+%\centering
 
 \begin{equation}
-  count_{L, \textsc{left}} = \sum_{a \in \textsc{ARCS}_L} left_a
+  count_{L, \textsc{left}} = \sum_{a \in \textsc{ARCS}_L} link(a,L)
 \end{equation}
 \begin{equation}
   count_{L, \textsc{left}} = \textsc{M} \cdot \textsc{allowed}_{L,\textsc{left}} + \textsc{slack}_{L}
 \end{equation}
-Where $L \in \textsc{LABELS}$, and $\textsc{M}$ is the size of the corpus.
-The objective is:
+%Where $L \in \textsc{LABELS}$, and $\textsc{M}$ is the size of the corpus.
+OBJECTIVE:
 \begin{equation}
   \min \sum_{L \in \textsc{LABELS} \atop \textsc{DIR} \in \{left, right\}} (\textsc{allowed}_{L,\textsc{DIR}}) \atop + \textsc{COST}(L) * \sum_L \textsc{slack}_L
 \end{equation}
@@ -127,20 +144,9 @@ The objective is:
   \textsc{COST}(L) = \frac{100}{(\textsc{count}_{L,\textsc{left}} + \textsc{count}_{L,\textsc{right}})}
 \end{equation}
 
+\caption{The ILP formulation. L is a label and M is the size of the corpus.}
 
-\begin{algorithm}
-\caption{ILP Encoding}\label{ILP}
-\begin{algorithmic}[1]
-%\Procedure{MyProcedure}{}
-
-\State $\text{min} \sum_{l \in labels} allowed_L(l) + allowed_R(l)$
-\State $\text{subject to}$
-\State $\text{Acyclicity}$
-\State $\text{All nodes reachable from the root.}$
-
-%\EndProcedure
-\end{algorithmic}
-\end{algorithm}
+\end{figure*}
 
 
 
@@ -149,8 +155,9 @@ We tested to see how the solution changed over increasing numbers of processed s
 Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run, and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 
 \begin{figure}[ht!]
+  \small
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
-  \caption{Precision and Recall of different runs on English}
+  \caption{\small Precision and recall of increasing runs of English sentences}
 \end{figure}
 
 In the end, the precision values converged to 100\% while the recall values continued to grow throughout our data. This indicates that the solutions of the previous runs were consistent with the largest run. However as the data grew, we would continue to encounter novel link types.
@@ -162,7 +169,15 @@ In the end, the precision values converged to 100\% while the recall values cont
 
 
 
-\section{Link Corpus}
+\section{Link Corpus Experiment and Results}
+
+\begin{figure}[ht!]
+  \centering
+  \small
+  \input{figure/conll_analysis_sentences.tex}
+  \caption{\small Of the sentences used for this experiment section about \input{figure/conll_analysis_sentences_dropped}had at least one dropped word, and about \input{figure/conll_analysis_sentences_multiheaded}had at least one multiheaded word}
+\end{figure}
+
 
 
 Compared to the original conll data, the link parses match about half the conll arcs in location and directionality. The mismatches in the other half can be accounted for in the following ways.
@@ -185,8 +200,18 @@ In about 25\% of the cases, the conll arc's corresponding link would be assigned
 
 \TODO{more in the appendix ...}
 
-
 We should acknowledge that another option would be to post-process either CoNLL parses or our link parses to automatically add more multi-heading, e.g., to handle control phenomena ("John wants to skip" or "Jane ran for office in order to change the tax laws" should have John/Jane be the subject of two verbs).  However, that requires per-language 
+
+
+
+\section{Future Work}
+
+\subsection{Slack Hierarchy}
+We would like to introduce slack on the link grammar types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack would place a prior on rare or never-before seen link types to be assigned in the same way as other similar link types. We think that this will give the ILP better flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
+
+
+
+
 
 \section{Related Work}
 
@@ -195,6 +220,11 @@ We should acknowledge that another option would be to post-process either CoNLL 
 \bibliographystyle{acl2014}
 \bibliography{LinksToDAG}
 
+
+
+
+
+\clearpage
 \appendix
 \section{English Link Types}
 
