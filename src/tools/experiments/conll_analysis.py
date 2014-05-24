@@ -6,6 +6,7 @@ from tikz_dependency import *
 from dependency_graph import *
 from conll_analysis_output import *
 
+# The directory containing the original conll data file
 CONLL_DIR = "data/"
 CONLL_LOC = CONLL_DIR+"english_bnews_train.conll"
 if len(sys.argv) > 2:
@@ -13,23 +14,40 @@ if len(sys.argv) > 2:
 if not os.path.exists(CONLL_DIR):
     os.makedirs(CONLL_DIR)
 
+# The directory containing our link-conll result data file
 SOL_DIR = "sol/"
 SOL_LOC = SOL_DIR+"links.conll"
 if not os.path.exists(SOL_DIR):
     os.makedirs(SOL_DIR)
 
+# Analysis directory and files. Where we will store these results.
 ANALYSIS_DIR = "sol/conll_analysis/"
 ANALYSIS_FILE = ANALYSIS_DIR+"conll_analysis.txt"
 if not os.path.exists(ANALYSIS_DIR):
     os.makedirs(ANALYSIS_DIR)
 
+# The trial number. How many sentences we take in originally.
+TRIAL_NUM = 0
+if len(sys.argv) > 3:
+    TRIAL_NUM = int(sys.argv[3])
+
+# Latex directory and files. Where we will store these results in latex form.
+LATEX_DIR = "doc/figure/"
+LATEX_FILE_SENTENCE = LATEX_DIR+"conll_analysis_sentences.tex"
+LATEX_FILE_SENTENCE_DROPPED = LATEX_DIR+"conll_analysis_sentences_dropped.tex"
+LATEX_FILE_SENTENCE_MULTIHEADED = LATEX_DIR+"conll_analysis_sentences_multiheaded.tex"
+if not os.path.exists(LATEX_DIR):
+    os.makedirs(LATEX_DIR)
+
+
+# Tikz directory and files
 TIKZ_DIR = "doc/figure/"
 TIKZ_LOC = TIKZ_DIR+"sentences.tikz"
 if not os.path.exists(TIKZ_DIR):
     os.makedirs(TIKZ_DIR)
 TIKZ = open(TIKZ_LOC, 'w+')
 
-ALL_PARSES_LOC = TIKZ_DIR+"allparses.tikz"
+ALL_PARSES_LOC = TIKZ_DIR+"parses.tikz"
 ALL_PARSES = open(ALL_PARSES_LOC, 'w+')
 
 
@@ -153,7 +171,10 @@ def analysis_words(conlls,links):
             isMultiheaded = True
 
 
-    return (dropped_word_count, multiheaded_count, word_count, hasDropped, isMultiheaded)
+    multiheaded_data = (multiheaded_count, isMultiheaded)
+    dropped_data = (dropped_word_count, hasDropped)
+    return (dropped_data, multiheaded_data, word_count)
+    #return (dropped_word_count, multiheaded_count, word_count, hasDropped, isMultiheaded)
 
 
 
@@ -164,8 +185,6 @@ def analysis_words(conlls,links):
 # We will use this to query conll results from both our conll and link-conll files
 conll_results = {}
 link_results = {}
-matching_sentences = []
-
 
 # Populating the conll_results and link_results
 f = open(CONLL_LOC)
@@ -254,19 +273,20 @@ word_count_total = 0
 multiheaded_sentence_count = 0
 dropped_sentence_count = 0
 total_sentence_count = len(link_results)
-
+conll_analysis_sentence_count = 0
 
 sentenceCount = 0
-skip_sentenceCount = 4
+skip_sentenceCount = 2
+tikzLimit = 6
 
 allParseCount = 0
-tikzCount = 4
+allParseLimit = 100
 
 for linkSentence in link_results:
     if linkSentence in conll_results:
-        matching_sentences.append(linkSentence)
+        conll_analysis_sentence_count += 1
 
-        if sentenceCount < tikzCount and len(linkSentence.split()) > 4 and len(linkSentence.split()) < 7:
+        if sentenceCount < tikzLimit and len(linkSentence.split()) > 4 and len(linkSentence.split()) < 7:
             if skip_sentenceCount > 0:
                 skip_sentenceCount -= 1
             else:
@@ -276,13 +296,14 @@ for linkSentence in link_results:
                 if sentenceCount % 2 == 0:
                     TIKZ.write("\n")
 
-        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
-        ALL_PARSES.write("\\begin{figure*}[ht!]\n")
-        ALL_PARSES.write(tikz)
-        ALL_PARSES.write("\\end{figure*}\n\n")
-        allParseCount += 1
-        if allParseCount % 3 == 0:
-            ALL_PARSES.write("\clearpage")
+        if allParseCount < allParseLimit:
+            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
+            ALL_PARSES.write("\\begin{figure*}[ht!]\n")
+            ALL_PARSES.write(tikz)
+            ALL_PARSES.write("\\end{figure*}\n\n")
+            allParseCount += 1
+            if allParseCount % 3 == 0:
+                ALL_PARSES.write("\clearpage")
 
 
         (match_data, reverse_data, extra_data, word_data, mismatch_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
@@ -290,9 +311,12 @@ for linkSentence in link_results:
         (matches, label_match, label_match_count)                           = match_data
         (reverse_matches, label_reverse, label_reverse_count)               = reverse_data
         (extras, label_extra, label_extra_count)                            = extra_data
-        (dropped_word_count, multiheaded_count, word_count, hasDropped, isMultiheaded)                      = word_data
-        (mismatches, blanks)                                                = mismatch_data 
 
+        (mismatches, blanks)                                                = mismatch_data 
+        (dropped_data, multiheaded_data, word_count)                        = word_data
+
+        (dropped_word_count, hasDropped)                                    = dropped_data
+        (multiheaded_count, isMultiheaded)                                  = multiheaded_data
 
         match_total += matches
         blank_total += blanks
@@ -306,10 +330,8 @@ for linkSentence in link_results:
         dropped_word_total += dropped_word_count
         word_count_total += word_count
 
-
         if isMultiheaded:
             multiheaded_sentence_count += 1 
-
         if hasDropped:
             dropped_sentence_count += 1
 
@@ -328,7 +350,7 @@ for linkSentence in link_results:
             mismatch_directionality_counts[pair] = mismatch_directionality_counts.get(pair,0) + label_reverse_count[pair]
 
 
-
+f = open(ANALYSIS_FILE, "w+")
 result = result_numbers(final_total, 
                         match_total, 
                         extra_total, 
@@ -341,18 +363,37 @@ result = result_numbers(final_total,
                         word_count_total, 
                         dropped_sentence_count,
                         multiheaded_sentence_count, 
+                        TRIAL_NUM,
+                        conll_analysis_sentence_count,
                         total_sentence_count)
 
-
-
-f = open(ANALYSIS_FILE, "w+")
 f.write(result)
 f.close()
 
 
 
+result = result_latex_corpus(TRIAL_NUM, 
+                             total_sentence_count, 
+                             conll_analysis_sentence_count)
+f = open(LATEX_FILE_SENTENCE, "w+")
+f.write(result)
+f.close()
+
+dropped_sentence_percentage = float(dropped_sentence_count) / conll_analysis_sentence_count * 100
+dropped_sentence_percentage = "{:.2f}".format(dropped_sentence_percentage)+"\\%"
+
+multiheaded_sentence_percentage = float(multiheaded_sentence_count) / conll_analysis_sentence_count * 100
+multiheaded_sentence_percentage = "{:.2f}".format(multiheaded_sentence_percentage)+"\\%"
+
+f = open(LATEX_FILE_SENTENCE_DROPPED, "w+")
+f.write(dropped_sentence_percentage)
+f.close()
+
+f = open(LATEX_FILE_SENTENCE_MULTIHEADED, "w+")
+f.write(multiheaded_sentence_percentage)
+f.close()
 
 
 
 
-print result
+#print result

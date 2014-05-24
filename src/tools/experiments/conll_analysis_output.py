@@ -16,7 +16,10 @@ def result_numbers(final_total,
                    word_count_total, 
                    dropped_sentence_count,
                    multiheaded_sentence_count, 
+                   original_sentence_count,
+                   conll_analysis_sentence_count,
                    total_sentence_count):
+
 
     match_percent = str(0)
     mismatch_percent = str(0)
@@ -104,9 +107,18 @@ Total number of sentences with dropped words:
 Dropped Sentences:\t\t\t"""+str(dropped_sentence_count)+"""
 Percent of Sentences:\t\t\t"""+str(float(dropped_sentence_count) / total_sentence_count)+"""
 
-Total Sentence Count:\t\t\t"""+str(total_sentence_count)+"""
 
+Total Sentence Count used in this analysis:
+\t\t\t\t\t"""+str(conll_analysis_sentence_count)+"""
+\t\t\t\t\t("""+str(float(conll_analysis_sentence_count)/original_sentence_count)+""") of original sentences
+
+Total Sentence Count given after skipping the disconnected sentences in the link parser:
+\t\t\t\t\t"""+str(total_sentence_count)+"""
+\t\t\t\t\t("""+str(float(total_sentence_count)/original_sentence_count)+""") of original sentences
+
+Original Sentence Count:\t\t"""+str(original_sentence_count)+"""
 """
+
 
 
 
@@ -203,3 +215,27 @@ Of the cases where the links had different directionality, what are the "extra" 
 #print mismatch_extra_total
 
   
+
+
+
+
+
+def result_latex_corpus(original_sentence_count,
+                        total_sentence_count, 
+                        conll_analysis_sentence_count):
+
+    result = ""
+    result += "\t\\begin{tabular}{|l|l|}\n"
+    result += "\t\t\\hline\n"
+    result += "\t\tOriginal number of sentences in conll corpus & "+str(original_sentence_count)+"\\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\tSentences after discarding disconnected parses & "+str(total_sentence_count)+"\\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\tSentences used for experiment and analysis & "+str(conll_analysis_sentence_count)+"\\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\\end{tabular}\n"
+
+    return result
+
+
+
