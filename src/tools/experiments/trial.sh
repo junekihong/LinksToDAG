@@ -31,7 +31,6 @@ if [ $LANGUAGE ]; then
     mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS\_$LANGUAGE.txt
 else
     cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS.txt
-    
     python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL
     mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS.txt
 fi
