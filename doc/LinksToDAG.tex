@@ -59,36 +59,36 @@
 \maketitle
 
 \begin{abstract}
-
 % Copied from the google doc
-There has been recent theoretical work on multi-headed versions of dependency grammar (cite). Such formalisms can be more syntactically and semantically expressive. However, there aren't any corpora at present (check this) except for Buch-Kromann's work on Danish (cite), so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate. To fill this gap, we observe that link grammar produces parses that are similar to multi-headed planar dependency parses except that the links are undirected. We use Integer Linear Programming to assign consistent directions to the links in a corpus of NNN parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and more. (what statistics does it use?). We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences. We also report ...
-
+There has been recent theoretical work on multi-headed versions of dependency grammar(cite). Such formalisms can be more syntactically and semantically expressive. However, there aren't any corpora at present (check this) except for Buch-Kromann's work on Danish \cite{kromann2003danish}, so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate. To fill this gap, we observe that link grammar produces parses that are similar to multi-headed planar dependency parses except that the links are undirected. We use Integer Linear Programming to assign consistent directions to the links in a corpus of NNN parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and more. (what statistics does it use?). We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences. We also report ...
 \end{abstract}
-
 
 
 \section{Introduction}
 
+\TODO{Intro}
 
-Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. 
+Projective dependency parsing is the task of mapping a sentence to a directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
 
+We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
 
-
-To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. 
-It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \TODO{}. 
-
-
-
-Kromann 2003 Danish dependency treebank\cite{kromann2003danish}
-
-McDonald and Pereira 2006\cite{McDonald2006}
-
-Sagae and Tsujii 2008\cite{Sagae2008}
-
-Gomez-Rodriguez and Nivre 2013\cite{gomez-rodriguez_divisible_2013}
+We publish our dictionary of label-to-direction assignments, that anyone can use to turn a link parse into a dependency parse.
 
 
-%Despite this, the link parses offer additional links in addition to dependencies...
+Using the sentences of a dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly two thirds of the arcs in the conll dependency corpus. \TODO{This is because...} 
+Of the links that match a corresponding dependency arc we measure whether the direction we chose is the same as the original dependency data. 
+Finally, we look to see that given a link label, whether the original conll label can be recovered.
+
+
+%about 20\% 
+
+
+
+%Kromann 2003 Danish dependency treebank\cite{kromann2003danish}
+%McDonald and Pereira 2006\cite{McDonald2006}
+%Sagae and Tsujii 2008\cite{Sagae2008}
+%Gomez-Rodriguez and Nivre 2013\cite{gomez-rodriguez_divisible_2013}
+
 
 
 
@@ -112,11 +112,14 @@ The link grammar on which the link-parser makes its linking decisions based on a
 
 \section{Integer Linear Programming}
 
-We formulated the ILP to assign directional dependencies to a link grammar parse such that it is a connected DAG, with all of the nodes reachable from the root.
+We formulated an ILP to assign directional dependencies to all of the links in a set of link grammar parses, such that they are all connected DAGs, with the nodes reachable from the root. 
 
 The ILP chooses whether to set a link type to be assigned left, right, or both. For this, two label\_direction variables were made for each link type that appears in the parses, corresponding to whether all of the $l$ link edges were to be set to go left, right, or both. Because we assign a directionality to every link type, at least one of these variables must be set to true.
 
 For example, setting the variables $$l_{\textsc{LEFT}} = \textsc{TRUE}, l_{\textsc{RIGHT}} = \textsc{FALSE}$$ would mean that the directional dependency of all links with label $l$ would be set to $\textsc{LEFT}$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
+
+The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite (cite?).
+
 
 \TODO{cite model minimization papers}
 
