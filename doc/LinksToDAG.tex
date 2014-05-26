@@ -104,40 +104,28 @@ The link grammar is based on a set of handwritten dictionaries. Instead of going
 \section{Integer Linear Programming}
 We formulated an ILP to assign directionality to all of the links in a set of link grammar parses, while still mandating that the resulting dependency parses are connected DAGs, with the nodes reachable from the root. 
 
-In order to choose which direction the link labels are assigned, for every encountered label we generate two boolean label\_direction variables correspending to left and right. Setting the only one of these variables to \textsc{TRUE} chooses a consistent direction for a label throughout all parses, and because we assign a directionality to every link type at least one must be set to true. Setting both variables would allow us to go in either direction.
+In order to choose which direction the link labels are assigned, for every encountered label we generate two boolean label/direction variables correspending to left and right. Setting one of these variables to \textsc{true} allows only the specified direction for a label throughout all parses, and because we assign a directionality to every link type at least one of these variables must be set to true. Setting both variables would allow us to go in either direction.
 
-Our ILP objective is to minimize the number of label\_direction variables set to true, while still satisfying the acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite (cite?).
+Our ILP objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying the acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite\cite{achterberg2009scip}.
 
 \TODO{cite model minimization papers}
 
 \subsection{Slack}
 We introduced slack on the directional dependency variables such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for both directions to be assigned if needed.
 \begin{figure}
-%\centering
   \small
-  \begin{align*}
-    &\textsc{dir} = \{\textsc{left}, \textsc{right}\}, \textsc{l} \in \textsc{labels} & \\
-    &\textsc{m} = \left|{\textsc{links}}\right|
-  \end{align*}
-  \begin{equation}
-    \textsc{count}_{\textsc{l}, \textsc{dir}} = \sum \textsc{link}_{\textsc{l},\textsc{dir}}
-  \end{equation}
-  \begin{equation}
-    \textsc{count}_{\textsc{l}, \textsc{dir}} = \textsc{m} \cdot \textsc{allowed}_{\textsc{l},\textsc{dir}} + \textsc{slack}_{\textsc{l}} 
-  \end{equation}
-  \begin{equation}
-    \textsc{cost}_{\textsc{l}} = \frac{100}{\textsc{count}_{\textsc{l},\textsc{left}} + \textsc{count}_{\textsc{l},\textsc{right}}}
-  \end{equation}
-  \begin{equation}
-    \text{minimize} \sum_{(\textsc{l}, \textsc{dir}} \textsc{allowed}_{\textsc{l},\textsc{dir}}) + \textsc{cost}_{\textsc{l}} \cdot \sum_\textsc{l} \textsc{slack}_{\textsc{l}} 
-  \end{equation}
-  \begin{align*}
+  \begin{align}
+    \textsc{dir} &= \{\textsc{left}, \textsc{right}\} &\\ 
+    \textsc{l} &\in \textsc{labels} & \\
+    \textsc{m} &= \left|{\textsc{links}}\right| &\\
+    \textsc{count}_{\textsc{l}, \textsc{dir}} &= \sum \textsc{link}_{\textsc{l},\textsc{dir}} &\\
+    \textsc{count}_{\textsc{l}, \textsc{dir}} &= \textsc{m} \cdot \textsc{allowed}_{\textsc{l},\textsc{dir}} + \textsc{slack}_{\textsc{l}} &\\
+    \textsc{cost}_{\textsc{l}} &= \frac{100}{\textsc{count}_{\textsc{l},\textsc{left}} + \textsc{count}_{\textsc{l},\textsc{right}}} &\\
+    \text{minimize} &\sum_{\textsc{l}, \textsc{dir}} (\textsc{allowed}_{\textsc{l},\textsc{dir}}) + \textsc{cost}_{\textsc{l}} \cdot \sum_\textsc{l} \textsc{slack}_{\textsc{l}} &\\
     \text{subject to } &\forall_{i \in \textsc{sentence}}: \textsc{reachable}_{\textsc{root}, i} = \textsc{true} &\\
-                       &\forall_{\substack{i,j \in \textsc{sentence} \\ i\neq j }}: \textsc{cycle}_{i,j} = \textsc{false} &
-  \end{align*}
-
+                       &\forall_{\substack{i,j \in \textsc{sentence} \\ i\neq j }}: \textsc{has\_cycle}_{i,j} = \textsc{false} &
+  \end{align}
   \caption{\small The ILP formulation.}
-  %\\L is a label\\M is the size of the corpus.}
 \end{figure}
 
 
