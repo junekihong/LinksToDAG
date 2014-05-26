@@ -65,15 +65,12 @@ There has been recent theoretical work on multi-headed versions of dependency gr
 
 
 \section{Introduction}
-
 \TODO{Intro}
-
 Projective dependency parsing is the task of mapping a sentence to a directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
 
 We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
 
-We publish our dictionary of label-to-direction assignments, that anyone can use to turn a link parse into a dependency parse.
-
+From the ILP, we produce a dictionary of label-to-direction assignments. We publish this so that anyone can easily turn a link parse into a dependency parse.
 
 Using the sentences of a dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly two thirds of the arcs in the conll dependency corpus. \TODO{This is because...} 
 Of the links that match a corresponding dependency arc we measure whether the direction we chose is the same as the original dependency data. 
@@ -81,8 +78,6 @@ Finally, we look to see that given a link label, whether the original conll labe
 
 
 %about 20\% 
-
-
 
 %Kromann 2003 Danish dependency treebank\cite{kromann2003danish}
 %McDonald and Pereira 2006\cite{McDonald2006}
@@ -101,55 +96,49 @@ Finally, we look to see that given a link label, whether the original conll labe
 
 
 \section{Link Grammars}
+Link grammars are a grammatical system equivalent to context-free grammars that assign linking requirements to every given word\cite{SleatorTemperly91}. A link parser then tries to satisfy all of these requirements for every word of a sentence while still maintaining planarity. The resulting links describe the relationships between constituents in a parse. 
 
-Link grammars describe the links, or relationships between constituents in a parse \cite{SleatorTemperly91}. 
-
-
-We ran the link parser on the english bnews corpus sentences \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.}
-
-The link grammar on which the link-parser makes its linking decisions based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the link grammar using an ILP. This approach allows us to analyze any link grammar dictionary other than English.
+The link grammar is based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the grammar using an ILP. This approach also potentially allows us to analyze link grammar dictionaries other than English. \TODO{explore other link grammar dictionaries} 
 
 
 \section{Integer Linear Programming}
+We formulated an ILP to assign directionality to all of the links in a set of link grammar parses, while still mandating that the resulting dependency parses are connected DAGs, with the nodes reachable from the root. 
 
-We formulated an ILP to assign directional dependencies to all of the links in a set of link grammar parses, such that they are all connected DAGs, with the nodes reachable from the root. 
+In order to choose which direction the link labels are assigned, for every encountered label we generate two boolean label\_direction variables correspending to left and right. Setting the only one of these variables to \textsc{TRUE} chooses a consistent direction for a label throughout all parses, and because we assign a directionality to every link type at least one must be set to true. Setting both variables would allow us to go in either direction.
 
-The ILP chooses whether to set a link type to be assigned left, right, or both. For this, two label\_direction variables were made for each link type that appears in the parses, corresponding to whether all of the $l$ link edges were to be set to go left, right, or both. Because we assign a directionality to every link type, at least one of these variables must be set to true.
-
-For example, setting the variables $$l_{\textsc{LEFT}} = \textsc{TRUE}, l_{\textsc{RIGHT}} = \textsc{FALSE}$$ would mean that the directional dependency of all links with label $l$ would be set to $\textsc{LEFT}$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
-
-The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite (cite?).
-
+Our ILP objective is to minimize the number of label\_direction variables set to true, while still satisfying the acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite (cite?).
 
 \TODO{cite model minimization papers}
 
-
 \subsection{Slack}
-
-We introduced slack on the directional dependency variable tokens such that link types were allowed to deviate from the majority up to (1\% ?) of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for the possibility that both directions could still be assigned.
-
-
-\begin{figure*}
+We introduced slack on the directional dependency variables such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for both directions to be assigned if needed.
+\begin{figure}
 %\centering
+  \small
+  \begin{align*}
+    &\textsc{dir} = \{\textsc{left}, \textsc{right}\}, \textsc{l} \in \textsc{labels} & \\
+    &\textsc{m} = \left|{\textsc{links}}\right|
+  \end{align*}
+  \begin{equation}
+    \textsc{count}_{\textsc{l}, \textsc{dir}} = \sum \textsc{link}_{\textsc{l},\textsc{dir}}
+  \end{equation}
+  \begin{equation}
+    \textsc{count}_{\textsc{l}, \textsc{dir}} = \textsc{m} \cdot \textsc{allowed}_{\textsc{l},\textsc{dir}} + \textsc{slack}_{\textsc{l}} 
+  \end{equation}
+  \begin{equation}
+    \textsc{cost}_{\textsc{l}} = \frac{100}{\textsc{count}_{\textsc{l},\textsc{left}} + \textsc{count}_{\textsc{l},\textsc{right}}}
+  \end{equation}
+  \begin{equation}
+    \text{minimize} \sum_{(\textsc{l}, \textsc{dir}} \textsc{allowed}_{\textsc{l},\textsc{dir}}) + \textsc{cost}_{\textsc{l}} \cdot \sum_\textsc{l} \textsc{slack}_{\textsc{l}} 
+  \end{equation}
+  \begin{align*}
+    \text{subject to } &\forall_{i \in \textsc{sentence}}: \textsc{reachable}_{\textsc{root}, i} = \textsc{true} &\\
+                       &\forall_{\substack{i,j \in \textsc{sentence} \\ i\neq j }}: \textsc{cycle}_{i,j} = \textsc{false} &
+  \end{align*}
 
-\begin{equation}
-  count_{L, \textsc{left}} = \sum_{a \in \textsc{ARCS}_L} link(a,L)
-\end{equation}
-\begin{equation}
-  count_{L, \textsc{left}} = \textsc{M} \cdot \textsc{allowed}_{L,\textsc{left}} + \textsc{slack}_{L}
-\end{equation}
-%Where $L \in \textsc{LABELS}$, and $\textsc{M}$ is the size of the corpus.
-OBJECTIVE:
-\begin{equation}
-  \min \sum_{L \in \textsc{LABELS} \atop \textsc{DIR} \in \{left, right\}} (\textsc{allowed}_{L,\textsc{DIR}}) \atop + \textsc{COST}(L) * \sum_L \textsc{slack}_L
-\end{equation}
-\begin{equation}
-  \textsc{COST}(L) = \frac{100}{(\textsc{count}_{L,\textsc{left}} + \textsc{count}_{L,\textsc{right}})}
-\end{equation}
-
-\caption{The ILP formulation. L is a label and M is the size of the corpus.}
-
-\end{figure*}
+  \caption{\small The ILP formulation.}
+  %\\L is a label\\M is the size of the corpus.}
+\end{figure}
 
 
 
@@ -167,12 +156,14 @@ In the end, the precision values converged to 100\% while the recall values cont
 
 
 
-\section{Other languages}
+%\section{Other languages}
 
 
 
 
 \section{Link Corpus Experiment and Results}
+We ran the link parser on the english bnews corpus sentences. \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.} 
+From these parses we ran our ILP and generated directionalized multiheaded dependency data to compare with the original conll data.
 
 \begin{figure}[ht!]
   \centering
