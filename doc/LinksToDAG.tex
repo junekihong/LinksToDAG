@@ -110,8 +110,6 @@ Our ILP objective is to minimize the number of label/direction variables set to 
 
 \TODO{cite model minimization papers}
 
-\subsection{Slack}
-We introduced slack on the directional dependency variables such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for both directions to be assigned if needed.
 \begin{figure}
   \small
   \begin{align}
@@ -130,17 +128,19 @@ We introduced slack on the directional dependency variables such that the link t
 
 
 
-\subsection{Stability of Results}
-We tested to see how the solution changed over increasing numbers of processed sentences. 
-Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run, and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
+\subsection{Slack}
+We introduced slack on the directional dependency variables such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for both directions to be assigned if needed.
 
+
+\subsection{Stability of Results}
+We measured how the solution changed over increasing numbers of processed sentences. 
+Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 \begin{figure}[ht!]
   \small
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
-  \caption{\small Precision and recall of increasing runs of English sentences}
+  \caption{\small Precision/recall of results of English sentences}
 \end{figure}
-
-In the end, the precision values converged to 100\% while the recall values continued to grow throughout our data. This indicates that the solutions of the previous runs were consistent with the largest run. However as the data grew, we would continue to encounter novel link types.
+We found that the precision values converged to 100\% while the recall values continued to grow throughout our data without converging. This indicates that the solutions of the previous runs were consistent with the largest run. However as the data grew, we would continue to encounter novel link types.
 
 
 
