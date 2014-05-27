@@ -71,69 +71,65 @@ To help fill this gap, we observe that link grammar already produces {\em undire
 We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of !!! \noteJE{fill in the number} parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  
 \end{abstract}
 
+\section{Multi-Headed Dependency Parsing}
 
-\section{Introduction}
-\todo{Intro}
+Dependency parsing maps a sentence to a directed graph whose vertices are the words $1, 2, \ldots, n$ of the sentence along with a distinguished ``root'' vertex 0.  A labeled directed edge $u \stackrel{L}{\rightarrow} v$ or $v \stackrel{L}{\leftarrow} u$ indicates that the ``child'' $v$ is some kind of argument or modifier of its ``parent'' $u$.  The edge label $L$ indicates the specific syntactic or semantic relationship between the two words.  
 
-Dependency parsing maps a sentence to a directed graph whose vertices are the words $1, 2, \ldots, n$ of the sentence along with a distinguished ``root'' vertex 0.  A labeled directed edge $u \stackrel{L}{\rightarrow} v$ or $v \stackrel{L}{\leftarrow} u$ indicates that the ``child'' $v$ is some kind of argument or modifier of its ``parent'' $u$.  The edge label $L$ indicates the specific syntactic or semantic relationship between the two words.  In the special case $u=0$, the edge designates $v$ as playing some special top-level role in the sentence, e.g., as the main verb.  The case $v=0$ is not allowed.
+In the special case $u=0$, the edge designates $v$ as playing some special top-level role in the sentence, e.g., as the main verb.  We disallow $v=0$.
 
-As recently discussed by \newcite{gomez-rodriguez_divisible_2013}, one might place several optional requirements on the graph:
+As recently discussed by \newcite{gomezrodriguez-nivre-2013}, one might impose various requirements on the parse graph:
 \begin{itemize}
-\item acyclic (there are no directed cycles)
-\item connected (for every pair of words $u,v$, there is an undirected path between them)
-\item accessible (for every word $v\neq 0$, there is a directed path from 0 to $v$)
-\item planar (no ``crossing edges'': if there is an edge between $u$ and $v$, then there is no edge between $i$ and $j$ where $u < i < v$ and not $u \leq j \leq v$)
-\item single-headed (each $v\neq 0$ has at most one parent)
+\item {\sc Single-Head}: each word has at most one parent
+\item {\sc Acyclic}: there are no directed cycles
+\item {\sc Connected}: each pair of words has a undirected path between them
+\item {\sc Reachable}: each word can be reached from 0 by a directed path
+\item {\sc Planar}: edges may not ``cross'' \\ (if there are edges between $u,v$ and between $i,j$, where $u < i < v$, then $u \leq j \leq v$)
 \end{itemize}
-It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective, rooted trees.  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomez-rodriguez_divisible_2013}.  
+It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.\footnote{{\sc Projective} basically means {\sc Planar} + {\sc Reachable}.}  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
 
-In this paper, we are interested in relaxing the requirement of single-headedness.
-\NoteJE{discuss why.  Later, explain why our task isn't trivial.  We could just orient all edges from left to right, but we want to be consistent.}
+In this paper, we are interested in relaxing the {\sc Single-Head} requirement while preserving all the others.  This means that the parse can have more than $n$ edges, allowing it to express more relationships between words.  In English, for example, here are some constructions that seem to call for a multi-headed analysis.  
+\begin{description}
+\item[control] In {\em ``Jill likes to skip,''} the word {\em Jill} is the subject of two verbs.  In {\em ``Jill persuaded Jack to skip,''} {\em Jack} is the object of one verb and the subject of another.  Without recognizing this, our parser would miss the syntactic invariant that {\em skip} always has a subject and {\em persuaded} always has an object.  It would also be unable to exploit the selectional preferences of both verbs to help disambiguate the parse.  This is why we prefer to make the parser aware of multi-headedness, rather than using a single-headed parser and then extracting the additional semantic roles from its output.
+\item[relativization] In {\em ``The boy that Jill skipped with fell down,''} the word {\em boy} is the object of {\em with} as well as the subject of {\em fell}.  Without recognizing this, we would miss the syntactic invariant that {\em with} always has an object.  
+\item[conjunction] In {\em ``Jack and Jill went up the hill,''} {\em Jack} and {\em Jill} serve as the two arguments to {\em and}, but they are also semantically subjects of {\em went}.  Without recognizing this, we would have no (local) reason for expecting the arguments of {\em and} to be nouns.
+\end{description}
 
+In linguistics, it is common to analyze some of these structures using trees with ``empty categories.''  The subject of {\em skip} is taken to be a silent morpheme {\em PRO}:
+{\em ``Jill$_i$ likes PRO$_i$ to skip.''}  However, this is no longer a tree if one considers the implicit undirected edge between {\em Jill} and {\em PRO} (denoted by their shared index $i$).  Our simpler representation contracts this coreference edge, eliminating {\em PRO} and creating a {\em Jill} $\leftarrow$ {\em skip} link.  
 
-Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
+\section{Link Grammars}
 
-We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser version 5.0.0 \noteJE{is this the version you used?} \cite{LINKPARSER-2014}, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
+A few past NLP papers have explored multi-headed dependency parsing \cite{buchkromann-2006,mcdonald-pereira-2006,sagae-tsujii-2008,gomezrodriguez-nivre-2013}.  Unfortunately, there seem to be no annotated corpora in this form other than the Danish Dependency Treebank \cite{kromann-2003}; researchers have sometimes converted corpora from other formats such as HPSG.  
 
-From the ILP, we produce a dictionary of label-to-direction assignments. We publish this so that anyone can easily turn a link parse into a dependency parse.
+All of these options result in non-projective parses, so the parsers must use non-projective or pseudo-projective algorithms.
 
-Using the sentences of a dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly two thirds of the arcs in the conll dependency corpus. \todo{This is because...} 
-Of the links that match a corresponding dependency arc we measure whether the direction we chose is the same as the original dependency data. 
-Finally, we look to see that given a link label, whether the original conll label can be recovered.
+It seems at first that no one has worked out annotation conventions for {\em projective} multi-headed dependency parsing.  However, this is not quite true.  Link Grammar \cite{SleatorTemperly91} is a grammar-based formalism for projective dependency parsing with {\em undirected} links.  It produces undirected connected planar graphs.  The annotation conventions are implicit in the detailed Link Grammar lexicon,%
+\footnote{\url{http://www.abisource.com/projects/link-grammar/dict/introduction.html}.  The link types in the English lexicon are documented at \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html}.} 
+which specifies for every word a constraint on the {\em sequence} of labeled leftward and rightward edges attached to it.  As remarked by \newcite{eisner-2000-iwptbook}, this is analogous to dependency grammar's use of head automata to constrain a word's sequence of left and right children.  For example, in {\em ``The boy that Jill skipped with fell down,''} the word {\em with} uses a lexical entry that requires it to link to a governing verb to the left, an extracted object farther to the left, and nothing to the right.
 
+Given a link grammar parse, it would be straightforward to convert it to an acyclic dependency parse by orienting all edges rightward.  However, the result may violate the {\sc Reachability} constraint.  Instead we could orient all edges by depth-first search from the root node, which yields a DAG satisfying all our constraints.  However, this might result in inconsistent annotation conventions, with some \texttt{S} links pointing from subject to verb and others from verb to subject.  
+
+We supposed that the link grammar lexicon designers actually had a consistent direction in mind for each edge type.  We would expect verbs to point to their subject arguments in dependency grammar, and so we surmise that all \texttt{S} links are intended to point leftward (from verb to subject: {\em ``Jack $\stackrel{\texttt{S}}{\leftarrow}$ is falling''}).  The link grammar designers take care to use a distinct \texttt{SI} label in cases of subject-verb inversion, and we surmise that \texttt{SI} links are intended to point rightward (again from verb to subject: {\em ``Jack $\stackrel{\texttt{SI}}{\rightarrow}$ is falling''}).
+
+Our goal in this paper is to recover these implicit directions by global optimization.  We seek a fixed mapping from labels to directions such that we can interpret link grammar parses as directed dependency parses that satisfy all of our constraints.
+
+Our first thought was to seek a direction mapping such that no parsed word sequence allowed by the link grammar lexicon could possibly violate our constraints after directions were imposed.  This is a well-defined constraint programming problem.  For example, to prevent cyclicity, we would require (roughly speaking) that no word type could follow a sequence of directed rightward links through other word types and then a leftward link back to itself.  
+
+However, working directly with the link grammar lexicon format is somewhat tricky.  We also feared that there would not be a perfect solution---for example, because of errors in the lexicon, or linguistically unnatural word sequences not anticipated by the grammar designers.  In this case it would not be clear how to relax our constraints.
+
+Thus, we chose to use a sample of {\em actual} sentences parsed by the link grammar, and to seek a direction mapping so that {\em these} parses would not violate our constraints after directions were imposed.  If no such mapping exists, then we are willing to orient a few edge tokens in the wrong direction to ensure that the parses are still well-formed---but we minimize the number of such violations.  In this way, the empirical distribution of sentences guides our assignment of directions.
+
+% Link grammars are a grammatical system equivalent to context-free grammars that assign linking requirements to every given word. A link parser then tries to satisfy all of these requirements for every word of a sentence while still maintaining planarity. The resulting links describe the relationships between constituents in a parse. 
+
+% The link grammar is based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the grammar using an ILP. This approach also potentially allows us to analyze link grammar dictionaries other than English. \todo{explore other link grammar dictionaries} 
+
+% \NoteJE{what statistics does it use?  what languages are available}
+
+% Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
 
 %about 20\% 
 
-%Kromann 2003 Danish dependency treebank\cite{kromann2003danish}
-%McDonald and Pereira 2006\cite{McDonald2006}
-%Sagae and Tsujii 2008\cite{Sagae2008}
-%Gomez-Rodriguez and Nivre 2013\cite{gomez-rodriguez_divisible_2013}
-
-
-Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
-
-Some recent work has considered multi-headed ...
-
- by expressing the dependency of a word on multiple parents.
-
-\cite{mcdonald-pereira-2006,buchkromann-2006,sagae-tsujii-2008,gomezrodriguez-nivre-2013}
-
-
- (check this) except for Buch-Kromann's work on Danish \cite{kromann-2003}
-
-\NoteJE{discuss multiheadedness.  cite Kromann 2003's danish
-  dependency treebank.  Prior work: McDonald and Pereira 2006, Sagae
-  and Tsujii 2008, Gomez-Rodriguez and Nivre 2013.}
-% http://aclweb.org/anthology/J/J13/J13-4002.pdf
-% http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.156.3938&rep=rep1&type=pdf
-
-\section{Link Grammars}
-Link grammars are a grammatical system equivalent to context-free grammars that assign linking requirements to every given word\cite{SleatorTemperly91}. A link parser then tries to satisfy all of these requirements for every word of a sentence while still maintaining planarity. The resulting links describe the relationships between constituents in a parse. 
-
-The link grammar is based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the grammar using an ILP. This approach also potentially allows us to analyze link grammar dictionaries other than English. \todo{explore other link grammar dictionaries} 
-
-\NoteJE{what statistics does it use?  what languages are available}
-
+% Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 \section{Integer Linear Programming}
 We formulated an ILP to assign directionality to all of the links in a set of link grammar parses, while still mandating that the resulting dependency parses are connected DAGs, with the nodes reachable from the root. 
@@ -195,6 +191,16 @@ We found that the precision values converged to 100\% while the recall values co
 
 
 \section{Link Corpus Experiment and Results}
+
+We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser version 5.0.0 \noteJE{is this the version you used?} \cite{LINKPARSER-2014}, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
+
+From the ILP, we produce a dictionary of label-to-direction assignments. We publish this so that anyone can easily turn a link parse into a dependency parse.
+
+Using the sentences of a dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly two thirds of the arcs in the conll dependency corpus. \todo{This is because...} 
+Of the links that match a corresponding dependency arc we measure whether the direction we chose is the same as the original dependency data. 
+Finally, we look to see that given a link label, whether the original conll label can be recovered.
+
+
 We ran the link parser and our ILP on the english bnews corpus sentences. \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.} 
 From this, we generated directionalized multiheaded dependency data to compare with the original conll data.
 
