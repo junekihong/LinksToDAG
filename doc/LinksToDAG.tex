@@ -154,33 +154,6 @@ We introduced slack on the directional dependency variable tokens such that link
 This slack hierarchy gave the ILP the flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
 
 
-\begin{equation}
-  count_{L, \textsc{left}} = \sum_{a \in \textsc{ARCS}_L} left_a
-\end{equation}
-\begin{equation}
-  count_{L, \textsc{left}} = \textsc{M} \cdot \textsc{allowed}_{L,\textsc{left}} + \textsc{slack}_{L}
-\end{equation}
-Where $L \in \textsc{LABELS}$, and $\textsc{M}$ is the size of the corpus.
-The objective is:
-\begin{equation}
-  \min \sum_{L \in \textsc{LABELS} \atop \textsc{DIR} \in \{left, right\}} (\textsc{allowed}_{L,\textsc{DIR}}) \atop + \textsc{COST}(L) * \sum_L \textsc{slack}_L
-\end{equation}
-\begin{equation}
-  \textsc{COST}(L) = \frac{100}{(\textsc{count}_{L,\textsc{left}} + \textsc{count}_{L,\textsc{right}})}
-\end{equation}
-
-
-\begin{algorithm}
-\caption{ILP Encoding}\label{ILP}
-\begin{algorithmic}[1]
-%\Procedure{MyProcedure}{}
-\State $\text{min} \sum_{l \in labels} allowed_L(l) + allowed_R(l)$
-\State $\text{subject to}$
-\State $\text{Acyclicity}$
-\State $\text{All nodes reachable from the root.}$
-\end{algorithmic}
-\end{algorithm}
-
 \subsection{Slack}
 We introduced slack on the directional dependency variables such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for both directions to be assigned if needed.
 
