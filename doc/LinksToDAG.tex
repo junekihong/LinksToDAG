@@ -59,18 +59,22 @@
 \maketitle
 
 \begin{abstract}
-Under multi-headed dependency grammar, a parse is a DAG rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, there are few multi-headed corpora at present, particularly for the projective case, so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate.  To fill this gap, we observe that link grammar produces {\em undirected} projective graphs.  
+Under multi-headed dependency grammar, a parse is a DAG rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, few multi-headed corpora exist, particularly for the projective case, so it is hard to train, test, or improve such parsers.
+% OLD
+% investigate the benefit of such parsers or to work on making them faster or more accurate.  
+To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs.  
 % OLD
 % ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
-We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of !!! \noteJE{fill in the number} parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and more. \noteJE{what statistics does it use?} We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  We also report on the convergence of our ILP method to a stable annotation scheme as the corpus size increases.
+We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of !!! \noteJE{fill in the number} parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  
 \end{abstract}
 
 
 \section{Introduction}
 \todo{Intro}
-Projective dependency parsing is the task of mapping a sentence to a directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
+Projective dependency parsing is the task of mapping a sentence to a directed acyclic graph.  
+Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
 
-We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
+We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser version 5.0.0 \noteJE{is this the version you used?} \cite{LINKPARSER-2014}, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
 
 From the ILP, we produce a dictionary of label-to-direction assignments. We publish this so that anyone can easily turn a link parse into a dependency parse.
 
@@ -104,11 +108,12 @@ Some recent work has considered multi-headed ...
 % http://aclweb.org/anthology/J/J13/J13-4002.pdf
 % http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.156.3938&rep=rep1&type=pdf
 
-
 \section{Link Grammars}
 Link grammars are a grammatical system equivalent to context-free grammars that assign linking requirements to every given word\cite{SleatorTemperly91}. A link parser then tries to satisfy all of these requirements for every word of a sentence while still maintaining planarity. The resulting links describe the relationships between constituents in a parse. 
 
 The link grammar is based on a set of handwritten dictionaries. Instead of going through these dictionaries, we learned the grammar using an ILP. This approach also potentially allows us to analyze link grammar dictionaries other than English. \todo{explore other link grammar dictionaries} 
+
+\NoteJE{what statistics does it use?  what languages are available}
 
 
 \section{Integer Linear Programming}
@@ -181,6 +186,10 @@ We introduced slack on the directional dependency variables such that the link t
 
 
 \subsection{Stability of Results}
+
+We report on the convergence of our ILP method to a stable annotation scheme as the corpus size increases.
+
+
 We measured how the solution changed over increasing numbers of processed sentences. 
 Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 \begin{figure}[ht!]
