@@ -277,7 +277,7 @@ conll_analysis_sentence_count = 0
 
 sentenceCount = 0
 skip_sentenceCount = 2
-tikzLimit = 6
+tikzLimit = 3
 
 allParseCount = 0
 allParseLimit = 100
@@ -286,14 +286,20 @@ for linkSentence in link_results:
     if linkSentence in conll_results:
         conll_analysis_sentence_count += 1
 
-        if sentenceCount < tikzLimit and len(linkSentence.split()) > 4 and len(linkSentence.split()) < 7:
+        sentenceCheck = True
+        linkSentenceCheck = linkSentence.split()
+        sentenceCheck = "serwer" not in linkSentenceCheck and "salees" not in linkSentenceCheck
+        
+
+
+        if (sentenceCount < tikzLimit) and len(linkSentence.split()) > 4 and len(linkSentence.split()) < 6 and sentenceCheck:
             if skip_sentenceCount > 0:
                 skip_sentenceCount -= 1
             else:
-                tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .9 / 2)            
+                tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97 / 3)            
                 TIKZ.write(tikz)
                 sentenceCount += 1
-                if sentenceCount % 2 == 0:
+                if sentenceCount % 3 == 0:
                     TIKZ.write("\n")
 
         if allParseCount < allParseLimit:
