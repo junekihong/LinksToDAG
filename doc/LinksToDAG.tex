@@ -31,27 +31,27 @@
 
 \usepackage{tikz-dependency}
 
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}  % allows better color names
+\usepackage{todonotes}   % insert [disable] to disable all notes
+% Note that these macros accept optional arguments such as 
+% [size=\small,bordercolor=red].
+\newcommand{\Note}[4][]{\todo[author=#2,color=#3,fancyline,#1]{#4}}
+\newcommand{\noteJH}[2][]{\Note[#1]{MRG}{blue!40}{#2}}
+\newcommand{\noteJE}[2][]{\Note[#1]{JE}{green!40}{#2}}   
+\newcommand{\notewho}[3][]{\Note[#1]{#2}{orange!40}{#3}}  % extra arg with miscellaneous author
+\newcommand{\NoteJH}[2][]{\noteJH[inline,#1]{#2}}
+\newcommand{\NoteJE}[2][]{\noteJE[inline,#1]{#2}}
+\newcommand{\Notewho}[3][]{\notewho[inline,#1]{#2}{#3}}  % extra arg with miscellaneous author
 
-\newcommand{\Note}[1]{}
-\renewcommand{\Note}[1]{\hl{[#1]}}  % comment out this definition to suppress all Notes                                                                                
-\newcommand{\TODO}[1]{\Note{TODO: #1}}
-\newcommand{\NoteSigned}[3]{{\sethlcolor{#2}\Note{#1: #3}}}
-\newcommand{\NoteJE}[1]{\NoteSigned{JE}{LightBlue}{#1}}
-\newcommand{\NoteJH}[1]{\NoteSigned{JH}{YellowGreen}{#1}}
+\title{Deriving Multi-Headed Projective Dependency Parses \\ from Link Grammar Parses}
+% Oriented link grammar: Creating a multi-headed dependency corpus.
 
-
-
-
-
-
-\title{Deriving Multi-headed Planar Dependency Parses from Link Grammar Parses}
-
-\author{Juneki Hong and Jason Eisner\\
-  Department of Computer Science \\
-  Johns Hopkins University \\
-  Baltimore, MD 21218, USA \\ 
-  {\tt \{juneki,jason\}@cs.jhu.edu} \\
-}
+% \author{Juneki Hong and Jason Eisner\\
+%   Department of Computer Science \\
+%   Johns Hopkins University \\
+%   Baltimore, MD 21218, USA \\ 
+%   {\tt \{juneki,jason\}@cs.jhu.edu} \\
+% }
 
 \date{}
 
@@ -61,19 +61,29 @@
 \begin{abstract}
 
 % Copied from the google doc
-There has been recent theoretical work on multi-headed versions of dependency grammar (cite). Such formalisms can be more syntactically and semantically expressive. However, there aren't any corpora at present (check this) except for Buch-Kromann's work on Danish (cite), so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate. To fill this gap, we observe that link grammar produces parses that are similar to multi-headed planar dependency parses except that the links are undirected. We use Integer Linear Programming to assign consistent directions to the links in a corpus of NNN parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and more. (what statistics does it use?). We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences. We also report ...
+Under multi-headed dependency grammar, a parse is a DAG rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, there are few multi-headed corpora at present, particularly for the projective case, so it is hard to investigate the benefit of such parsers or to work on making them faster or more accurate.  To fill this gap, we observe that link grammar produces {\em undirected} projective graphs.  
+% OLD
+% ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
+We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of !!! \noteJE{fill in the number} parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English, Russian, and more. \noteJE{what statistics does it use?} We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  We also report on the convergence of our ILP method to a stable annotation scheme as the corpus size increases.
 
 \end{abstract}
-
 
 
 \section{Introduction}
 
 
-Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \TODO{}. 
+Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 %Despite this, the link parses offer additional links in addition to dependencies...
 
+Some recent work has considered multi-headed ...
+
+ by expressing the dependency of a word on multiple parents.
+
+\cite{mcdonald-pereira-2006,buchkromann-2006,sagae-tsujii-2008,gomezrodriguez-nivre-2013}
+
+
+ (check this) except for Buch-Kromann's work on Danish \cite{kromann-2003}
 
 \NoteJE{discuss multiheadedness.  cite Kromann 2003's danish
   dependency treebank.  Prior work: McDonald and Pereira 2006, Sagae
@@ -100,14 +110,14 @@ The ILP chooses whether to set a link type to be assigned left, right, or both. 
 
 For example, setting the variables $$l_{LEFT} = TRUE, l_{RIGHT} = FALSE$$ would mean that the directional dependency of all links with label $l$ would be set to $LEFT$. If both variables were set to true, then the link type is allowed to go in either direction. Our ILP objective is to minimize the number of label\_direction variables set to true, while satisfying the other constraints.
 
-\TODO{cite model minimization papers}
+\todo{cite model minimization papers}
 
 
 \subsection{Slack Hierarchy}
 
 We introduced slack on the directional dependency variable tokens such that link types were allowed to deviate from the majority up to (1\% ?) of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for the possibility that both directions could still be assigned.
 
-\TODO{} We also introduced slack on the link types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack places a prior on rare or never-before seen link types to be assigned in the same way as other similar link types.
+\todo{} We also introduced slack on the link types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack places a prior on rare or never-before seen link types to be assigned in the same way as other similar link types.
 
 This slack hierarchy gave the ILP the flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
 
@@ -183,7 +193,7 @@ In about 25\% of the cases, the conll arc's corresponding link would be assigned
   \caption{Example Sentences}
 \end{figure*}
 
-\TODO{more in the appendix ...}
+\todo{more in the appendix ...}
 
 
 We should acknowledge that another option would be to post-process either CoNLL parses or our link parses to automatically add more multi-heading, e.g., to handle control phenomena ("John wants to skip" or "Jane ran for office in order to change the tax laws" should have John/Jane be the subject of two verbs).  However, that requires per-language 
@@ -198,7 +208,7 @@ We should acknowledge that another option would be to post-process either CoNLL 
 \appendix
 \section{English Link Types}
 
-\TODO{A table here that lists each link grammar type together with its
+\todo{A table here that lists each link grammar type together with its
   count, its allowed direction(s), its percentage of majority
   directions by token, and its most common corresponding CoNLL tags
   with percentages.  Readers could cut-and-paste this data to make a 
@@ -206,7 +216,7 @@ We should acknowledge that another option would be to post-process either CoNLL 
 
 \section{Sample English Parses}
 
-\TODO{Show a bunch of English sentences with CoNLL vs.\@ link parses.
+\todo{Show a bunch of English sentences with CoNLL vs.\@ link parses.
   Explain how they were selected and how the results are colorized etc.}
 
 \end{document}
