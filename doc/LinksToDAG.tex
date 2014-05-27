@@ -19,6 +19,7 @@
 \usepackage{url}
 \usepackage{latexsym}
 \usepackage{amsmath}
+\usepackage{xspace}
 
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{soul}
@@ -42,6 +43,8 @@
 \newcommand{\NoteJH}[2][]{\noteJH[inline,#1]{#2}}
 \newcommand{\NoteJE}[2][]{\noteJE[inline,#1]{#2}}
 \newcommand{\Notewho}[3][]{\notewho[inline,#1]{#2}{#3}}  % extra arg with miscellaneous author
+
+% \newcommand{\root}{\texttt{\$}}
 
 \title{Deriving Multi-Headed Projective Dependency Parses \\ from Link Grammar Parses}
 % Oriented link grammar: Creating a multi-headed dependency corpus.
@@ -71,7 +74,23 @@ We use Integer Linear Programming to assign consistent directions to the labeled
 
 \section{Introduction}
 \todo{Intro}
-Projective dependency parsing is the task of mapping a sentence to a directed acyclic graph.  
+
+Dependency parsing maps a sentence to a directed graph whose vertices are the words $1, 2, \ldots, n$ of the sentence along with a distinguished ``root'' vertex 0.  A labeled directed edge $u \stackrel{L}{\rightarrow} v$ or $v \stackrel{L}{\leftarrow} u$ indicates that the ``child'' $v$ is some kind of argument or modifier of its ``parent'' $u$.  The edge label $L$ indicates the specific syntactic or semantic relationship between the two words.  In the special case $u=0$, the edge designates $v$ as playing some special top-level role in the sentence, e.g., as the main verb.  The case $v=0$ is not allowed.
+
+As recently discussed by \newcite{gomez-rodriguez_divisible_2013}, one might place several optional requirements on the graph:
+\begin{itemize}
+\item acyclic (there are no directed cycles)
+\item connected (for every pair of words $u,v$, there is an undirected path between them)
+\item accessible (for every word $v\neq 0$, there is a directed path from 0 to $v$)
+\item planar (no ``crossing edges'': if there is an edge between $u$ and $v$, then there is no edge between $i$ and $j$ where $u < i < v$ and not $u \leq j \leq v$)
+\item single-headed (each $v\neq 0$ has at most one parent)
+\end{itemize}
+It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective, rooted trees.  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomez-rodriguez_divisible_2013}.  
+
+In this paper, we are interested in relaxing the requirement of single-headedness.
+\NoteJE{discuss why.  Later, explain why our task isn't trivial.  We could just orient all edges from left to right, but we want to be consistent.}
+
+
 Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
 
 We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser version 5.0.0 \noteJE{is this the version you used?} \cite{LINKPARSER-2014}, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
