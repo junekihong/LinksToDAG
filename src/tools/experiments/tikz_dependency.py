@@ -7,11 +7,11 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
 
     result = ""
     if subfigure:
-        ratio = "{0:.2f}".format(ratio)
+        ratio = "{0:.4f}".format(ratio)
         result += "\\begin{subfigure}[b]{"+ratio+"\\textwidth}\n"
     result += "\t\\begin{dependency}\n"
     result += "\t\t\\begin{deptext}\n"
-        
+    
     indices = []
     conll_heads = []
     conll_labels = []
@@ -32,8 +32,8 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
     POS_sequence = " \& ".join(graph_link.POS_sequence).replace("$", "\\$")
 
     result += "\t\t\t" + " \& ".join(POS_conll) + " \\\\\n"
-    result += "\t\t\t" + " \& ".join(graph_conll.sentence) + " \\\\\n"
-    result += "\t\t\t" + " \\\\\n"
+    #result += "\t\t\t" + " \& ".join(graph_conll.sentence) + " \\\\\n"
+    #result += "\t\t\t" + " \\\\\n"
     result += "\t\t\t" + link_sentence + " \\\\\n"
     result += "\t\t\t" + POS_sequence + " \\\\\n"
     result += "\t\t\\end{deptext}\n"

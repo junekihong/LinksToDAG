@@ -22,7 +22,7 @@ graph_runtime:
 	cp sol/runtimes/runtimes.png doc
 
 graph_precision_recall:
-	python src/tools/plotter.py -x Sentences -y Percent -o sol/precision_recall/precision_recall.png sol/precision_recall/precision.txt sol/precision_recall/recall.txt
+	python src/tools/plotter.py -x "Sentences used from the corpus" -y Percent -o sol/precision_recall/precision_recall.png sol/precision_recall/precision.txt sol/precision_recall/recall.txt
 	cp sol/precision_recall/precision_recall.png doc/figure/
 
 graph: graph_precision_recall

@@ -53,6 +53,7 @@ Percent of all arcs:\t\t\t"""+ match_percent +"""
 
 How many conll arcs do not match a link in only directionality?
 Directional Mismatch Total:\t\t"""+str(reverse_match_total)+"""
+Percent of all arcs:\t\t\t"""+ str(float(reverse_match_total) / final_total)+"""
 Percent of all mismatches:\t\t"""+ directional_percent +"""
 
 How many conll arcs do not match a link. In either attachment or directionality.
