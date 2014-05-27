@@ -118,14 +118,17 @@ Our ILP objective is to minimize the number of label/direction variables set to 
     \textsc{m} &= \left|{\textsc{links}}\right| &\\
     \textsc{count}_{\textsc{l}, \textsc{dir}} &= \sum \textsc{link}_{\textsc{l},\textsc{dir}} &\\
     \textsc{count}_{\textsc{l}, \textsc{dir}} &= \textsc{m} \cdot \textsc{allowed}_{\textsc{l},\textsc{dir}} + \textsc{slack}_{\textsc{l}} &\\
-    \textsc{cost}_{\textsc{l}} &= \frac{100}{\textsc{count}_{\textsc{l},\textsc{left}} + \textsc{count}_{\textsc{l},\textsc{right}}} &\\
-    \text{minimize} &\sum_{\textsc{l}, \textsc{dir}} (\textsc{allowed}_{\textsc{l},\textsc{dir}}) + \textsc{cost}_{\textsc{l}} \cdot \sum_\textsc{l} \textsc{slack}_{\textsc{l}} &\\
+    \textsc{cost}_{\textsc{l}} &= \frac{100}{\textsc{count}_{\textsc{l},\textsc{left}} + \textsc{count}_{\textsc{l},\textsc{right}}} &
+  \end{align}
+  \begin{equation} % I seperated out this line from the rest because it would disrupt the line number on the right side of the figure.
+    \text{minimize:} \sum_{\textsc{l}, \textsc{dir}} (\textsc{allowed}_{\textsc{l},\textsc{dir}}) + \textsc{cost}_{\textsc{l}} \cdot \sum_\textsc{l} \textsc{slack}_{\textsc{l}} 
+  \end{equation}
+  \begin{align}
     \text{subject to } &\forall_{i \in \textsc{sentence}}: \textsc{reachable}_{\textsc{root}, i} = \textsc{true} &\\
                        &\forall_{\substack{i,j \in \textsc{sentence} \\ i\neq j }}: \textsc{has\_cycle}_{i,j} = \textsc{false} &
   \end{align}
   \caption{\small The ILP formulation.}
 \end{figure}
-
 
 
 \subsection{Slack}
@@ -140,18 +143,14 @@ Taking the solution to the largest run as the answer key, we measured how much t
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
   \caption{\small Precision/recall of results of English sentences}
 \end{figure}
-We found that the precision values converged to 100\% while the recall values continued to grow throughout our data without converging. This indicates that the solutions of the previous runs were consistent with the largest run. However as the data grew, we would continue to encounter novel link types.
-
-
+We found that the precision values converged to 100\% while the recall values continued to grow throughout our data. This indicates that the solutions of the previous runs were consistent with the largest run, and as the data grew we would continue to encounter novel link types and incorporate them.
 
 %\section{Other languages}
 
 
-
-
 \section{Link Corpus Experiment and Results}
-We ran the link parser on the english bnews corpus sentences. \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.} 
-From these parses we ran our ILP and generated directionalized multiheaded dependency data to compare with the original conll data.
+We ran the link parser and our ILP on the english bnews corpus sentences. \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.} 
+From this, we generated directionalized multiheaded dependency data to compare with the original conll data.
 
 \begin{figure}[ht!]
   \centering
@@ -165,7 +164,7 @@ From these parses we ran our ILP and generated directionalized multiheaded depen
 Compared to the original conll data, the link parses match about half the conll arcs in location and directionality. The mismatches in the other half can be accounted for in the following ways.
 
 \subsection{Blanks}
-Whenever the link parser failed to recognize a word from its dictionary, it would skip it and fail to attach any links. This accounts for about 10\% of the mismatches.
+The link parser will skip and attach no links to words that it failed to recognize from its dictionary. This accounts for about ten percent of the mismatches.
 
 \subsection{Directional Mismatches}
 In about 25\% of the cases, the conll arc's corresponding link would be assigned the opposite direction.
@@ -178,11 +177,14 @@ In about 25\% of the cases, the conll arc's corresponding link would be assigned
   \centering
   \input{figure/sentences.tikz}
   \caption{Example Sentences}
+  \label{fig:parses}
 \end{figure*}
 
 \TODO{more in the appendix ...}
 
-We should acknowledge that another option would be to post-process either CoNLL parses or our link parses to automatically add more multi-heading, e.g., to handle control phenomena ("John wants to skip" or "Jane ran for office in order to change the tax laws" should have John/Jane be the subject of two verbs).  However, that requires per-language 
+\NoteJE{We should acknowledge that another option would be to post-process either CoNLL parses or our link parses to automatically add more multi-heading, e.g., to handle control phenomena ("John wants to skip" or "Jane ran for office in order to change the tax laws" should have John/Jane be the subject of two verbs).  However, that requires per-language}
+
+We have a set of 100 parses similar to figure~\ref{fig:parses} in the appendix.
 
 
 
