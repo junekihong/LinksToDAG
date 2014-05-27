@@ -27,12 +27,11 @@ tail --lines 1 runtime >> /tmp/LinksToDAG_times
 if [ $LANGUAGE ]; then
 
     cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS\_$LANGUAGE.txt
-    python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL $LANGUAGE
+    python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL $ITERATIONS $LANGUAGE
     mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS\_$LANGUAGE.txt
 else
     cp sol/allowedLinks.txt /tmp/LinksToDAG_trial_sol/allowedLinks_$ITERATIONS.txt
-    
-    python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL
+    python src/tools/experiments/conll_analysis.py $SENTENCES $CONLL $ITERATIONS
     mv sol/conll_analysis/conll_analysis.txt sol/conll_analysis/conll_analysis_$ITERATIONS.txt
 fi
 
