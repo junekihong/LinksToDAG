@@ -5,7 +5,7 @@ typeset -i i END
 
 #END=10000
 #END=60030
-END=256
+END=64
 #INCREMENT=1
 
 SENTENCES="data/english_bnews_train.sentences"
@@ -69,14 +69,19 @@ python src/tools/plotter.py -x "Sentences" -y "Runtime (seconds)" -o $SOL_RUNTIM
 
 
 python src/tools/experiments/type_analysis.py 
-cat $TXT_PRECISION | sort -V > temp_precision; 
-cat $TXT_RECALL | sort -V > temp_recall; 
+cat $TXT_PRECISION | sort -V > temp_precision; rm -f $TXT_PRECISION 
+cat $TXT_RECALL | sort -V > temp_recall; rm -f $TXT_RECALL
 
 if [ $LANGUAGE ]; then
-    mv temp_precision $PRECISION_RECALL"precision#"$LANGUAGE".txt"
-    mv temp_recall $PRECISION_RECALL"recall#"$LANGUAGE".txt"
-    python src/tools/plotter.py -x "Sentences" -y "Percent" -o $PRECISION_RECALL"precision_recall#"$LANGUAGE".png" $PRECISION_RECALL"precision#"$LANGUAGE".txt" $PRECISION_RECALL"recall#"$LANGUAGE".txt"
+    TXT_PRECISION=$PRECISION_RECALL"precision#"$LANGUAGE".txt"
+    TXT_RECALL=$PRECISION_RECALL"recall#"$LANGUAGE".txt"
+
+    mv temp_precision $TXT_PRECISION
+    mv temp_recall $TXT_RECALL
+    python src/tools/plotter.py -x "Sentences" -y "Percent" -o $PRECISION_RECALL"precision_recall#"$LANGUAGE".png" $TXT_PRECISION $TXT_RECALL
 else
+    TXT_PRECISION=$PRECISION_RECALL"precision#en.txt"
+    TXT_RECALL=$PRECISION_RECALL"recall#en.txt"
     mv temp_precision $TXT_PRECISION
     mv temp_recall $TXT_RECALL
     python src/tools/plotter.py -x "Sentences" -y "Percent" -o $SOL_PRECISION_RECALL $TXT_PRECISION $TXT_RECALL
