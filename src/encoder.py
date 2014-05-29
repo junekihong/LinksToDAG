@@ -100,8 +100,6 @@ def getBatchDataFromLinkParses(lines):
     processedSentences = []
     linkData = []
 
- 
-
     i = 0
     temp = 0
     for j in xrange(len(lines)):

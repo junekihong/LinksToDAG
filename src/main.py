@@ -37,8 +37,6 @@ if __name__=="__main__":
     args = parser.parse_args()
 
 
-
-    # TODO
     # already in the cache
     if args.ID != None and cache.check(args.ID):
         print "SCIP SOLUTION FOUND IN CACHE"
@@ -56,8 +54,7 @@ if __name__=="__main__":
         # Link Edge Encoder
         (processedSentences, links) = getBatchDataFromLinkParses(lines)
         (sentences,sizeOfCorpus) = getSentencesFromProcessedSentences(processedSentences)
-
-    
+            
         wordTags = []
         linkLabels = []
         for i in xrange(len(sentences)):
@@ -79,7 +76,6 @@ if __name__=="__main__":
         
         allowedLabels.sort()
         cache.store(args.ID, (sentences, linkLabels, wordTags, allowedLabels, linkDeps))
-
 
 
     # Save the allowed links solution file.
