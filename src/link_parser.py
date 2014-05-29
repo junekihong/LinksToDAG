@@ -33,7 +33,6 @@ class linkParser:
             else:
                 parse = self.parse(sentence)
                 self.cache.store(ID,parse)
-
             output.write(parse)
         output.close()
 
@@ -43,11 +42,16 @@ class linkParser:
 
     def parse(self,sentence):
         echo_process = Popen(["echo",sentence], stdout=PIPE)
-        linkparser_process = Popen(["link-parser", self.language, "-!graphics=0", "-!links=0", "-!echo=1", "-!postscript=1", "-!panic=0"], stdin=echo_process.stdout, stdout=PIPE, stderr=subprocess.PIPE)
+
+        # Time out the link parser. Don't even need to bother with its internal timeout.
+        timeout = str(30)
+        linkparser_process = Popen(["timeout", timeout, "link-parser", self.language, "-!graphics=0", "-!links=0", "-!echo=1", "-!postscript=1", "-!panic=0"], stdin=echo_process.stdout, stdout=PIPE, stderr=subprocess.PIPE)
         echo_process.stdout.close()
 
         output, err = linkparser_process.communicate()        
-        linkparser_process.stdout.close()
+        linkparser_process.stdout.close()        
+        #output = output.strip()
+        
         return output
 
 
