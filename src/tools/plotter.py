@@ -16,6 +16,12 @@ parser.add_argument("strings", nargs="*")
 args = parser.parse_args()
 
 
+PE = "Precision: English"
+RE = "Recall: English"
+PR = "Precision: Russian"
+RR = "Recall: Russian"
+
+
 labels = []
 file_lines = []
 for filename in args.strings:
@@ -23,6 +29,19 @@ for filename in args.strings:
     label = filename.split("/")[-1]
     label = label.split(".")[0]
     label = label.split("_")[0]
+
+    if len(label.split("#")) > 1:
+        label = label.split("#")
+        label = ": ".join(label)
+    else:
+        label += ": en"
+
+    label = {"precision: en": PE,
+             "recall: en": RE,
+             "precision: ru": PR,
+             "recall: ru": RR
+             }.get(label, label)
+
 
     labels.append(label)
     
@@ -82,13 +101,27 @@ ax.set_ylabel(args.yLabel)
 for l,coord in zip(labels,file_coord):
     Xs = [elem[0] for elem in coord]
     Ys = [elem[1] for elem in coord]
-    plt.plot(Xs,Ys, label=l)
+
+    c = {PE:"DarkOrange",
+         RE:"red",
+         PR:"DeepSkyBlue",
+         RR:"blue"
+         }.get(l,"blue")
+
+
+    m = {PE:"o",
+         RE:"o",
+         PR:"*",
+         RR:"*"}.get(l,".")
+
+
+    plt.plot(Xs,Ys, label=l, color=c, marker=m, linewidth=1.5)
 
 
 
 ax.legend(loc='lower right')
-plt.xlim(xmin, xmax)
-plt.ylim(ymin=0)
+plt.xlim(-0.015*xmax, xmax + 0.015*xmax)
+plt.ylim(0,1.04)
 
 
 
