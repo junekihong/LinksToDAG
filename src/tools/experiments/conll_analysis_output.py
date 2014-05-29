@@ -8,17 +8,15 @@ from dependency_graph import *
 def result_numbers(final_total, 
                    match_total, 
                    extra_total, 
-                   blank_total, 
                    mismatch_total, 
                    reverse_match_total,
-                   dropped_word_total,
                    multiheaded_word_count, 
                    word_count_total, 
                    dropped_sentence_count,
                    multiheaded_sentence_count, 
                    original_sentence_count,
-                   conll_analysis_sentence_count,
-                   total_sentence_count):
+                   link_sentence_total,
+                   link_remaining_sentences):
 
 
     match_percent = str(0)
@@ -27,20 +25,13 @@ def result_numbers(final_total,
         match_percent = str(float(match_total)/final_total)
         mismatch_percent = str(float(mismatch_total)/final_total)
 
-    blank_percent = str(0)
-    if blank_total != 0:
-        blank_percent = str(float(blank_total)/mismatch_total)
-
     directional_percent = str(0)
     if mismatch_total != 0:
         directional_percent = str(float(reverse_match_total)/mismatch_total)
 
     multiheaded_word_percent = str(0)
-    dropped_word_percent = str(0)
     if word_count_total != 0:
         multiheaded_word_percent = str(float(multiheaded_word_count)/word_count_total)
-        dropped_word_percent = str(float(dropped_word_total)/word_count_total)
-
 
 
     return """------------------------------------------------------------
@@ -68,11 +59,6 @@ Final Total:\t\t\t\t""" +str(final_total)+"""
 MISMATCHES
 ------------------------------------------------------------
 
-How many conll arcs do not match a link because the link node was dropped and had no attachments.
-Blank Total:\t\t\t\t"""+ str(blank_total)+"""
-Percent of all mismatches:\t\t"""+ blank_percent +"""
-
-
 ------------------------------------------------------------
 EXTRA LINKS
 ------------------------------------------------------------
@@ -89,10 +75,6 @@ How many multiheaded words there are.
 Multiheaded Words:\t\t\t"""+str(multiheaded_word_count)+"""
 Percent of all words:\t\t\t"""+multiheaded_word_percent+"""
 
-How many dropped words there are.
-Dropped Words:\t\t\t\t"""+str(dropped_word_total)+"""
-Percent of all words:\t\t\t"""+dropped_word_percent+"""
-
 Total number of all words:\t\t"""+str(word_count_total)+"""
 
 
@@ -100,24 +82,24 @@ Total number of all words:\t\t"""+str(word_count_total)+"""
 SENTENCES
 ------------------------------------------------------------
 
-Total number of sentences with multiheaded words:
-Multiheaded Sentences:\t\t\t"""+str(multiheaded_sentence_count)+"""
-Percent of Sentences:\t\t\t"""+str(float(multiheaded_sentence_count) / total_sentence_count)+"""
-
 Total number of sentences with dropped words:
 Dropped Sentences:\t\t\t"""+str(dropped_sentence_count)+"""
-Percent of Sentences:\t\t\t"""+str(float(dropped_sentence_count) / total_sentence_count)+"""
+Percent of link sentences that were dropped:\t"""+str(float(dropped_sentence_count) / link_sentence_total)+"""
 
+Total number of sentences with multiheaded words:
+Multiheaded Sentences:\t\t\t"""+str(multiheaded_sentence_count)+"""
+Percent of Sentences analyzed:\t\t"""+str(float(multiheaded_sentence_count) / link_remaining_sentences)+"""
 
-Total Sentence Count used in this analysis:
-\t\t\t\t\t"""+str(conll_analysis_sentence_count)+"""
-\t\t\t\t\t("""+str(float(conll_analysis_sentence_count)/original_sentence_count)+""") of original sentences
+Original Sentence Count:
+\t\t\t\t\t"""+str(original_sentence_count)+"""
 
 Total Sentence Count given after skipping the disconnected sentences in the link parser:
-\t\t\t\t\t"""+str(total_sentence_count)+"""
-\t\t\t\t\t("""+str(float(total_sentence_count)/original_sentence_count)+""") of original sentences
+\t\t\t\t\t"""+str(link_sentence_total)+"""
+\t\t\t\t\t("""+str(float(link_sentence_total)/original_sentence_count)+""") of original sentences
 
-Original Sentence Count:\t\t"""+str(original_sentence_count)+"""
+Total Sentence Count used in this analysis:
+\t\t\t\t\t"""+str(link_remaining_sentences)+"""
+\t\t\t\t\t("""+str(float(link_remaining_sentences)/original_sentence_count)+""") of original sentences
 """
 
 
@@ -222,7 +204,7 @@ Of the cases where the links had different directionality, what are the "extra" 
 
 
 def result_latex_corpus(original_sentence_count,
-                        total_sentence_count, 
+                        link_sentence_total, 
                         conll_analysis_sentence_count):
 
     result = ""
@@ -230,7 +212,7 @@ def result_latex_corpus(original_sentence_count,
     result += "\t\t\\hline\n"
     result += "\t\tOriginal number of sentences in conll corpus & "+str(original_sentence_count)+"\\\\ \n"
     result += "\t\t\\hline\n"
-    result += "\t\tSentences after discarding disconnected parses & "+str(total_sentence_count)+"\\\\ \n"
+    result += "\t\tSentences after discarding disconnected parses & "+str(link_sentence_total)+"\\\\ \n"
     result += "\t\t\\hline\n"
     result += "\t\tSentences used for experiment and analysis & "+str(conll_analysis_sentence_count)+"\\\\ \n"
     result += "\t\t\\hline\n"
