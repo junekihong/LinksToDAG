@@ -61,7 +61,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
                 graph_link.deleteEdge(child,head)
             
             else:
-                result += tikz_draw_edge(head, child, label, "above", "densely dotted")
+                result += tikz_draw_edge(head, child, label, "above", "dotted")
 
 
 
@@ -73,7 +73,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
             if len(graph_link.heads[child]) > 1 :
                 result += tikz_draw_edge(head,child,label, "below", "ultra thick", "orange")
             else:
-                result += tikz_draw_edge(head,child,label, "below", "densely dotted")
+                result += tikz_draw_edge(head,child,label, "below", "dotted")
 
         
     result += "\t\\end{dependency}\n"
