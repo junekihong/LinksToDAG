@@ -37,7 +37,7 @@
 % Note that these macros accept optional arguments such as 
 % [size=\small,bordercolor=red].
 \newcommand{\Note}[4][]{\todo[author=#2,color=#3,fancyline,#1]{#4}}
-\newcommand{\noteJH}[2][]{\Note[#1]{MRG}{blue!40}{#2}}
+\newcommand{\noteJH}[2][]{\Note[#1]{JH}{blue!40}{#2}}
 \newcommand{\noteJE}[2][]{\Note[#1]{JE}{green!40}{#2}}   
 \newcommand{\notewho}[3][]{\Note[#1]{#2}{orange!40}{#3}}  % extra arg with miscellaneous author
 \newcommand{\NoteJH}[2][]{\noteJH[inline,#1]{#2}}
@@ -133,69 +133,90 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 \section{Integer Linear Programming}
-We formulated an ILP to assign directionality to all of the links in a set of link grammar parses, while still mandating that the resulting dependency parses are connected DAGs, with the nodes reachable from the root. 
+We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. 
 
-In order to choose which direction the link labels are assigned, for every encountered label we generate two boolean label/direction variables correspending to left and right. Setting one of these variables to \textsc{true} allows only the specified direction for a label throughout all parses, and because we assign a directionality to every link type at least one of these variables must be set to true. Setting both variables would allow us to go in either direction.
-
-Our ILP objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying the acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite\cite{achterberg2009scip}.
+For every encountered label we generate two boolean label/direction variables (e.g. label/left, label/right). Setting one of these variables to \textsc{true} allows the label type to only go in the specified direction, while setting both would allow the label to go in either way.
+The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite\cite{achterberg2009scip}.
 
 \todo{cite model minimization papers}
 
-\begin{figure}
+\begin{figure*}
   \small
-  \begin{align}
-    \textsc{dir} &= \{\textsc{left}, \textsc{right}\} &\\ 
-    \textsc{l} &\in \textsc{labels} & \\
-    \textsc{m} &= \left|{\textsc{links}}\right| &\\
-    \textsc{count}_{\textsc{l}, \textsc{dir}} &= \sum \textsc{link}_{\textsc{l},\textsc{dir}} &\\
-    \textsc{count}_{\textsc{l}, \textsc{dir}} &= \textsc{m} \cdot \textsc{allowed}_{\textsc{l},\textsc{dir}} + \textsc{slack}_{\textsc{l}} &\\
-    \textsc{cost}_{\textsc{l}} &= \frac{100}{\textsc{count}_{\textsc{l},\textsc{left}} + \textsc{count}_{\textsc{l},\textsc{right}}} &
-  \end{align}
-  \begin{equation} % I seperated out this line from the rest because it would disrupt the line number on the right side of the figure.
-    \text{minimize:} \sum_{\textsc{l}, \textsc{dir}} (\textsc{allowed}_{\textsc{l},\textsc{dir}}) + \textsc{cost}_{\textsc{l}} \cdot \sum_\textsc{l} \textsc{slack}_{\textsc{l}} 
-  \end{equation}
-  \begin{align}
-    \text{subject to } &\forall_{i \in \textsc{sentence}}: \textsc{reachable}_{\textsc{root}, i} = \textsc{true} &\\
-                       &\forall_{\substack{i,j \in \textsc{sentence} \\ i\neq j }}: \textsc{has\_cycle}_{i,j} = \textsc{false} &
-  \end{align}
+  \begin{align*}
+    \text{Sets:}&&\\
+    &\textsc{link}_{i,j,\textsc{label},\textsc{sentence}} \in \textsc{links} &\\
+    &\textsc{label} \in \textsc{labels}&\\ 
+    &\textsc{dir} = \{\textsc{left}, \textsc{right}\} &\\
+    \text{Params:}&&\\
+    &\textsc{m}_\textsc{length} = \max (\forall{\textsc{link}_{i,j,\textsc{sentence}}} \max(i,j)) &\\
+    %&\textsc{count}_{\textsc{label}, \textsc{dir}} = \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 &\\
+    &\textsc{cost}_{\textsc{label}} = \frac{100}{ \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 } &\\
+    \text{Variables:}&&\\
+    &\textsc{slack}_{\textsc{link}} \geq 0 &\\ 
+    &\textsc{depth}_{i,\textsc{sentence}} \geq 0 &\\
+    &\textsc{allowed}_{\textsc{label},\textsc{dir}} = \{0,1\}&\\
+    &\textsc{arc}_{\textsc{link}} = \{0,1\} &\\
+    \text{minimize:}& &\\ 
+    &\sum_{\textsc{label}, \textsc{dir}} (\textsc{allowed}_{\textsc{label},\textsc{dir}}) + \textsc{cost}_{\textsc{label}} \cdot \sum_\textsc{link} \textsc{slack}_{\textsc{link}} &\\
+    &&\\
+    \text{subject to: }& &\\
+    &\text{Links go in the allowed directions, except for slack}&\\
+    &\forall{\textsc{link}_{i,j,\textsc{label}}}: 1-\textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{left}} + \textsc{slack}_{\textsc{link}} &\\
+    &\forall{\textsc{link}_{i,j,\textsc{label}}}: \textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{right}} + \textsc{slack}_{\textsc{link}} &\\
+    &\text{Depth constraints for acyclicity}&\\
+    &\forall{\textsc{link}_{i,\textsc{sentence}}}: \textsc{depth}_{\text{root},\textsc{sentence}} \leq \textsc{depth}_{i,\textsc{sentence}} &\\
+    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{i,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot\textsc{arc}_{i,j,\textsc{sentence}} \geq \textsc{depth}_{j,\textsc{sentence}} + 1 &\\
+    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{j,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot(1-\textsc{arc}_{i,j,\textsc{sentence}}) \geq \textsc{depth}_{i,\textsc{sentence}} + 1 &\\
+    &\text{Every token has a parent}&\\
+    &\forall{\textsc{link}_{i \neq \textsc{root},\textsc{sentence}}}: \sum_{\textsc{link}_{i,j,\textsc{sentence}}} (1-\textsc{arc}_{i,j,\textsc{sentence}}) + \sum_{\textsc{link}_{j,i,\textsc{sentence}}}(\textsc{arc}_{j,i,\textsc{sentence}}) \geq 1&\\
+  \end{align*}
   \caption{\small The ILP formulation.}
-\end{figure}
-
-\subsection{Slack Hierarchy}
-
-We introduced slack on the directional dependency variable tokens such that link types were allowed to deviate from the majority up to (1\% ?) of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for the possibility that both directions could still be assigned.
-
-\todo{} We also introduced slack on the link types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack places a prior on rare or never-before seen link types to be assigned in the same way as other similar link types.
-
-This slack hierarchy gave the ILP the flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
+\end{figure*}
 
 
 \subsection{Slack}
-We introduced slack on the directional dependency variables such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both directional dependency variables to true. This addressed noise in the link parser's label assignments, while still allowing for both directions to be assigned if needed.
+We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
+
+\section{Experiments and Results}
+To evaluate ...
+
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}. 
+
+The experiments were conducted on Russian and English sentences.
+The Russian sentences were taken from a part of the Russian National Corpus (about 75,000 sentences)\noteJH{cite?}. 
+The English sentences were taken from the conll bnews training data (about 60,000 sentences)\noteJH{cite?}. We were able to compare the resulting English link dependency data with the original conll to analyze the differences. 
+
+We publish the final link type to direction assignments so that anyone can easily turn a link parse into a dependency parse.
+
+
+We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
+We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. 
 
 \subsection{Stability of Results}
-
-We report on the convergence of our ILP method to a stable annotation scheme as the corpus size increases.
-
-
-We measured how the solution changed over increasing numbers of processed sentences. 
-Taking the solution to the largest run as the answer key, we measured how much the previous runs deviated from it. We measured the precision of whether the assignments in the smaller runs matched the assignments of the largest run and we measured the recall of whether the assignments in the largest run could be found in the smaller runs. 
 \begin{figure}[ht!]
   \small
-  \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
-  \caption{\small Precision/recall of results of English sentences}
+  \centering
+  \includegraphics[width=0.9\linewidth, keepaspectratio=true]{figure/precision_recall.png}
+  \caption{\small Precision/recall of increasing runs of English and Russian sentences}
 \end{figure}
-We found that the precision values converged to 100\% while the recall values continued to grow throughout our data. This indicates that the solutions of the previous runs were consistent with the largest run, and as the data grew we would continue to encounter novel link types and incorporate them.
-
-%\section{Other languages}
 
 
-\section{Link Corpus Experiment and Results}
+We found that the precision values converged to 100\% while the recall values continued to grow throughout the data. This indicates that the solutions of the previous runs were consistent with the largest run, and as the data increased we would continue to encounter novel link types and incorporate them.
 
-We will accomplish this by generating link parses using the AbiWord/CMU link grammar parser version 5.0.0 \noteJE{is this the version you used?} \cite{LINKPARSER-2014}, learning a direction to every encountered link label type, and then using these assignments for all link tokens in the link parse corpus. We formulate an integer linear programming problem that will find the smallest set of assignments that will still produce dependency parses that are acyclic with all nodes reachable from the root.
 
-From the ILP, we produce a dictionary of label-to-direction assignments. We publish this so that anyone can easily turn a link parse into a dependency parse.
+\subsection{Link Corpus Analysis}
+
+\begin{figure*}[ht!]
+  \centering
+  \input{figure/sentences.tikz}
+  \caption{Example Parses: The top blue arcs represent the conll dependencies, and the bottom red arcs are the directionalized link grammar parses}
+  \label{fig:parses}
+\end{figure*}
+
+
+
+
 
 Using the sentences of a dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly two thirds of the arcs in the conll dependency corpus. \todo{This is because...} 
 Of the links that match a corresponding dependency arc we measure whether the direction we chose is the same as the original dependency data. 
@@ -209,11 +230,12 @@ From this, we generated directionalized multiheaded dependency data to compare w
   \centering
   \small
   \input{figure/conll_analysis_sentences.tex}
-  \caption{\small Of the sentences used for this experiment section, about \input{figure/conll_analysis_sentences_dropped}
-    had at least one dropped word, and about \input{figure/conll_analysis_sentences_multiheaded}
-    had at least one multiheaded word}
+  \caption{\small From the original sentences, we discarded disconnected parses for the ILP. From these sentences, we only looked at the complete link parses and discarded sentences with dropped words for our analysis section. About \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences contained dropped words.}
 \end{figure}
 
+\todo{Fix the caption in the conll analysis sentence chart}
+
+About \input{figure/conll_analysis_sentences_multiheaded} of the sentences with complete parses had at least one multiheaded word
 
 
 Compared to the original conll data, the link parses match about half the conll arcs in location and directionality. The mismatches in the other half can be accounted for in the following ways.
@@ -228,12 +250,6 @@ In about 25\% of the cases, the conll arc's corresponding link would be assigned
 \section{Discussion}
 
 
-\begin{figure*}[ht!]
-  \centering
-  \input{figure/sentences.tikz}
-  \caption{Example Sentences}
-  \label{fig:parses}
-\end{figure*}
 
 \todo{more in the appendix ...}
 
@@ -277,5 +293,8 @@ We would like to introduce slack on the link grammar types such that link types 
 
 \todo[inline]{Show a bunch of English sentences with CoNLL vs.\@ link parses.
   Explain how they were selected and how the results are colorized etc.}
+
+Here we display a set of link parses as further examples
+
 
 \end{document}
