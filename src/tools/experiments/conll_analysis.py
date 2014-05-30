@@ -38,6 +38,7 @@ LATEX_DIR = "doc/figure/"
 LATEX_FILE_SENTENCE = LATEX_DIR+"conll_analysis_sentences.tex"
 LATEX_FILE_SENTENCE_DROPPED = LATEX_DIR+"conll_analysis_sentences_dropped.tex"
 LATEX_FILE_SENTENCE_MULTIHEADED = LATEX_DIR+"conll_analysis_sentences_multiheaded.tex"
+LATEX_FILE_SENTENCE_TOTAL = LATEX_DIR+"conll_analysis_sentences_total.tex"
 if not os.path.exists(LATEX_DIR):
     os.makedirs(LATEX_DIR)
 
@@ -425,9 +426,14 @@ f = open(LATEX_FILE_SENTENCE, "w+")
 f.write(result)
 f.close()
 
+
+
+#---------------------------------------------------------------------
+# Take our generated numbers and put them in latex files 
+# to be called by the paper
+#---------------------------------------------------------------------
 dropped_sentence_percentage = float(link_dropped_sentences) / link_sentence_total * 100
 dropped_sentence_percentage = "{:.2f}".format(dropped_sentence_percentage)+"\\%"
-
 multiheaded_sentence_percentage = float(multiheaded_sentence_count) / link_remaining_sentences * 100
 multiheaded_sentence_percentage = "{:.2f}".format(multiheaded_sentence_percentage)+"\\%"
 
@@ -439,6 +445,9 @@ f = open(LATEX_FILE_SENTENCE_MULTIHEADED, "w+")
 f.write(multiheaded_sentence_percentage)
 f.close()
 
+f = open(LATEX_FILE_SENTENCE_TOTAL, "w+")
+f.write("{:,d}".format(link_sentence_total))
+f.close()
 
 
 
