@@ -69,7 +69,7 @@ it is hard to train, test, or improve multi-headed parsers because few multi-hea
 To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs.  
 % OLD
 % ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
-We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of 70,000 \noteJE{fill in the number} parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  
+We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of \input{figure/conll_analysis_sentences_total.tex}parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  
 \end{abstract}
 
 \section{Multi-Headed Dependency Parsing}
@@ -128,50 +128,13 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 
 % Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies, and whether the multiheadedness of the link grammar offers additional dependency relationships not found in other corpora.
 
-%about 20\% 
-
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 \section{Integer Linear Programming}
-We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. 
+We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. Our task of finding the smallest set of assignments that would explain the parsesis also called model minimization\cite{ravi2009}.
 
 For every encountered label we generate two boolean label/direction variables (e.g. label/left, label/right). Setting one of these variables to \textsc{true} allows the label type to only go in the specified direction, while setting both would allow the label to go in either way.
 The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite\cite{achterberg2009scip}.
-
-\todo{cite model minimization papers}
-
-\begin{figure*}
-  \small
-  \begin{align*}
-    \text{Sets:}&&\\
-    &\textsc{link}_{i,j,\textsc{label},\textsc{sentence}} \in \textsc{links} &\\
-    &\textsc{label} \in \textsc{labels}&\\ 
-    &\textsc{dir} = \{\textsc{left}, \textsc{right}\} &\\
-    \text{Params:}&&\\
-    &\textsc{m}_\textsc{length} = \max (\forall{\textsc{link}_{i,j,\textsc{sentence}}} \max(i,j)) &\\
-    %&\textsc{count}_{\textsc{label}, \textsc{dir}} = \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 &\\
-    &\textsc{cost}_{\textsc{label}} = \frac{100}{ \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 } &\\
-    \text{Variables:}&&\\
-    &\textsc{slack}_{\textsc{link}} \geq 0 &\\ 
-    &\textsc{depth}_{i,\textsc{sentence}} \geq 0 &\\
-    &\textsc{allowed}_{\textsc{label},\textsc{dir}} = \{0,1\}&\\
-    &\textsc{arc}_{\textsc{link}} = \{0,1\} &\\
-    \text{minimize:}& &\\ 
-    &\sum_{\textsc{label}, \textsc{dir}} (\textsc{allowed}_{\textsc{label},\textsc{dir}}) + \textsc{cost}_{\textsc{label}} \cdot \sum_\textsc{link} \textsc{slack}_{\textsc{link}} &\\
-    &&\\
-    \text{subject to: }& &\\
-    &\text{Links go in the allowed directions, except for slack}&\\
-    &\forall{\textsc{link}_{i,j,\textsc{label}}}: 1-\textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{left}} + \textsc{slack}_{\textsc{link}} &\\
-    &\forall{\textsc{link}_{i,j,\textsc{label}}}: \textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{right}} + \textsc{slack}_{\textsc{link}} &\\
-    &\text{Depth constraints for acyclicity}&\\
-    &\forall{\textsc{link}_{i,\textsc{sentence}}}: \textsc{depth}_{\text{root},\textsc{sentence}} \leq \textsc{depth}_{i,\textsc{sentence}} &\\
-    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{i,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot\textsc{arc}_{i,j,\textsc{sentence}} \geq \textsc{depth}_{j,\textsc{sentence}} + 1 &\\
-    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{j,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot(1-\textsc{arc}_{i,j,\textsc{sentence}}) \geq \textsc{depth}_{i,\textsc{sentence}} + 1 &\\
-    &\text{Every token has a parent}&\\
-    &\forall{\textsc{link}_{i \neq \textsc{root},\textsc{sentence}}}: \sum_{\textsc{link}_{i,j,\textsc{sentence}}} (1-\textsc{arc}_{i,j,\textsc{sentence}}) + \sum_{\textsc{link}_{j,i,\textsc{sentence}}}(\textsc{arc}_{j,i,\textsc{sentence}}) \geq 1&\\
-  \end{align*}
-  \caption{\small The ILP formulation.}
-\end{figure*}
 
 
 \subsection{Slack}
@@ -179,33 +142,30 @@ We introduced slack such that the link types were allowed to deviate from the ma
 
 
 \section{Experiments and Results}
-To evaluate ...
 
 We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}. 
 
 The experiments were conducted on Russian and English sentences.
 The Russian sentences were taken from a part of the Russian National Corpus (about 75,000 sentences)\noteJH{cite?}. 
-The English sentences were taken from the conll bnews training data (about 60,000 sentences)\noteJH{cite?}. We were able to compare the resulting English link dependency data with the original conll to analyze the differences. 
+The English sentences were taken from the conll bnews training data (about 60,000 sentences)\noteJH{cite?}. We were also able to compare the resulting English link dependency data with the original conll to analyze the differences. 
 
-We publish the final link type to direction assignments so that anyone can easily turn a link parse into a dependency parse.
+In these languages, we also publish our link type to direction assignments so that anyone can use it to turn a link parse into a dependency parse.
 
 
+\subsection{Stability of Results}
 We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
 We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. 
 
-\subsection{Stability of Results}
 \begin{figure}[ht!]
   \small
   \centering
-  \includegraphics[width=0.9\linewidth, keepaspectratio=true]{figure/precision_recall.png}
-  \caption{\small Precision/recall of increasing runs of English and Russian sentences}
+  \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
+  \caption{\small Precision/recall of increasing runs of English and Russian sentences. The precision values converge while the recall values continue to grow throughout the data.}
 \end{figure}
+Because the precision values were high, we found that the solutions of the previous runs were consistent with the largest run, and as the data increased so did the recall values, and so we would continue to encounter novel link types and then incorporate them.
 
 
-We found that the precision values converged to 100\% while the recall values continued to grow throughout the data. This indicates that the solutions of the previous runs were consistent with the largest run, and as the data increased we would continue to encounter novel link types and incorporate them.
-
-
-\subsection{Link Corpus Analysis}
+\subsection{English Link-Dependency Analysis}
 
 \begin{figure*}[ht!]
   \centering
@@ -214,37 +174,31 @@ We found that the precision values converged to 100\% while the recall values co
   \label{fig:parses}
 \end{figure*}
 
+In order to compare 
+Using the sentences of the dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly three fourths of the arcs in the conll dependency corpus. \todo{This is because...} 
 
 
+Of the links that match a corresponding dependency arc 
 
-
-Using the sentences of a dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly two thirds of the arcs in the conll dependency corpus. \todo{This is because...} 
-Of the links that match a corresponding dependency arc we measure whether the direction we chose is the same as the original dependency data. 
+we measure whether the direction we chose is the same as the original dependency data. 
 Finally, we look to see that given a link label, whether the original conll label can be recovered.
 
 
-We ran the link parser and our ILP on the english bnews corpus sentences. \footnote{We ignored the link parses that the link parser could not find suitable attachments and returned a disconnected graph. This happened for roughly 19\% of the sentences in the corpus.} 
 From this, we generated directionalized multiheaded dependency data to compare with the original conll data.
 
 \begin{figure}[ht!]
   \centering
   \small
   \input{figure/conll_analysis_sentences.tex}
-  \caption{\small From the original sentences, we discarded disconnected parses for the ILP. From these sentences, we only looked at the complete link parses and discarded sentences with dropped words for our analysis section. About \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences contained dropped words.}
+  \caption{\small The subsets of English sentences used for this work.}
 \end{figure}
 
-\todo{Fix the caption in the conll analysis sentence chart}
-
-About \input{figure/conll_analysis_sentences_multiheaded} of the sentences with complete parses had at least one multiheaded word
+From the original sentences, we discarded disconnected parses for the ILP. From these sentences, we only looked at the complete link parses and discarded sentences with dropped words for our analysis section. We removed about \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences this way.
+Of the sentences with complete parses, about \input{figure/conll_analysis_sentences_multiheaded}had at least one multiheaded word.
 
 
 Compared to the original conll data, the link parses match about half the conll arcs in location and directionality. The mismatches in the other half can be accounted for in the following ways.
 
-\subsection{Blanks}
-The link parser will skip and attach no links to words that it failed to recognize from its dictionary. This accounts for about ten percent of the mismatches.
-
-\subsection{Directional Mismatches}
-In about 25\% of the cases, the conll arc's corresponding link would be assigned the opposite direction.
 
 
 \section{Discussion}
@@ -281,6 +235,44 @@ We would like to introduce slack on the link grammar types such that link types 
 
 \clearpage
 \appendix
+\section{ILP Formulation}
+Here we will present our ILP formulation. 
+
+\begin{figure*}
+  \small
+  \begin{align*}
+    \text{Sets:}&&\\
+    &\textsc{link}_{i,j,\textsc{label},\textsc{sentence}} \in \textsc{links} &\\
+    &\textsc{label} \in \textsc{labels}&\\ 
+    &\textsc{dir} = \{\textsc{left}, \textsc{right}\} &\\
+    \text{Params:}&&\\
+    &\textsc{m}_\textsc{length} = \max (\forall{\textsc{link}_{i,j,\textsc{sentence}}} \max(i,j)) &\\
+    %&\textsc{count}_{\textsc{label}, \textsc{dir}} = \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 &\\
+    &\textsc{cost}_{\textsc{label}} = \frac{100}{ \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 } &\\
+    \text{Variables:}&&\\
+    &\textsc{slack}_{\textsc{link}} \geq 0 &\\ 
+    &\textsc{depth}_{i,\textsc{sentence}} \geq 0 &\\
+    &\textsc{allowed}_{\textsc{label},\textsc{dir}} = \{0,1\}&\\
+    &\textsc{arc}_{\textsc{link}} = \{0,1\} &\\
+    \text{minimize:}& &\\ 
+    &\sum_{\textsc{label}, \textsc{dir}} (\textsc{allowed}_{\textsc{label},\textsc{dir}}) + \textsc{cost}_{\textsc{label}} \cdot \sum_\textsc{link} \textsc{slack}_{\textsc{link}} &\\
+    &&\\
+    \text{subject to: }& &\\
+    &\text{Links go in the allowed directions, except for slack}&\\
+    &\forall{\textsc{link}_{i,j,\textsc{label}}}: 1-\textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{left}} + \textsc{slack}_{\textsc{link}} &\\
+    &\forall{\textsc{link}_{i,j,\textsc{label}}}: \textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{right}} + \textsc{slack}_{\textsc{link}} &\\
+    &\text{Depth constraints for acyclicity}&\\
+    &\forall{\textsc{link}_{i,\textsc{sentence}}}: \textsc{depth}_{\text{root},\textsc{sentence}} \leq \textsc{depth}_{i,\textsc{sentence}} &\\
+    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{i,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot\textsc{arc}_{i,j,\textsc{sentence}} \geq \textsc{depth}_{j,\textsc{sentence}} + 1 &\\
+    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{j,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot(1-\textsc{arc}_{i,j,\textsc{sentence}}) \geq \textsc{depth}_{i,\textsc{sentence}} + 1 &\\
+    &\text{Every token has a parent}&\\
+    &\forall{\textsc{link}_{i \neq \textsc{root},\textsc{sentence}}}: \sum_{\textsc{link}_{i,j,\textsc{sentence}}} (1-\textsc{arc}_{i,j,\textsc{sentence}}) + \sum_{\textsc{link}_{j,i,\textsc{sentence}}}(\textsc{arc}_{j,i,\textsc{sentence}}) \geq 1&\\
+  \end{align*}
+  \caption{\small The ILP formulation.}
+\end{figure*}
+
+
+
 \section{English Link Types}
 
 \todo[inline]{A table here that lists each link grammar type together with its
