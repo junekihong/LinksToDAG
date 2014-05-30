@@ -109,10 +109,10 @@ for l,coord in zip(labels,file_coord):
          }.get(l,"blue")
 
 
-    m = {PE:"o",
-         RE:"o",
-         PR:"*",
-         RR:"*"}.get(l,".")
+    m = {PE:".",
+         RE:".",
+         PR:"+",
+         RR:"+"}.get(l,".")
 
 
     plt.plot(Xs,Ys, label=l, color=c, marker=m, linewidth=1.5)
