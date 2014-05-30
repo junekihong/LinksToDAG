@@ -6,7 +6,7 @@ from tikz_dependency import *
 from dependency_graph import *
 from conll_analysis_output import *
 
-DEBUG = True
+DEBUG = False
 
 # The directory containing the original conll data file
 CONLL_DIR = "data/"
@@ -425,7 +425,7 @@ f = open(LATEX_FILE_SENTENCE, "w+")
 f.write(result)
 f.close()
 
-dropped_sentence_percentage = float(link_dropped_sentences) / link_remaining_sentences * 100
+dropped_sentence_percentage = float(link_dropped_sentences) / link_sentence_total * 100
 dropped_sentence_percentage = "{:.2f}".format(dropped_sentence_percentage)+"\\%"
 
 multiheaded_sentence_percentage = float(multiheaded_sentence_count) / link_remaining_sentences * 100
