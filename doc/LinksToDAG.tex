@@ -62,7 +62,7 @@
 \maketitle
 
 \begin{abstract}
-Under multi-headed dependency grammar, a parse is a DAG rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, 
+Under multi-headed dependency grammar, a parse is a directed acyclic graph rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, 
 it is hard to train, test, or improve multi-headed parsers because few multi-headed corpora exist, particularly for the projective case.
 % OLD
 % investigate the benefit of such parsers or to work on making them faster or more accurate.  
@@ -134,14 +134,25 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. Our task of finding the smallest set of assignments that would explain the parsesis also called model minimization\cite{ravi2009}.
 
 For every encountered label we generate two boolean label/direction variables (e.g. label/left, label/right). Setting one of these variables to \textsc{true} allows the label type to only go in the specified direction, while setting both would allow the label to go in either way.
-The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite\cite{achterberg2009scip}.
+The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite \cite{achterberg2009scip}.
 
 
 \subsection{Slack}
 We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
 
+\section{English and Russian Data}
+The data used for this work came from English and Russian corpuses. The English sentences were taken from the bnews conll training data set \noteJH{cite} and provided about 60,000 sentence examples in total. 
+
+The Russian sentence data was taken from a part of the Russian National Corpus \noteJH{cite?}
+
+
+
 \section{Experiments and Results}
+
+
+
+
 
 We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}. 
 
@@ -236,7 +247,7 @@ We would like to introduce slack on the link grammar types such that link types 
 \clearpage
 \appendix
 \section{ILP Formulation}
-Here we will present our ILP formulation. 
+We present our ILP formulation. 
 
 \begin{figure*}
   \small
@@ -282,11 +293,30 @@ Here we will present our ILP formulation.
   cheap post-processor for LG parses.}
 
 \section{Sample English Parses}
+In this section, we will display 100 sample English parses. The top half of each parse visualization represents the CoNLL dependency parse, while the bottom half shows our directionalized link grammar parse. 
 
-\todo[inline]{Show a bunch of English sentences with CoNLL vs.\@ link parses.
-  Explain how they were selected and how the results are colorized etc.}
+\subsection{Sentence Selection}
+These sentences have been taken from the English bnews training data set. We chose to display sentences with complete link parses similar to the analysis section of this paper. We display the first 100 parses whose character lengths do not exceed the width of the page.
 
-Here we display a set of link parses as further examples
+\subsection{Parse Colorization}
+The top blue arcs represent the CoNLL dependency parses. For every arc:
+\begin{enumerate}
+\item If there is a corresponding link edge between the same nodes then a solid blue line is drawn.
+\item Or else a dotted blue line is drawn. 
+\end{enumerate}
+The bottom red arcs represent the directionalized link grammar parses. For every link edge:
+\begin{enumerate}
+\item If there is a corresponding CoNLL arc between the same nodes then a solid red line is drawn.
+\item If the matching arc is facing the opposite direction, then the link edge is drawn thicker.
+\item Of the remaining edges, if an edge is a multiheaded link, then it is drawn with thick orange.
+\item The rest of the remaining edges are drawn with dotted red lines.
+\end{enumerate}
+
+\subsection{Link Parser Annotations}
+The sentence used in the middle of the parse is taken from the output of the link parser. We removed sentences with dropped words, but they would have shown up in the parse as [bracketed]. There are also words that the link parser did not recognize, but rather made a guess as to its part of speech. These words are tagged with a [!] symbol at the end. The dashes in the link grammar part of speech tag annotations mean that the link parser did not return one.
+
+% Uncomment this to add in all of the parses. Warning: compilation will take a long time.
+%\input{figure/parses.tikz}
 
 
 \end{document}
