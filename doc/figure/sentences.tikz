@@ -21,40 +21,40 @@
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize CC} \& {\scriptsize JJ} \& {\scriptsize NNS} \& {\scriptsize AUXP} \& {\scriptsize VBN} \\
-			and \& few \& problems \& are \& reported \\
-			ij \& - \& n \& v \& v-d \\
+			{\scriptsize PRP} \& {\scriptsize DT} \& {\scriptsize VBP} \& {\scriptsize DT} \& {\scriptsize NN} \\
+			we \& all \& have \& a \& responsibility \\
+			- \& a \& v \& - \& n \\
 		\end{deptext}
-		\deproot[edge below, edge style = {red, thick}]{5}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{5}{root}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{Dmc}
-		\depedge[edge above, edge style = {blue, thick}]{3}{2}{adj}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{1}{mod}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{3}{mod}
-		\depedge[edge below, edge style = {red, ultra thick}]{4}{5}{Pvf}
-		\depedge[edge above, edge style = {blue, thick}]{5}{4}{mod}
-		\depedge[edge below, edge style = {red, dotted}]{1}{3}{Wdc}
-		\deproot[edge below, edge style = {red, dotted}]{1}{Wc}
-		\depedge[edge below, edge style = {red, dotted}]{3}{4}{Spx}
+		\depedge[edge above, edge style = {blue, dotted}]{1}{2}{det}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\deproot[edge above, edge style = {blue, thick}]{3}{root}
+		\depedge[edge below, edge style = {red, ultra thick}]{1}{3}{Sp}
+		\depedge[edge above, edge style = {blue, thick}]{3}{1}{mod}
+		\depedge[edge below, edge style = {red, thick}]{3}{5}{Os}
+		\depedge[edge above, edge style = {blue, thick}]{3}{5}{obj}
+		\depedge[edge below, edge style = {red, thick}]{5}{4}{Dsu}
+		\depedge[edge above, edge style = {blue, thick}]{5}{4}{det}
+		\deproot[edge below, edge style = {red, dotted}]{1}{Wd}
+		\depedge[edge below, edge style = {red, dotted}]{3}{2}{E}
 	\end{dependency}
 \end{subfigure}
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize JJ} \& {\scriptsize NNS} \& {\scriptsize RB} \& {\scriptsize VBD} \& {\scriptsize RB} \\
-			american \& astronauts \& even \& worked \& there \\
-			- \& n \& e \& v-d \& r \\
+			{\scriptsize NNP} \& {\scriptsize NNP} \& {\scriptsize VBZ} \& {\scriptsize JJ} \& {\scriptsize NNS} \\
+			south \& korea \& has \& different \& concerns \\
+			a \& - \& v \& a \& n \\
 		\end{deptext}
-		\deproot[edge below, edge style = {red, thick}]{4}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{4}{root}
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{AN}
-		\depedge[edge above, edge style = {blue, thick}]{2}{1}{adj}
-		\depedge[edge below, edge style = {red, ultra thick}]{2}{4}{Sp}
-		\depedge[edge above, edge style = {blue, thick}]{4}{2}{mod}
-		\depedge[edge below, edge style = {red, thick}]{4}{3}{E}
-		\depedge[edge above, edge style = {blue, thick}]{4}{3}{mod}
-		\depedge[edge below, edge style = {red, thick}]{4}{5}{MVp}
-		\depedge[edge above, edge style = {blue, thick}]{4}{5}{mod}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\deproot[edge above, edge style = {blue, thick}]{3}{root}
+		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{Ss}
+		\depedge[edge above, edge style = {blue, thick}]{3}{2}{mod}
+		\depedge[edge below, edge style = {red, thick}]{3}{5}{Op}
+		\depedge[edge above, edge style = {blue, thick}]{3}{5}{obj}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{A}
+		\depedge[edge above, edge style = {blue, thick}]{2}{1}{mod}
+		\depedge[edge below, edge style = {red, thick}]{5}{4}{Am}
+		\depedge[edge above, edge style = {blue, thick}]{5}{4}{adj}
 		\deproot[edge below, edge style = {red, dotted}]{2}{Wd}
 	\end{dependency}
 \end{subfigure}
