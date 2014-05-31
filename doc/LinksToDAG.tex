@@ -142,26 +142,13 @@ We introduced slack such that the link types were allowed to deviate from the ma
 
 
 \section{English and Russian Data}
-The data used for this work came from English and Russian corpuses. The English sentences were taken from the bnews conll training data set \noteJH{cite} and provided about 60,000 sentence examples in total. 
+The data used for this work came from English and Russian corpuses. The English sentences were taken from the bnews CoNLL training data set \noteJH{cite}. We were able to compare the our link parses with the dependencies.
+The Russian sentence data was taken from a part of the Russian National Corpus \noteJH{cite?}. With only the sentence data, we did not have dependencies to compare with.
 
-The Russian sentence data was taken from a part of the Russian National Corpus \noteJH{cite?}
-
-
+We also publish our link type to direction assignments so that anyone can use it to turn a link parse into a dependency parse.
 
 \section{Experiments and Results}
-
-
-
-
-
 We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}. 
-
-The experiments were conducted on Russian and English sentences.
-The Russian sentences were taken from a part of the Russian National Corpus (about 75,000 sentences)\noteJH{cite?}. 
-The English sentences were taken from the conll bnews training data (about 60,000 sentences)\noteJH{cite?}. We were also able to compare the resulting English link dependency data with the original conll to analyze the differences. 
-
-In these languages, we also publish our link type to direction assignments so that anyone can use it to turn a link parse into a dependency parse.
-
 
 \subsection{Stability of Results}
 We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
