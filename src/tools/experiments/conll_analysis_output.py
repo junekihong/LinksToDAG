@@ -206,19 +206,35 @@ Of the cases where the links had different directionality, what are the "extra" 
 def result_latex_corpus(original_sentence_count,
                         link_sentence_total, 
                         conll_analysis_sentence_count):
-
     result = ""
     result += "\t\\begin{tabular}{|l|l|}\n"
     result += "\t\t\\hline\n"
-    result += "\t\tOriginal number of sentences in conll corpus & "+str(original_sentence_count)+"\\\\ \n"
+    result += "\t\tNumber of English sentences used from the corpus & "+str(original_sentence_count)+"\\\\ \n"
     result += "\t\t\\hline\n"
     result += "\t\tSentences after discarding disconnected parses & "+str(link_sentence_total)+"\\\\ \n"
     result += "\t\t\\hline\n"
-    result += "\t\tSentences used for experiment and analysis & "+str(conll_analysis_sentence_count)+"\\\\ \n"
+    result += "\t\tSentences with complete parses used for analysis & "+str(conll_analysis_sentence_count)+"\\\\ \n"
     result += "\t\t\\hline\n"
     result += "\t\\end{tabular}\n"
 
     return result
 
 
-
+def result_latex_arcs(match_total, 
+                      reverse_match_total,
+                      mismatch_total,
+                      final_total):
+    result = "\t\\begin{tabular}{|l|l|l|}\n"
+    result += "\t\t\\hline\n"
+    result += "\t\t & CoNLL arcs & Percent of total \\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\tMatches: & "+str(match_total)+" & "+"{:.2f}\\%".format(float(match_total)/final_total*100)+"\\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\tFlipped direction: & "+str(reverse_match_total)+" & "+"{:.2f}\\%".format(float(reverse_match_total)/final_total*100)+"\\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\tMismatches: & "+str(mismatch_total)+" & "+"{:.2f}\\%".format(float(mismatch_total)/final_total*100)+"\\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\tTotal: & "+str(final_total)+" & "+str(int(float(final_total)/final_total)*100)+"\\% \\\\ \n"
+    result += "\t\t\\hline\n"
+    result += "\t\\end{tabular}\n"
+    return result

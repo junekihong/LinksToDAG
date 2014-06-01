@@ -36,9 +36,11 @@ if len(sys.argv) > 3:
 # Latex directory and files. Where we will store these results in latex form.
 LATEX_DIR = "doc/figure/"
 LATEX_FILE_SENTENCE = LATEX_DIR+"conll_analysis_sentences.tex"
+LATEX_FILE_SENTENCE_DISCONNECTED = LATEX_DIR+"conll_analysis_sentences_disconnected.tex"
 LATEX_FILE_SENTENCE_DROPPED = LATEX_DIR+"conll_analysis_sentences_dropped.tex"
 LATEX_FILE_SENTENCE_MULTIHEADED = LATEX_DIR+"conll_analysis_sentences_multiheaded.tex"
 LATEX_FILE_SENTENCE_TOTAL = LATEX_DIR+"conll_analysis_sentences_total.tex"
+LATEX_FILE_ARCS = LATEX_DIR+"conll_analysis_arcs.tex"
 if not os.path.exists(LATEX_DIR):
     os.makedirs(LATEX_DIR)
 
@@ -343,7 +345,7 @@ for linkSentence in link_results:
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
     # Filter out sentences to only up to length 16
-    elif example_parses_count < example_parses_limit and len(linkSentence.split()) <= 1500:
+    elif example_parses_count < example_parses_limit and len(linkSentence) <= 85:
         tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
         EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
         EXAMPLE_PARSES.write(tikz)
@@ -426,16 +428,23 @@ f = open(LATEX_FILE_SENTENCE, "w+")
 f.write(result)
 f.close()
 
+result = result_latex_arcs(match_total, reverse_match_total, mismatch_total, arc_total)
+f = open(LATEX_FILE_ARCS, "w+")
+f.write(result)
+f.close()
 
 
 #---------------------------------------------------------------------
 # Take our generated numbers and put them in latex files 
 # to be called by the paper
 #---------------------------------------------------------------------
-dropped_sentence_percentage = float(link_dropped_sentences) / link_sentence_total * 100
-dropped_sentence_percentage = "{:.2f}".format(dropped_sentence_percentage)+"\\%"
+disconnected_sentence_percentage = "{:.2f}".format(float(TRIAL_NUM - link_sentence_total) / TRIAL_NUM * 100)+"\\%"
+dropped_sentence_percentage = "{:.2f}".format(float(link_dropped_sentences) / link_sentence_total * 100)+"\\%"
 multiheaded_sentence_percentage = float(multiheaded_sentence_count) / link_remaining_sentences * 100
 multiheaded_sentence_percentage = "{:.2f}".format(multiheaded_sentence_percentage)+"\\%"
+f = open(LATEX_FILE_SENTENCE_DISCONNECTED, "w+")
+f.write(disconnected_sentence_percentage)
+f.close()
 
 f = open(LATEX_FILE_SENTENCE_DROPPED, "w+")
 f.write(dropped_sentence_percentage)
