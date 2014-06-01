@@ -136,30 +136,39 @@ We formulate an ILP to find the minimal set of link type to directionality assig
 For every encountered label we generate two boolean label/direction variables (e.g. label/left, label/right). Setting one of these variables to \textsc{true} allows the label type to only go in the specified direction, while setting both would allow the label to go in either way.
 The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite \cite{achterberg2009scip}.
 
-
 \subsection{Slack}
 We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
+\section{Data Sets}
+The data used for this work came from English bnews CoNLL dependency training data \noteJH{cite?} and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}}. With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
 
-\section{English and Russian Data}
-The data used for this work came from English and Russian corpuses. The English sentences were taken from the bnews CoNLL training data set \noteJH{cite}. We were able to compare the our link parses with the dependencies.
-The Russian sentence data was taken from a part of the Russian National Corpus \noteJH{cite?}. With only the sentence data, we did not have dependencies to compare with.
+\subsection{Discarding Incomplete Link Parses}
+Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
 
-We also publish our link type to direction assignments so that anyone can use it to turn a link parse into a dependency parse.
+For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped}of the non-disconnected sentences were removed, leaving us working only with complete link parses.
+
+\begin{figure}[ht!]
+  \centering
+  \small
+  \input{figure/conll_analysis_sentences.tex}
+  \caption{\small The English sentences used for this work.}
+\end{figure}
+
+\noteJH{The stability results come from the second row of this table. The analysis later in the paper uses the third row. Putting this section here might be confusing to readers?}
 
 \section{Experiments and Results}
 We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}. 
 
 \subsection{Stability of Results}
-We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
-We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. 
-
 \begin{figure}[ht!]
   \small
   \centering
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
   \caption{\small Precision/recall of increasing runs of English and Russian sentences. The precision values converge while the recall values continue to grow throughout the data.}
 \end{figure}
+We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
+We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. 
+
 Because the precision values were high, we found that the solutions of the previous runs were consistent with the largest run, and as the data increased so did the recall values, and so we would continue to encounter novel link types and then incorporate them.
 
 
@@ -168,34 +177,26 @@ Because the precision values were high, we found that the solutions of the previ
 \begin{figure*}[ht!]
   \centering
   \input{figure/sentences.tikz}
-  \caption{Example Parses: The top blue arcs represent the conll dependencies, and the bottom red arcs are the directionalized link grammar parses}
+  \caption{\small Example Parses: The top blue arcs represent conll dependencies; the bottom red arcs represent directionalized link grammar parses. See the Appendix for more details.}
   \label{fig:parses}
 \end{figure*}
 
 In order to compare 
 Using the sentences of the dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly three fourths of the arcs in the conll dependency corpus. \todo{This is because...} 
 
-
-Of the links that match a corresponding dependency arc 
+\begin{figure}[ht!]
+  \centering
+  \small
+  \input{figure/conll_analysis_arcs.tex}
+  \caption{Arcs that match links}
+\end{figure}
 
 we measure whether the direction we chose is the same as the original dependency data. 
 Finally, we look to see that given a link label, whether the original conll label can be recovered.
 
 
-From this, we generated directionalized multiheaded dependency data to compare with the original conll data.
-
-\begin{figure}[ht!]
-  \centering
-  \small
-  \input{figure/conll_analysis_sentences.tex}
-  \caption{\small The subsets of English sentences used for this work.}
-\end{figure}
-
-From the original sentences, we discarded disconnected parses for the ILP. From these sentences, we only looked at the complete link parses and discarded sentences with dropped words for our analysis section. We removed about \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences this way.
 Of the sentences with complete parses, about \input{figure/conll_analysis_sentences_multiheaded}had at least one multiheaded word.
 
-
-Compared to the original conll data, the link parses match about half the conll arcs in location and directionality. The mismatches in the other half can be accounted for in the following ways.
 
 
 
@@ -236,20 +237,20 @@ We would like to introduce slack on the link grammar types such that link types 
 \section{ILP Formulation}
 We present our ILP formulation. 
 
-\begin{figure*}
+\begin{figure}[!htb]
   \small
   \begin{align*}
     \text{Sets:}&&\\
-    &\textsc{link}_{i,j,\textsc{label},\textsc{sentence}} \in \textsc{links} &\\
+    &\textsc{link}_{\textsc{sentence},\textsc{label}, i,j} \in \textsc{links} &\\
     &\textsc{label} \in \textsc{labels}&\\ 
     &\textsc{dir} = \{\textsc{left}, \textsc{right}\} &\\
     \text{Params:}&&\\
-    &\textsc{m}_\textsc{length} = \max (\forall{\textsc{link}_{i,j,\textsc{sentence}}} \max(i,j)) &\\
+    &\textsc{m}_\textsc{length} = \max (\forall{\textsc{link}_{\textsc{sentence}, i,j}} \max(i,j)) &\\
     %&\textsc{count}_{\textsc{label}, \textsc{dir}} = \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 &\\
     &\textsc{cost}_{\textsc{label}} = \frac{100}{ \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 } &\\
     \text{Variables:}&&\\
     &\textsc{slack}_{\textsc{link}} \geq 0 &\\ 
-    &\textsc{depth}_{i,\textsc{sentence}} \geq 0 &\\
+    &\textsc{depth}_{\textsc{sentence},i} \geq 0 &\\
     &\textsc{allowed}_{\textsc{label},\textsc{dir}} = \{0,1\}&\\
     &\textsc{arc}_{\textsc{link}} = \{0,1\} &\\
     \text{minimize:}& &\\ 
@@ -260,16 +261,17 @@ We present our ILP formulation.
     &\forall{\textsc{link}_{i,j,\textsc{label}}}: 1-\textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{left}} + \textsc{slack}_{\textsc{link}} &\\
     &\forall{\textsc{link}_{i,j,\textsc{label}}}: \textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{right}} + \textsc{slack}_{\textsc{link}} &\\
     &\text{Depth constraints for acyclicity}&\\
-    &\forall{\textsc{link}_{i,\textsc{sentence}}}: \textsc{depth}_{\text{root},\textsc{sentence}} \leq \textsc{depth}_{i,\textsc{sentence}} &\\
-    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{i,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot\textsc{arc}_{i,j,\textsc{sentence}} \geq \textsc{depth}_{j,\textsc{sentence}} + 1 &\\
-    &\forall{\textsc{link}_{i,j,\textsc{sentence}}}: \textsc{depth}_{j,\textsc{sentence}} + \textsc{m}_\textsc{length}\cdot(1-\textsc{arc}_{i,j,\textsc{sentence}}) \geq \textsc{depth}_{i,\textsc{sentence}} + 1 &\\
+    &\forall{\textsc{link}_{\textsc{sentence},i}}: \textsc{depth}_{\textsc{sentence},\text{root}} \leq \textsc{depth}_{\textsc{sentence},i} &\\
+    &\forall{\textsc{link}_{\textsc{sentence},i,j}}: \textsc{depth}_{\textsc{sentence},i} + \textsc{m}_\textsc{length}\cdot\textsc{arc}_{\textsc{sentence},i,j} \geq \textsc{depth}_{\textsc{sentence},j} + 1 &\\
+    &\forall{\textsc{link}_{\textsc{sentence},i,j}}: \textsc{depth}_{\textsc{sentence},j} + \textsc{m}_\textsc{length}\cdot(1-\textsc{arc}_{\textsc{sentence},i,j}) \geq \textsc{depth}_{\textsc{sentence},i} + 1 &\\
     &\text{Every token has a parent}&\\
-    &\forall{\textsc{link}_{i \neq \textsc{root},\textsc{sentence}}}: \sum_{\textsc{link}_{i,j,\textsc{sentence}}} (1-\textsc{arc}_{i,j,\textsc{sentence}}) + \sum_{\textsc{link}_{j,i,\textsc{sentence}}}(\textsc{arc}_{j,i,\textsc{sentence}}) \geq 1&\\
+    &\forall{\textsc{link}_{\textsc{sentence},i \neq \textsc{root}}}: \sum_{\textsc{link}_{\textsc{sentence},i,j}} (1-\textsc{arc}_{\textsc{sentence},i,j}) + \sum_{\textsc{link}_{\textsc{sentence},j,i}}(\textsc{arc}_{\textsc{sentence},j,i}) \geq 1&\\
   \end{align*}
   \caption{\small The ILP formulation.}
-\end{figure*}
+\end{figure}
 
 
+\clearpage
 
 \section{English Link Types}
 
