@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, os
+import sys, os, operator 
 from pprint import pprint
 from tikz_dependency import *
 from dependency_graph import *
@@ -193,6 +193,14 @@ def analysis_words(conlls,links):
     #dropped_data = (dropped_word_count, hasDropped)
     #return (dropped_data, multiheaded_data, word_count)
     return (multiheaded_data, word_count)
+
+
+
+
+# Analysis on the links. For the appendix of the paper
+def analysis_links(links):
+    print links
+
 
 
 
@@ -485,30 +493,20 @@ for (label_conll, label_link) in mismatch_directionality_counts:
     
     
 
-#pprint(link_label_prediction)
+pprint(link_label_prediction)
 
 predictions = []
 
-import operator 
 for label_link in link_label_prediction:
     conll_map = link_label_prediction[label_link]
     predictions.append((label_link, max(conll_map.iteritems(), key=operator.itemgetter(1))[0]))
 
 #predictions.sort()
-
-#print
-#print
 #pprint(predictions)
 
 
 
-#print "ALL EXTRA COUNTS"
-#pprint(all_extra_counts)
-#print
 
-#print "ALL BLANK COUNTS"
-#pprint(all_blank_counts)
-#print
 
 
 

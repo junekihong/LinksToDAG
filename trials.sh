@@ -3,9 +3,9 @@
 typeset -i i END
 
 
-#END=10000
+END=4096
 #END=60030
-END=60030
+#END=16384
 #INCREMENT=1
 
 SENTENCES="data/english_bnews_train.sentences"
@@ -92,7 +92,7 @@ fi
 
 
 
-echo $RUNTIMES $END $'\n'The CLSP machines cant run plotter. Please download files and run: $'\n'python src/tools/plotter.py -x "Sentences" -y "Percent" -o $SOL_PRECISION_RECALL $TXT_PRECISION $TXT_RECALL | mutt -s $END -a $RUNTIMES -a $TXT_PRECISION -a $TXT_RECALL -- junekihong@gmail.com
+#echo $RUNTIMES $END $'\n'The CLSP machines cant run plotter. Please download files and run: $'\n'python src/tools/plotter.py -x "Sentences" -y "Percent" -o $SOL_PRECISION_RECALL $TXT_PRECISION $TXT_RECALL | mutt -s $END -a $RUNTIMES -a $TXT_PRECISION -a $TXT_RECALL -- junekihong@gmail.com
 
 #-a $TYPE_ANALYSIS -a $CONLL_ANALYSIS -- junekihong@gmail.com
 
