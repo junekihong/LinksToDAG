@@ -162,12 +162,12 @@ For our analysis of these parses, we further discarded those that had dropped wo
 
 \section{Integer Linear Programming Model}
 
-For each undirected labeled edge $ij$ in the link corpus, where $i,j$ denote tokens of the same sentence with $i < j$, we introduce nonnegative integer variables $x_{ij}$ and $x_{ji}$ with a constraint $x_{ij}+x_{ji}=1$.  We interpret $x_{ij}=1$ or $x_{ji}=1$ to mean that the link has direction $i \rightarrow j$ or $i \leftarrow j$, respectively.\footnote{In practice we halve the number of variables by replacing $x_{ji}$ with $1-x_{ij}$ for $j > i$, but that obscures the exposition.}
+For each undirected labeled edge $ij$ in the link corpus, where $i,j$ denote tokens in the same sentence with $i < j$, we introduce nonnegative integer variables $x_{ij}$ and $x_{ji}$ with a constraint $x_{ij}+x_{ji}=1$.  We interpret $x_{ij}=1$ or $x_{ji}=1$ to mean that the link has direction $i \rightarrow j$ or $i \leftarrow j$, respectively.\footnote{In practice we halve the number of variables by replacing $x_{ji}$ with $1-x_{ij}$ for $j > i$, but that obscures the exposition.}
 
 % OLD VERSION
 % we introduce a variable $x_{ij}$ that is 0 or 1 according to whether $e$ points left or right.  We abbreviate $1-x_{ij}$ as $\bar{x}_{ij}$.
 
-For each non-0 token $v$, we ensure that it has at least one parent by constraining
+For each non-0 token $v$, we ensure that it has at least one parent by constraining\footnote{To denote two linked tokens, we use variables $i,j$ when $i$ is to the left of $j$, or variables $u,v$ when $u$ is the parent of $v$.}
 \begin{align}\label{eqn:oneparent}
 \sum_u x_{uv} & \geq 1
 \end{align}
@@ -175,7 +175,7 @@ For each non-0 token $v$, we ensure that it has at least one parent by constrain
 % $$\sum_{u < v} x_{uv} + \sum_{u > v} \bar{x}_{vu} \geq 1$$
 where $u$ ranges only over tokens such that the relevant variable exists.
 %
-To prevent cycles,\footnote{This also ensures {\sc reachable}, given \eqnref{oneparent}.} for each token $v$ we introduce a depth variable $d_v$ in the range $[0,n_v]$ (not constrained to be integer), where $n_v$ is the length of the sentence containing $v$.  We require a child's depth to be at least 1 greater than each of its parents' depths---since this can be satisfied iff the sentence has no directed cycles:
+To prevent cycles,\footnote{This also ensures {\sc reachable}, given \eqnref{oneparent}.} for each token $v$ we introduce a depth variable $d_v$ in the range $[0,n_v]$ (not constrained to be integer), where $n_v$ is the length of the sentence containing $v$.  We require a child's depth to be at least 1 greater than each of its parents' depths---constraints that can be satisfied iff the sentence has no directed cycles:
 \begin{align}\label{eqn:nocycles}
 (\forall u)\; d_v + (1+n_v) \cdot (1-x_{uv}) & \geq 1+d_u
 % OLD VERSION
@@ -186,7 +186,7 @@ The second summand ensures that \eqnref{nocycles} is trivially satisfied (hence 
 
 \noteJE{what's the point of the root\_depth constraint in the .zpl file?  Almost trivially satisfied.}
 
-Finally, we encourage all links with the same label \noteJE{explain that we mean capital letters?} to have the same direction.  For each label $L$, we introduce binary variables $r_v$ and $\ell_v$ which say that a link of type $L$ is ``allowed'' to point right or left, respectively.  For each undirected edge $ij$ of label $L$, with $i < j$, we write
+Finally, we encourage all links with the same label \noteJE{explain that we mean capital letters?} to have the same direction.  For each label $L$, we introduce binary variables $r_L$ and $\ell_L$, which say whether a link of type $L$ is ``allowed'' to point right or left, respectively.  For each undirected edge $ij$ of label $L$, with $i < j$, we write
 \begin{align}
 x_{ij} &\leq r_L + s_{ij} & 
 x_{ji} &\leq \ell_L + s_{ij}
@@ -225,6 +225,7 @@ We recorded the precision of whether the assignments in the smaller runs could b
 
 Because the precision values were high, we found that the solutions of the previous runs were consistent with the largest run, and as the data increased so did the recall values, and so we would continue to encounter novel link types and then incorporate them.
 
+\NoteJE{how often is the ``both'' option used?  and how much slack do we have?}
 
 \subsection{English Link-Dependency Analysis}
 
@@ -247,17 +248,13 @@ Using the sentences of the dependency corpus as comparison, we find that the lin
   \caption{Arcs that match links}
 \end{figure}
 
-we measure whether the direction we chose is the same as the original dependency data. 
-Finally, we look to see that given a link label, whether the original conll label can be recovered.
-
+we measure whether the direction we chose is the same as the original dependency data.  Finally, we look to see that given a link label, whether the original conll label can be recovered.
 
 Of the sentences with complete parses, about \input{figure/conll_analysis_sentences_multiheaded}
 \noteJE{why ``about''?}
 had at least one multiheaded word.
 
-\NoteJE{how often is the ``both'' option used?}
-
-\NoteJE{discuss differences!}
+\NoteJE{discuss linguistic differences!}
 
 \NoteJE{what do we say about Russian?}
 
