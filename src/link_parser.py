@@ -45,7 +45,7 @@ class linkParser:
 
         # Time out the link parser. Don't even need to bother with its internal timeout.
         timeout = str(30)
-        linkparser_process = Popen(["timeout", timeout, "link-parser", self.language, "-!graphics=0", "-!links=0", "-!echo=1", "-!postscript=1", "-!panic=0"], stdin=echo_process.stdout, stdout=PIPE, stderr=subprocess.PIPE)
+        linkparser_process = Popen(["timeout", timeout, "link-parser", self.language, "-!graphics=0", "-!links=0", "-!echo=1", "-!postscript=1", "-!panic=0", "-!null"], stdin=echo_process.stdout, stdout=PIPE, stderr=subprocess.PIPE)
         echo_process.stdout.close()
 
         output, err = linkparser_process.communicate()        
