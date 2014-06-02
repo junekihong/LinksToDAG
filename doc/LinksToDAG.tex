@@ -136,6 +136,30 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
+\section{Data Sets}
+The data used for this work came from English bnews CoNLL dependency training data \noteJH{cite?} \noteJE{wait a minute, the bnews is not from CoNLL!  It is merely in CoNLL format.  It is from Ariya Rastrow, and is automatically parsed, I think.  We should be comparing on hand-parsed data.}  and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}} \noteJE{give citation}. 
+
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained complete, connected parses for only !!! (of !!!) English sentences and !!! (of !!!) Russian sentences, discarding the other sentences. \noteJE{fill these !!! in automatically} These two languages have the most complete lexicons at present, although lexicons for !!! other languages are available.  
+
+% With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
+
+\subsection{Discarding Incomplete Link Parses}
+
+\NoteJE{ideally we could cut this section given what I wrote above.  However, you seem to be saying that we did train on sentences with dropped words as long as the parses were connected.  Didn't we decide to drop those sentences too?}
+
+Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
+
+For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped}of the non-disconnected sentences were removed, leaving us working only with complete link parses.
+
+\begin{figure}[ht!]
+  \centering
+  \small
+  \input{figure/conll_analysis_sentences.tex}
+  \caption{\small The English sentences used for this work.}
+\end{figure}
+
+\noteJH{The stability results come from the second row of this table. The analysis later in the paper uses the third row. Putting this section here might be confusing to readers?}
+
 \section{Integer Linear Programming Model}
 
 For each undirected labeled edge $ij$ in the link corpus, where $i,j$ denote tokens of the same sentence with $i < j$, we introduce nonnegative integer variables $x_{ij}$ and $x_{ji}$ with a constraint $x_{ij}+x_{ji}=1$.  We interpret $x_{ij}=1$ or $x_{ji}=1$ to mean that the link has direction $i \rightarrow j$ or $i \leftarrow j$, respectively.\footnote{In practice we halve the number of variables by replacing $x_{ji}$ with $1-x_{ij}$ for $j > i$, but that obscures the exposition.}
@@ -183,30 +207,6 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 % The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite \cite{achterberg2009scip}.
 % \subsection{Slack}
 % We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
-
-\section{Data Sets}
-The data used for this work came from English bnews CoNLL dependency training data \noteJH{cite?} \noteJE{wait a minute, the bnews is not from CoNLL!  It is merely in CoNLL format.  It is from Ariya Rastrow, and is automatically parsed, I think.  We should be comparing on hand-parsed data.}  and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}} \noteJE{give citation}. 
-
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained complete, connected parses for only !!! (of !!!) English sentences and !!! (of !!!) Russian sentences, discarding the other sentences. \noteJE{fill these !!! in automatically} These two languages have the most complete lexicons at present, although lexicons for !!! other languages are available.  
-
-% With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
-
-\subsection{Discarding Incomplete Link Parses}
-
-\NoteJE{ideally we could cut this section given what I wrote above.  However, you seem to be saying that we did train on sentences with dropped words as long as the parses were connected.  Didn't we decide to drop those sentences too?}
-
-Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
-
-For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped}of the non-disconnected sentences were removed, leaving us working only with complete link parses.
-
-\begin{figure}[ht!]
-  \centering
-  \small
-  \input{figure/conll_analysis_sentences.tex}
-  \caption{\small The English sentences used for this work.}
-\end{figure}
-
-\noteJH{The stability results come from the second row of this table. The analysis later in the paper uses the third row. Putting this section here might be confusing to readers?}
 
 \section{Experiments and Results}
 
