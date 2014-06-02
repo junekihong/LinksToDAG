@@ -32,6 +32,8 @@
 
 \usepackage{tikz-dependency}
 
+\newcommand{\eqnref}[1]{\eqref{eqn:#1}}
+
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}  % allows better color names
 \usepackage{todonotes}   % insert [disable] to disable all notes
 % Note that these macros accept optional arguments such as 
@@ -46,6 +48,7 @@
 
 % \newcommand{\root}{\texttt{\$}}
 
+
 \title{Deriving Multi-Headed Projective Dependency Parses \\ from Link Grammar Parses}
 % Oriented link grammar: Creating a multi-headed dependency corpus.
 
@@ -57,6 +60,8 @@
 % }
 
 \date{}
+
+\setlength\titlebox{3cm}    % Expanding the titlebox
 
 \begin{document}
 \maketitle
@@ -80,10 +85,11 @@ In the special case $u=0$, the edge designates $v$ as playing some special top-l
 
 As recently discussed by \newcite{gomezrodriguez-nivre-2013}, one might impose various requirements on the parse graph:
 \begin{itemize}
-\item {\sc Single-Head}: each word has at most one parent
+\item {\sc Single-Head}: each word has $\leq 1$ parent
 \item {\sc Acyclic}: there are no directed cycles
 \item {\sc Connected}: each pair of words has a undirected path between them
 \item {\sc Reachable}: each word can be reached from 0 by a directed path
+  \noteJE{note that this implies connected?  or does connected not allow 0 words on the path, i.e., does it restrict 0 to one child, and if not, is there a principle for that?  If no one, mention in footnote 1.}
 \item {\sc Planar}: edges may not ``cross'' \\ (if there are edges between $u,v$ and between $i,j$, where $u < i < v$, then $u \leq j \leq v$)
 \end{itemize}
 It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.\footnote{{\sc Projective} basically means {\sc Planar} + {\sc Reachable}.}  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
@@ -104,17 +110,17 @@ A few past NLP papers have explored multi-headed dependency parsing \cite{buchkr
 
 All of these options result in non-projective parses, so the parsers must use non-projective or pseudo-projective algorithms.
 
-It seems at first that no one has worked out annotation conventions for {\em projective} multi-headed dependency parsing.  However, this is not quite true.  Link Grammar \cite{SleatorTemperly91} is a grammar-based formalism for projective dependency parsing with {\em undirected} links.  It produces undirected connected planar graphs.  The annotation conventions are implicit in the detailed Link Grammar lexicon,%
+It seems at first that no one has worked out annotation conventions for {\em projective} multi-headed dependency parsing.  However, this is not quite true.  Link Grammar \cite{SleatorTemperly91} is a grammar-based formalism for projective dependency parsing with {\em undirected} links.  It produces undirected connected planar graphs.  Annotation conventions are implicit in the detailed lexicon for the Link Grammar Parser,\noteJE{check caps}%
 \footnote{\url{http://www.abisource.com/projects/link-grammar/dict/introduction.html}.  The 122 link types in the English lexicon are documented at \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html}.} 
 which specifies for every word a constraint on the {\em sequence} of labeled leftward and rightward edges attached to it.  As remarked by \newcite{eisner-2000-iwptbook}, this is analogous to dependency grammar's use of head automata to constrain a word's sequence of left and right children.  For example, in {\em ``The boy that Jill skipped with fell down,''} the word {\em with} uses a lexical entry that requires it to link to a governing verb to the left, an extracted object farther to the left, and nothing to the right.
 
-Given a link grammar parse, it would be straightforward to convert it to an acyclic dependency parse by orienting all edges rightward.  However, the result may violate the {\sc Reachability} constraint.  Instead we could orient all edges by depth-first search from the root node, which yields a DAG satisfying all our constraints.  However, this might result in inconsistent annotation conventions, with some \texttt{S} links pointing from subject to verb and others from verb to subject.  
+Given a link grammar parse, it would be straightforward to convert it to an acyclic dependency parse by orienting all edges rightward.  However, the result may violate the {\sc Reachable} constraint.  Instead we could orient all edges by depth-first search from the root node, which yields a DAG satisfying all our constraints.  However, this might result in inconsistent annotation conventions, with some \texttt{S}-labeled links pointing from subject to verb and others from verb to subject.  
 
-We supposed that the link grammar lexicon designers actually had a consistent direction in mind for each edge type.  We would expect verbs to point to their subject arguments in dependency grammar, and so we surmise that all \texttt{S} links are intended to point leftward (from verb to subject: {\em ``Jack $\stackrel{\texttt{S}}{\leftarrow}$ is falling''}).  The link grammar designers take care to use a distinct \texttt{SI} label in cases of subject-verb inversion, and we surmise that \texttt{SI} links are intended to point rightward (again from verb to subject: {\em ``Jack $\stackrel{\texttt{SI}}{\rightarrow}$ is falling''}).
+We supposed that the link grammar lexicon designers actually had a consistent direction in mind for each edge type.  We would expect verbs to point to their subject arguments in dependency grammar, and so we surmise that all \texttt{S} links are intended to point leftward (from verb to subject: {\em ``Jack $\stackrel{\texttt{S}}{\leftarrow}$ is falling''}).  The link grammar designers take care to use a distinct \texttt{SI} label in cases of subject-verb inversion, and we surmise that \texttt{SI} links are intended to point rightward (again from verb to subject: {\em ``Is $\stackrel{\texttt{SI}}{\rightarrow}$ Jack falling?''}).
 
 Our goal in this paper is to recover these implicit directions by global optimization.  We seek a fixed mapping from labels to directions such that we can interpret link grammar parses as directed dependency parses that satisfy all of our constraints.
 
-Our first thought was to seek a direction mapping such that no parsed word sequence allowed by the link grammar lexicon could possibly violate our constraints after directions were imposed.  This is a well-defined constraint programming problem.  For example, to prevent cyclicity, we would require (roughly speaking) that no word type could follow a sequence of directed rightward links through other word types and then a leftward link back to itself.  
+Our first thought was to seek a direction mapping such that no parsed word sequence allowed by the link grammar lexicon could possibly violate our constraints after directions were imposed.  This is a well-defined constraint programming problem.  For example, to prevent cyclicity, we would require (roughly speaking) that no word type in the lexicon could follow a sequence of directed rightward links through other word types and then a leftward link back to itself.  
 
 However, working directly with the link grammar lexicon format is somewhat tricky.  We also feared that there would not be a perfect solution---for example, because of errors in the lexicon, or linguistically unnatural word sequences not anticipated by the grammar designers.  In this case it would not be clear how to relax our constraints.
 
@@ -130,19 +136,65 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
-\section{Integer Linear Programming}
-We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. Our task of finding the smallest set of assignments that would explain the parsesis also called model minimization\cite{ravi2009}.
+\section{Integer Linear Programming Model}
 
-For every encountered label we generate two boolean label/direction variables (e.g. label/left, label/right). Setting one of these variables to \textsc{true} allows the label type to only go in the specified direction, while setting both would allow the label to go in either way.
-The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite \cite{achterberg2009scip}.
+For each undirected labeled edge $ij$ in the link corpus, where $i,j$ denote tokens of the same sentence with $i < j$, we introduce nonnegative integer variables $x_{ij}$ and $x_{ji}$ with a constraint $x_{ij}+x_{ji}=1$.  We interpret $x_{ij}=1$ or $x_{ji}=1$ to mean that the link has direction $i \rightarrow j$ or $i \leftarrow j$, respectively.\footnote{In practice we halve the number of variables by replacing $x_{ji}$ with $1-x_{ij}$ for $j > i$, but that obscures the exposition.}
 
-\subsection{Slack}
-We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
+% OLD VERSION
+% we introduce a variable $x_{ij}$ that is 0 or 1 according to whether $e$ points left or right.  We abbreviate $1-x_{ij}$ as $\bar{x}_{ij}$.
+
+For each non-0 token $v$, we ensure that it has at least one parent by constraining
+\begin{align}\label{eqn:oneparent}
+\sum_u x_{uv} & \geq 1
+\end{align}
+% OLD VERSION
+% $$\sum_{u < v} x_{uv} + \sum_{u > v} \bar{x}_{vu} \geq 1$$
+where $u$ ranges only over tokens such that the relevant variable exists.
+%
+To prevent cycles,\footnote{This also ensures {\sc reachable}, given \eqnref{oneparent}.} for each token $v$ we introduce a depth variable $d_v$ in the range $[0,n_v]$ (not constrained to be integer), where $n_v$ is the length of the sentence containing $v$.  We require a child's depth to be at least 1 greater than each of its parents' depths---since this can be satisfied iff the sentence has no directed cycles:
+\begin{align}\label{eqn:nocycles}
+(\forall u)\; d_v + (1+n_v) \cdot (1-x_{uv}) & \geq 1+d_u
+% OLD VERSION
+% $$(\forall u < v) d_v + (1+n_v) \cdot \bar{x}_{uv} \geq 1+d_u$$
+% $$(\forall u > v) d_v + (1+n_v) \cdot x_{vu} \geq 1+d_u$$
+\end{align}
+The second summand ensures that \eqnref{nocycles} is trivially satisfied (hence has no effect) when $u$ is {\em not} the parent of $v$.  As a speedup, we can require the 0 tokens to have depth 0. \noteJE{does this really still make a difference to speed?  Possible better version: just add all the depths (perhaps multiplied by 0.001) to the objective function; this breaks ties in simplex.}
+
+\noteJE{what's the point of the root\_depth constraint in the .zpl file?  Almost trivially satisfied.}
+
+Finally, we encourage all links with the same label \noteJE{explain that we mean capital letters?} to have the same direction.  For each label $L$, we introduce binary variables $r_v$ and $\ell_v$ which say that a link of type $L$ is ``allowed'' to point right or left, respectively.  For each undirected edge $ij$ of label $L$, with $i < j$, we write
+\begin{align}
+x_{ij} &\leq r_L + s_{ij} & 
+x_{ji} &\leq \ell_L + s_{ij}
+\end{align}
+where $s_{ij} \geq 0$ is a slack variable that allows an edge token to point in a disallowed direction if needed to ensure \eqnref{oneparent}--\eqnref{nocycles}. 
+
+Our objective tries to minimize the number of allowed directions (by link type---cf.\@ \newcite{ravi2009}) and the total slack (by link token):
+\begin{align}\label{eqn:obj}
+\min \left( \sum_{L} r_L + \ell_L \right) + \frac{100}{N_L} \cdot \sum_{ij} s_{ij}
+\end{align}
+where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj} is willing to tolerate up to 1\% of those link tokens' using a disallowed direction before it prefers to allow {\em both} directions.
+% CUT FOR SPACE
+% (i.e., $r_L+\ell_L=2$).  
+
+% OLD
+% We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. Our task of finding the smallest set of assignments that would explain the parses is also called model minimization\cite{ravi2009}. \noteJE{worth citing, but not quite the same thing}
+% For every encountered label we generate two boolean label/direction variables (e.g. label/left, label/right). Setting one of these variables to \textsc{true} allows the label type to only go in the specified direction, while setting both would allow the label to go in either way.
+% The objective is to minimize the number of label/direction variables set to \textsc{true}, while still satisfying acyclicity and reachability constraints. The encoding was written in the Zimpl little language \cite{Koch2004} and solved using the SCIP Optimization Suite \cite{achterberg2009scip}.
+% \subsection{Slack}
+% We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
 \section{Data Sets}
-The data used for this work came from English bnews CoNLL dependency training data \noteJH{cite?} and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}}. With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
+The data used for this work came from English bnews CoNLL dependency training data \noteJH{cite?} \noteJE{wait a minute, the bnews is not from CoNLL!  It is merely in CoNLL format.  It is from Ariya Rastrow, and is automatically parsed, I think.  We should be comparing on hand-parsed data.}  and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}} \noteJE{give citation}. 
+
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained complete, connected parses for only !!! (of !!!) English sentences and !!! (of !!!) Russian sentences, discarding the other sentences. \noteJE{fill these !!! in automatically} These two languages have the most complete lexicons at present, although lexicons for !!! other languages are available.  
+
+% With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
 
 \subsection{Discarding Incomplete Link Parses}
+
+\NoteJE{ideally we could cut this section given what I wrote above.  However, you seem to be saying that we did train on sentences with dropped words as long as the parses were connected.  Didn't we decide to drop those sentences too?}
+
 Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
 
 For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped}of the non-disconnected sentences were removed, leaving us working only with complete link parses.
@@ -157,17 +209,19 @@ For our analysis of these parses, we further discarded those that had dropped wo
 \noteJH{The stability results come from the second row of this table. The analysis later in the paper uses the third row. Putting this section here might be confusing to readers?}
 
 \section{Experiments and Results}
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}. 
+
+We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  
+\NoteJE{give runtime here}
 
 \subsection{Stability of Results}
 \begin{figure}[ht!]
   \small
   \centering
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
-  \caption{\small Precision/recall of increasing runs of English and Russian sentences. The precision values converge while the recall values continue to grow throughout the data.}
+  \caption{\small Convergence to the results obtained on the largest run.  Precision relative to that run is very high even for small training sizes.  Recall grows as more link types are observed.}
 \end{figure}
 We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
-We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. 
+We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. \noteJE{this is not clear.  are we comparing the direction table or the parses?  If the parses, which parses?}
 
 Because the precision values were high, we found that the solutions of the previous runs were consistent with the largest run, and as the data increased so did the recall values, and so we would continue to encounter novel link types and then incorporate them.
 
@@ -181,7 +235,9 @@ Because the precision values were high, we found that the solutions of the previ
   \label{fig:parses}
 \end{figure*}
 
-In order to compare 
+In the case of English, we had manually produced  single-headed 
+ CoNLL annotations \cite{!!!}.
+
 Using the sentences of the dependency corpus as comparison, we find that the link parses do not wholly subsume dependency parses, and that the undirected links match roughly three fourths of the arcs in the conll dependency corpus. \todo{This is because...} 
 
 \begin{figure}[ht!]
@@ -195,9 +251,15 @@ we measure whether the direction we chose is the same as the original dependency
 Finally, we look to see that given a link label, whether the original conll label can be recovered.
 
 
-Of the sentences with complete parses, about \input{figure/conll_analysis_sentences_multiheaded}had at least one multiheaded word.
+Of the sentences with complete parses, about \input{figure/conll_analysis_sentences_multiheaded}
+\noteJE{why ``about''?}
+had at least one multiheaded word.
 
+\NoteJE{how often is the ``both'' option used?}
 
+\NoteJE{discuss differences!}
+
+\NoteJE{what do we say about Russian?}
 
 
 \section{Discussion}
@@ -209,7 +271,6 @@ Of the sentences with complete parses, about \input{figure/conll_analysis_senten
 \NoteJE{We should acknowledge that another option would be to post-process either CoNLL parses or our link parses to automatically add more multi-heading, e.g., to handle control phenomena ("John wants to skip" or "Jane ran for office in order to change the tax laws" should have John/Jane be the subject of two verbs).  However, that requires per-language}
 
 We have a set of 100 parses similar to figure~\ref{fig:parses} in the appendix.
-
 
 
 \section{Future Work}
