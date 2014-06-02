@@ -199,7 +199,24 @@ def analysis_words(conlls,links):
 
 # Analysis on the links. For the appendix of the paper
 def analysis_links(links):
-    print links
+    link_direction_counts = {}
+    
+    for link in links:
+        link = link.split()
+        index = int(link[0])
+        heads = link[6].split(",")
+        labels = link[7].split(",")
+
+        for (head,label) in zip(heads,labels):
+            head = int(head)
+
+            link_direction_counts[label] = link_direction_counts.get(label,{})
+            if head < index:
+                link_direction_counts[label]["left"] = link_direction_counts[label].get("left",0) + 1
+            elif head > index:
+                link_direction_counts[label]["right"] = link_direction_counts[label].get("right",0) + 1
+
+    return link_direction_counts
 
 
 
@@ -310,6 +327,8 @@ mismatch_directionality_counts = {}
 #mismatch_extra_total = 0
 #mismatch_extra_counts = {}
 
+link_direction_totals = {}
+
 # --------------------------------------------------------------------
 # Variables for word analysis
 # --------------------------------------------------------------------
@@ -361,6 +380,14 @@ for linkSentence in link_results:
         example_parses_count += 1
         if example_parses_count % 3 == 0:
             EXAMPLE_PARSES.write("\clearpage")
+
+
+    # analysis_links
+    link_direction_counts = analysis_links(link_results[linkSentence])
+    for label in link_direction_counts:
+        link_direction_totals[label] = link_direction_totals.get(label,{})
+        for direction in link_direction_counts[label]:
+            link_direction_totals[label][direction] = link_direction_totals[label].get(direction, 0) + link_direction_counts[label][direction]
 
 
     (match_data, reverse_data, extra_data, word_data, mismatch_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
@@ -480,6 +507,14 @@ f.close()
 #print
 
 
+
+
+
+
+#---------------------------------------------------------------------
+# Setting up the matching link label counts and majority predictions
+# This will be used in a table of the appendix of the paper
+#---------------------------------------------------------------------
 link_label_prediction = {}
 for (label_conll, label_link) in all_match_counts:
     link_label_prediction[label_link] = link_label_prediction.get(label_link, {})
@@ -490,19 +525,101 @@ for (label_conll, label_link) in mismatch_directionality_counts:
     link_label_prediction[label_link] = link_label_prediction.get(label_link, {})
     link_label_prediction[label_link][label_conll] = link_label_prediction[label_link].get(label_conll, 0)
     link_label_prediction[label_link][label_conll] += mismatch_directionality_counts[(label_conll, label_link)]
-    
-    
 
-pprint(link_label_prediction)
+# Gives us total counts. The normalizing constants to use later.
+link_label_prediction_totals = {}
+for label in link_label_prediction:
+    conlls = link_label_prediction[label]
+    count = 0
+    for conll in conlls:
+        count += conlls[conll]
+    link_label_prediction_totals[label] = count
 
-predictions = []
-
+predictions = {}
 for label_link in link_label_prediction:
     conll_map = link_label_prediction[label_link]
-    predictions.append((label_link, max(conll_map.iteritems(), key=operator.itemgetter(1))[0]))
+    predictions[label_link] = max(conll_map.iteritems(), key=operator.itemgetter(1))[0]
 
-#predictions.sort()
 #pprint(predictions)
+#pprint(link_label_prediction)
+
+
+#---------------------------------------------------------------------
+# Setting up Link label counts 
+# which is used for a table in the appendix of the paper
+#---------------------------------------------------------------------
+#pprint(link_direction_totals)
+link_label_counts = {}
+for label in link_direction_totals:
+    count = 0
+    for direction in link_direction_totals[label]:
+        count += link_direction_totals[label][direction]
+    link_label_counts[label] = count
+labels = link_label_counts.keys()
+labels.sort()
+
+#---------------------------------------------------------------------
+# Analysis/counts of the links, their labels, and their directions
+# For the appendix section of the paper
+#---------------------------------------------------------------------
+LATEX_FILE_LINKS = LATEX_DIR+"link_analysis_table.tex"
+f = open(LATEX_FILE_LINKS, "w+")
+latex_table = "\\begin{tabular}{|l|l|l|l||l|l|}\n"
+header = "Label & Count & Left & Right & CoNLL & CoNLL Percentage\\\\ \n"
+
+begin_figure = "\\begin{figure*}\n"
+end_figure = "\\end{figure*}\n"
+
+table = begin_figure
+table += latex_table
+table += "\\hline\n"
+table += header
+line = 0
+for label in labels:
+    count = link_label_counts[label]
+    
+    left = link_direction_totals[label].get("left",0)
+    left = str(int(float(left) / count * 100))+"\\%" + " ("+str(left)+")"
+    right = link_direction_totals[label].get("right",0)
+    right = str(int(float(right) / count * 100))+"\\%" + " ("+str(right)+")"
+
+    prediction = predictions.get(label, "-")
+    prediction_num = ""
+    prediction_total = ""
+    prediction_percent = ""
+    if prediction != "-":
+        prediction_num = link_label_prediction[label][prediction]
+        prediction_total = link_label_prediction_totals[label]
+    if prediction_num and prediction_total:
+        prediction_percent = str(int(float(prediction_num) / prediction_total * 100)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
+
+
+    table += "\\hline\n"
+    table += " "+label+" & "+str(count)+" & "+left+" & "+right+" & "+prediction+" & "+prediction_percent+" \\\\ \n"
+    line += 1
+    
+    # Break up the table into smaller tables
+    if line % 50 == 0:
+        table += "\\hline\n"
+        table += "\\end{tabular}\n"
+        table += end_figure
+        table += begin_figure
+        table += latex_table
+        table += "\\hline\n"
+        table += header
+    
+table += "\\hline\n"
+table += "\\end{tabular}\n"
+table += end_figure
+
+f.write(table)
+f.close()
+
+
+
+
+
+
 
 
 
