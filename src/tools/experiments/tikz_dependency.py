@@ -28,7 +28,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
     for POS in graph_conll.POS_sequence:
         POS_conll.append("{\\scriptsize "+POS+"}")
 
-    graph_link.sentence = (" ".join(graph_link.sentence)).replace("&", "\\&").replace("$", "\\$").split()
+    graph_link.sentence = (" ".join(graph_link.sentence)).replace("&", "\\&").replace("$", "\\$").replace("%","\\%").split()
     link_sentence = " \& ".join(graph_link.sentence).replace("[", "\\lbrack ").replace("]", "\\rbrack")
     POS_sequence = " \& ".join(graph_link.POS_sequence).replace("$", "\\$")
 
