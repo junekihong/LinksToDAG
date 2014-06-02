@@ -243,6 +243,8 @@ for line in f:
             ID = " ".join(sentence)
             ID = ID.lower()
             link_results[ID] = tuple(conll)
+
+
         
         sentence = []
         conll = []
@@ -260,6 +262,14 @@ for line in f:
         index = word.rfind("[!]")
         if index != -1:
             word = word[:(index)]
+
+        """index = -1
+        index = word.rfind("[?]")
+        if index != -1:
+            word = word[:index]+word[index+len("[?]"):]
+        print word"""
+
+
 
         # Get rid of the [] brackets around words that the link-parser could not attach.        
         #word = word.strip("[]")
@@ -282,6 +292,8 @@ f = f.readlines()
 sentence = []
 conll = []
 
+
+
 for line in f:
     line = line.strip()
 
@@ -289,12 +301,14 @@ for line in f:
         # The sentence is stored as lower case, because link-parser will sometimes lowercase the words that it does not know.
         ID = " ".join(sentence)
         ID = ID.lower()
+        
+
 
         # Check to see if the sentence is in the link data. 
         # This is a small optimization. We don't need to store all of the conll data. 
         if ID in link_results:
             conll_results[ID] = tuple(conll)
-        
+
         sentence = []
         conll = []
     else:
@@ -351,11 +365,16 @@ example_parses_limit = 100
 
 
 for linkSentence in link_results:
+    if linkSentence not in conll_results:
+        continue
+
+
     sentenceCheck = True
     linkSentenceCheck = linkSentence.split()
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
-    bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
+    #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
+    bannedWords = []
     for word in bannedWords:
         if word in linkSentenceCheck:
             sentenceCheck = False
@@ -388,6 +407,7 @@ for linkSentence in link_results:
         link_direction_totals[label] = link_direction_totals.get(label,{})
         for direction in link_direction_counts[label]:
             link_direction_totals[label][direction] = link_direction_totals[label].get(direction, 0) + link_direction_counts[label][direction]
+
 
 
     (match_data, reverse_data, extra_data, word_data, mismatch_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
