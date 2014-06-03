@@ -221,9 +221,9 @@ def analysis_links(links):
 
             link_direction_counts[label] = link_direction_counts.get(label,{})
             if head < index:
-                link_direction_counts[label]["left"] = link_direction_counts[label].get("left",0) + 1
+                link_direction_counts[label]["right"] = link_direction_counts[label].get("left",0) + 1
             elif head > index:
-                link_direction_counts[label]["right"] = link_direction_counts[label].get("right",0) + 1
+                link_direction_counts[label]["left"] = link_direction_counts[label].get("right",0) + 1
 
 
     return (link_direction_counts, link_label_multiheaded)
