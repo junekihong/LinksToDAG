@@ -56,6 +56,37 @@ EXAMPLE_PARSES_LOC = TIKZ_DIR+"parses.tikz"
 EXAMPLE_PARSES = open(EXAMPLE_PARSES_LOC, 'w+')
 
 
+ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
+ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
+ALLOWED_LABELS_BOTH = TIKZ_DIR+"allowed_labels_both.tex"
+ALLOWED_LABELS_TOTAL = TIKZ_DIR+"allowed_labels_total.tex"
+
+allowedLabel = {}
+ALLOWED_LABELS = ALLOWED_LABELS.readlines()
+for line in ALLOWED_LABELS:
+    line = line.split()
+    if not line:
+        continue
+
+    label = line[0]
+    direction = line[1]
+    allowedLabel[label] = allowedLabel.get(label,{})
+    allowedLabel[label][direction] = True
+
+bothCount = 0
+for label in allowedLabel:
+    dirs = allowedLabel[label]
+    if len(dirs) > 1:
+        bothCount += 1
+
+f = open(ALLOWED_LABELS_BOTH,"w+")
+f.write(str(bothCount))
+f.close()
+
+f = open(ALLOWED_LABELS_TOTAL,"w+")
+f.write(str(len(allowedLabel)))
+f.close()
+
 
 # --------------------------------------------------------------------
 # Analysis while reading in data. Pertains mostly to sentence counts
@@ -221,9 +252,9 @@ def analysis_links(links):
 
             link_direction_counts[label] = link_direction_counts.get(label,{})
             if head < index:
-                link_direction_counts[label]["left"] = link_direction_counts[label].get("left",0) + 1
-            elif head > index:
                 link_direction_counts[label]["right"] = link_direction_counts[label].get("right",0) + 1
+            elif head > index:
+                link_direction_counts[label]["left"] = link_direction_counts[label].get("left",0) + 1
 
 
     return (link_direction_counts, link_label_multiheaded)
@@ -419,7 +450,8 @@ for linkSentence in link_results:
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
     # Filter out sentences to only up to length 16
-    elif example_parses_count < example_parses_limit and len(linkSentence) <= 85:
+    elif example_parses_count < example_parses_limit and len(linkSentence) <= 100:
+    #elif example_parses_count < example_parses_limit:
         tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
         EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
         EXAMPLE_PARSES.write(tikz)
@@ -773,13 +805,15 @@ for coarse_label in coarse_labels:
     if prediction != "-":
         prediction_num = link_label_coarse_prediction[coarse_label][prediction]
         prediction_total = link_label_coarse_prediction_totals[coarse_label]
-        prediction = make_percentage_figure(prediction_num, prediction_total)
+        prediction += " "+ make_percentage_figure(prediction_num, prediction_total)
         
 
     if prediction_num and prediction_total:
         match_percent = make_percentage_figure(prediction_total, count)
 
-        mismatch_percent = make_percentage_figure(prediction_total - coarse_dir_mismatch.get(coarse_label,0), prediction_total)
+        mismatch_percent = make_percentage_figure((prediction_total - coarse_dir_mismatch.get(coarse_label,0)), prediction_total)
+
+
     else:
         match_percent = "-"
         mismatch_percent = "-"
@@ -814,9 +848,7 @@ f.close()
 
 
 
-
-
-
-
-
-
+pprint(link_direction_coarse_totals)
+#pprint(
+#for coarse_label in link_direction_coarse_totals:
+#    direction
