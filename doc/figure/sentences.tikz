@@ -6,16 +6,18 @@
 			- \& v-d \& - \& v \& - \\
 		\end{deptext}
 		\deproot[edge above, edge style = {blue, dotted}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{Ss}
+		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small SBJ}
 		\depedge[edge below, edge style = {red, thick}]{2}{3}{N}
 		\depedge[edge above, edge style = {blue, thick}]{2}{3}{\small VMOD}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{I}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{I*d}
 		\depedge[edge above, edge style = {blue, thick}]{2}{4}{\small VC}
 		\depedge[edge above, edge style = {blue, dotted}]{2}{5}{\small P}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{1}{2}{Ss}
+		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{1}{Wd}
 		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{4}{WV}
-		\deproot[edge below, edge style = {red, dotted}]{5}{X}
+		\deproot[edge below, edge style = {red, dotted}]{5}{Xp}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{4}{2}{I*d}
 	\end{dependency}
 \end{subfigure}
 \begin{subfigure}[b]{0.3233\textwidth}
@@ -27,15 +29,17 @@
 		\end{deptext}
 		\deproot[edge below, edge style = {red, thick}]{3}{WV}
 		\deproot[edge above, edge style = {blue, thick}]{3}{\small ROOT}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{S}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{Ss*t}
 		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{3}{4}{P}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{Paf}
 		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small VMOD}
 		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{D*u}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
-		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{2}{W}
-		\deproot[edge below, edge style = {red, dotted}]{5}{X}
+		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{2}{Wd}
+		\deproot[edge below, edge style = {red, dotted}]{5}{Xp}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{2}{3}{Ss*t}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{4}{3}{Paf}
 	\end{dependency}
 \end{subfigure}
 \begin{subfigure}[b]{0.3233\textwidth}
@@ -47,15 +51,17 @@
 		\end{deptext}
 		\deproot[edge below, edge style = {red, thick}]{3}{WV}
 		\deproot[edge above, edge style = {blue, thick}]{3}{\small ROOT}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{S}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{Ss}
 		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{3}{4}{MV}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{MVa}
 		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small ADV}
 		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{Ds}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
-		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{2}{W}
-		\deproot[edge below, edge style = {red, dotted}]{5}{X}
+		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{2}{Wd}
+		\deproot[edge below, edge style = {red, dotted}]{5}{Xp}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{2}{3}{Ss}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{4}{3}{MVa}
 	\end{dependency}
 \end{subfigure}
 
