@@ -1,16 +1,16 @@
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize .} \\
-			terms \& were \& not \& disclosed \& . \\
-			n \& v-d \& e \& v-d \& - \\
+			{\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize .} \\
+			it \& did \& n't \& work \& . \\
+			- \& v-d \& - \& v \& - \\
 		\end{deptext}
 		\deproot[edge above, edge style = {blue, dotted}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{Spx}
+		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{Ss}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small SBJ}
 		\depedge[edge below, edge style = {red, thick}]{2}{3}{N}
 		\depedge[edge above, edge style = {blue, thick}]{2}{3}{\small VMOD}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{Pvf}
+		\depedge[edge below, edge style = {red, thick}]{2}{4}{I*d}
 		\depedge[edge above, edge style = {blue, thick}]{2}{4}{\small VC}
 		\depedge[edge above, edge style = {blue, dotted}]{2}{5}{\small P}
 		\deproot[edge below, edge style = {red, dotted}]{1}{Wd}
@@ -21,40 +21,40 @@
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize .} \\
-			corporate \& bonds \& were \& unchanged \& . \\
-			a \& n \& v-d \& a \& - \\
+			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize .} \\
+			the \& reason \& is \& simple \& . \\
+			- \& n \& v \& a \& - \\
 		\end{deptext}
 		\deproot[edge below, edge style = {red, thick}]{3}{WV}
 		\deproot[edge above, edge style = {blue, thick}]{3}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{Spx}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{Ss*t}
 		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{3}{4}{Pa}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{Paf}
 		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small VMOD}
 		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{A}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{D*u}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
-		\deproot[edge below, edge style = {red, dotted}]{2}{Wd}
+		\deproot[edge below, edge style = {orange, ultra thick}]{2}{Wd}
 		\deproot[edge below, edge style = {red, dotted}]{5}{Xp}
 	\end{dependency}
 \end{subfigure}
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize CD} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
-			one \& concerns \& Japanese \& investors \& . \\
-			- \& v \& a \& n \& - \\
+			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize .} \\
+			the \& judge \& wrote \& again \& . \\
+			- \& n \& v-d \& - \& - \\
 		\end{deptext}
-		\deproot[edge below, edge style = {red, thick}]{2}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, thick}]{2}{1}{Ss}
-		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{Op}
-		\depedge[edge above, edge style = {blue, thick}]{2}{4}{\small OBJ}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{5}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{4}{3}{A}
-		\depedge[edge above, edge style = {blue, thick}]{4}{3}{\small NMOD}
-		\deproot[edge below, edge style = {orange, ultra thick}]{1}{Wd}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\deproot[edge above, edge style = {blue, thick}]{3}{\small ROOT}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{Ss}
+		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{MVa}
+		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small ADV}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small P}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{Ds}
+		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
+		\deproot[edge below, edge style = {orange, ultra thick}]{2}{Wd}
 		\deproot[edge below, edge style = {red, dotted}]{5}{Xp}
 	\end{dependency}
 \end{subfigure}

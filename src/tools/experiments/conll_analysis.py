@@ -201,12 +201,20 @@ def analysis_words(conlls,links):
 # Analysis on the links. For the appendix of the paper
 def analysis_links(links):
     link_direction_counts = {}
-    
+    link_label_multiheaded = {}
+
     for link in links:
         link = link.split()
         index = int(link[0])
         heads = link[6].split(",")
         labels = link[7].split(",")
+        
+        if len(heads) > 1:
+            for label in labels:
+                coarse_label = get_coarse_label(label)
+
+                link_label_multiheaded[coarse_label] = link_label_multiheaded.get(coarse_label, 0) + 1
+
 
         for (head,label) in zip(heads,labels):
             head = int(head)
@@ -217,7 +225,18 @@ def analysis_links(links):
             elif head > index:
                 link_direction_counts[label]["right"] = link_direction_counts[label].get("right",0) + 1
 
-    return link_direction_counts
+
+    return (link_direction_counts, link_label_multiheaded)
+
+
+
+# Gets the coarse label for any given specific label
+def get_coarse_label(label):
+    coarse_label = "".join(w for w in list(label) if w.isupper())    
+    if len(list(coarse_label)) >= 2 and list(coarse_label)[0] == "I" and list(coarse_label)[1] == "D":
+        coarse_label = "ID"
+    return coarse_label
+
 
 
 
@@ -344,6 +363,7 @@ mismatch_directionality_counts = {}
 
 link_direction_totals = {}
 link_direction_coarse_totals = {}
+link_label_isMultiheaded = {}
 
 # --------------------------------------------------------------------
 # Variables for word analysis
@@ -371,8 +391,14 @@ for linkSentence in link_results:
         continue
 
 
+    # Remove sentences with [!] or [?] in them. I will have them later in the paper and explain what it means.
     sentenceCheck = True
-    linkSentenceCheck = linkSentence.split()
+    for line in link_results[linkSentence]:
+        line = line.split()
+        word = line[1]
+        if word.rfind("[!]") != -1 or word.rfind("[?]") != -1:
+            sentenceCheck = False
+            
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
@@ -404,9 +430,9 @@ for linkSentence in link_results:
 
 
     # analysis_links
-    link_direction_counts = analysis_links(link_results[linkSentence])
+    (link_direction_counts, link_label_multiheaded) = analysis_links(link_results[linkSentence])
     for label in link_direction_counts:
-        coarse_label = "".join(w for w in list(label) if w.isupper())
+        coarse_label = get_coarse_label(label)
 
         link_direction_coarse_totals[coarse_label] = link_direction_coarse_totals.get(coarse_label,{})
         link_direction_totals[label] = link_direction_totals.get(label,{})
@@ -414,6 +440,11 @@ for linkSentence in link_results:
         for direction in link_direction_counts[label]:
             link_direction_totals[label][direction] = link_direction_totals[label].get(direction, 0) + link_direction_counts[label][direction]
             link_direction_coarse_totals[coarse_label][direction] = link_direction_coarse_totals[coarse_label].get(direction,0) + link_direction_counts[label][direction]
+
+    for coarse_label in link_label_multiheaded:
+        link_label_isMultiheaded[coarse_label] = link_label_isMultiheaded.get(coarse_label,0) + link_label_multiheaded[coarse_label]
+
+
 
 
     (match_data, reverse_data, extra_data, word_data, mismatch_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
@@ -545,12 +576,13 @@ f.close()
 #---------------------------------------------------------------------
 link_label_prediction = {}
 link_label_coarse_prediction = {}
+coarse_dir_mismatch = {}
 for (label_conll, label_link) in all_match_counts:
     link_label_prediction[label_link] = link_label_prediction.get(label_link, {})
     link_label_prediction[label_link][label_conll] = link_label_prediction[label_link].get(label_conll, 0)
     link_label_prediction[label_link][label_conll] += all_match_counts[(label_conll, label_link)]
 
-    coarse_label_link = "".join(w for w in list(label_link) if w.isupper())
+    coarse_label_link = get_coarse_label(label_link)
     link_label_coarse_prediction[coarse_label_link] = link_label_coarse_prediction.get(coarse_label_link,{})
     link_label_coarse_prediction[coarse_label_link][label_conll] = link_label_coarse_prediction[coarse_label_link].get(label_conll,0)
     link_label_coarse_prediction[coarse_label_link][label_conll] += all_match_counts[(label_conll, label_link)]
@@ -565,7 +597,12 @@ for (label_conll, label_link) in mismatch_directionality_counts:
     link_label_coarse_prediction[coarse_label_link] = link_label_coarse_prediction.get(coarse_label_link,{})
     link_label_coarse_prediction[coarse_label_link][label_conll] = link_label_coarse_prediction[coarse_label_link].get(label_conll,0)
     link_label_coarse_prediction[coarse_label_link][label_conll] += mismatch_directionality_counts[(label_conll, label_link)]
+    
+    coarse_dir_mismatch[coarse_label_link] = coarse_dir_mismatch.get(coarse_label_link,0)
+    coarse_dir_mismatch[coarse_label_link] += mismatch_directionality_counts[(label_conll, label_link)]
 
+
+#pprint(coarse_dir_mismatch)
 
 #pprint(link_label_coarse_prediction)    
 
@@ -665,7 +702,7 @@ for label in labels:
         prediction_num = link_label_prediction[label][prediction]
         prediction_total = link_label_prediction_totals[label]
     if prediction_num and prediction_total:
-        prediction_percent = str(int(float(prediction_num) / prediction_total * 100)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
+        prediction_percent = str(int(float(prediction_num) / prediction_total * 100 + 0.5)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
 
 
     table += "\\hline\n"
@@ -699,11 +736,12 @@ f.close()
 #---------------------------------------------------------------------
 LATEX_FILE_COARSE_LINKS = LATEX_DIR+"link_analysis_coarse_table.tex"
 f = open(LATEX_FILE_COARSE_LINKS, "w+")
-latex_table = "\\begin{tabular}{|l|l|l|l||l|l|}\n"
-header = "Label & Count & Left & Right & CoNLL & CoNLL Percentage\\\\ \n"
+latex_table = "\\begin{tabular}{|l|l|l|l|l|l|}\n"
+header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\ \n"
 
-begin_figure = "\\begin{figure*}\n"
+begin_figure = "\\begin{figure*}\n\\small\n\\centering\n"
 end_figure = "\\end{figure*}\n"
+
 
 table = begin_figure
 table += latex_table
@@ -713,28 +751,44 @@ line = 0
 for coarse_label in coarse_labels:
     count = link_label_coarse_counts[coarse_label]
     
-    left = link_direction_coarse_totals[coarse_label].get("left",0)
-    left = str(int(float(left) / count * 100))+"\\%" + " ("+str(left)+")"
     right = link_direction_coarse_totals[coarse_label].get("right",0)
-    right = str(int(float(right) / count * 100))+"\\%" + " ("+str(right)+")"
+    right = str(int(float(right) / count * 100))+"\\%" + " ("+str(right)+"/"+str(count)+")"
 
-    prediction = coarse_predictions.get(coarse_label, "-")
     prediction_num = ""
     prediction_total = ""
-    prediction_percent = ""
+    match_percent = ""
+    mismatch_percent = ""
+    multiheaded = str(int(float(link_label_isMultiheaded.get(coarse_label,0)) / float(count) * 100 + 0.5))+"\\% ("+str(link_label_isMultiheaded.get(coarse_label, 0)) + "/" + str(count) + ")"
+
+
+
+    prediction = coarse_predictions.get(coarse_label, "-")
     if prediction != "-":
         prediction_num = link_label_coarse_prediction[coarse_label][prediction]
         prediction_total = link_label_coarse_prediction_totals[coarse_label]
-    if prediction_num and prediction_total:
-        prediction_percent = str(int(float(prediction_num) / prediction_total * 100)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
+        prediction += " "+str(int(float(prediction_num) / float(prediction_total) * 100 + 0.5)) + "\\%"
+        prediction += " (" +str(prediction_num) + "/" + str(prediction_total) + ")"
 
+    if prediction_num and prediction_total:
+        match_percent = str(int(float(prediction_total) / count * 100 + 0.5)) + "\\%" + " (" + str(prediction_total) + "/" + str(count) + ")"
+
+        mismatch_percent = str(int(float(prediction_total - coarse_dir_mismatch.get(coarse_label,0)) / float(prediction_total) * 100 + 0.5)) + "\\%" + " (" + str(prediction_total - coarse_dir_mismatch.get(coarse_label,0)) + "/" + str(prediction_total) + ")"
+    else:
+        match_percent = "-"
+        mismatch_percent = "-"
 
     table += "\\hline\n"
-    table += " "+coarse_label+" & "+str(count)+" & "+left+" & "+right+" & "+prediction+" & "+prediction_percent+" \\\\ \n"
+    table += coarse_label
+    table += " & "+right
+    table += " & "+multiheaded
+    table += " & "+match_percent
+    table += " & "+mismatch_percent
+    table += " & "+prediction
+    table += " \\\\ \n"
     line += 1
     
     # Break up the table into smaller tables
-    if line % 52 == 0:
+    if line % 50 == 0:
         table += "\\hline\n"
         table += "\\end{tabular}\n"
         table += end_figure
