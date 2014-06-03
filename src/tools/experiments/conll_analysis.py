@@ -221,9 +221,9 @@ def analysis_links(links):
 
             link_direction_counts[label] = link_direction_counts.get(label,{})
             if head < index:
-                link_direction_counts[label]["right"] = link_direction_counts[label].get("left",0) + 1
+                link_direction_counts[label]["left"] = link_direction_counts[label].get("left",0) + 1
             elif head > index:
-                link_direction_counts[label]["left"] = link_direction_counts[label].get("right",0) + 1
+                link_direction_counts[label]["right"] = link_direction_counts[label].get("right",0) + 1
 
 
     return (link_direction_counts, link_label_multiheaded)
@@ -419,8 +419,7 @@ for linkSentence in link_results:
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
     # Filter out sentences to only up to length 16
-    elif example_parses_count < example_parses_limit and len(linkSentence) <= 100:
-    #elif example_parses_count < example_parses_limit:
+    elif example_parses_count < example_parses_limit and len(linkSentence) <= 85:
         tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
         EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
         EXAMPLE_PARSES.write(tikz)
