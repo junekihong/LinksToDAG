@@ -77,7 +77,7 @@ it is hard to train, test, or improve multi-headed parsers because few multi-hea
 To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs.  
 % OLD
 % ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
-We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of \input{figure/conll_analysis_sentences_total.tex}parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although they are not in general consistent with CoNLL-style parses of the same sentences; we discuss the differences.  
+We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although their style does not match CoNLL-style parses of the same sentences; we discuss the differences.  
 \end{abstract}
 
 \section{Multi-Headed Dependency Parsing}
@@ -150,7 +150,7 @@ We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED
 We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only 8,018 (of 10,000) Russian sentences, discarding the other sentences.\footnote{For Russian only, we permitted the parser to drop words if necessary.  Otherwise only 208 sentences were parseable.}
 These two languages have the most mature lexicons at present, although lexicons for 7 other languages are available.  
 
-The link grammar parses do differ in style from the single-headed CoNLL parses of the same English sentences.  They have !!!\% more edges overall.  Only !!!\% of the links match CoNLL edges, and only !!!\% of the CoNLL edges match links.
+The link grammar parses do differ in style from the single-headed CoNLL parses of the same English sentences.  They have !!!\% more edges overall.  Only !!!\% of the links match CoNLL arcs, and only !!!\% of the CoNLL arcs match links.
 % DATA FOR THE ABOVE
 % \begin{figure}[ht!]
 %   \centering
@@ -336,37 +336,45 @@ Recall that \url{http://www.abisource.com/projects/link-grammar/dict/summarize-l
 
 Other researchers may postprocess link grammar parses simply by using the first two columns, which indicate whether a given link label $L$ tended to be oriented rightward or leftward by our ILP.  
 
-The labels that do not have a consistent direction are mainly those that connect a conjunction to its conjuncts.\footnote{See \url{http://www.abisource.com/projects/link-grammar/dict/coordination.html}.}  Our coarsening of the labels (see section~\ref{sec:stability}) discards the portion of the label that distinguishes left from right conjuncts.
+The labels that do not have a consistent direction are mainly those that connect a conjunction to its conjuncts.\footnote{See \url{http://www.abisource.com/projects/link-grammar/dict/coordination.html}.}  
+Our coarsening of the labels (see section~\ref{sec:stability}) discards the characters that distinguish left from right conjuncts.
 
 The third column indicates where multi-headedness happens, by showing how often the child of an $L$ link had additional parents as well.
 
 The remaining columns compare to the CoNLL parses.  They show the fraction of $L$-labeled link tokens that were also present in the CoNLL reference parse---and on that fraction, whether the orientation matches CoNLL's and what the dominant CoNLL label was.
 
+\renewcommand{\arraystretch}{1.2}    % more space between rows
 \input{figure/link_analysis_coarse_table.tex}
 
 \section{Sample English Parses}\label{app:parses}
 
-Below we display 100 sample English parses. The top half of each parse visualization represents the CoNLL dependency parse, while the bottom half shows our oriented link grammar parse. 
+Below we display the first 100 English sentences whose widths do not exceed the width of this page.  The blue top half shows the CoNLL tagging and dependency parse.  The red bottom half shows the link grammar's tagging and our orientation of the link parse.  
+% The dashes in the link grammar part of speech tag annotations mean that the link parser did not return one.
+Words that were unknown to the link parser are flagged with \texttt{[!]}.  
 
-\subsection{Sentence Selection}
-These sentences have been taken from the English bnews training data set. We chose to display sentences with complete link parses similar to the analysis section of this paper. We display the first 100 parses whose character lengths do not exceed the width of the page.
+Edges are shown as dotted lines if they appear only in one parse and not in the other.  The solid edges in the link parse are drawn thickly if the corresponding CoNLL arc points in the opposite direction.  Multiple parents are shown using orange edges. \noteJE{not quite how orange is currently handled---fix}
 
-\subsection{Parse Colorization}
-The top blue arcs represent the CoNLL dependency parses. For every arc:
-\begin{enumerate}
-\item If there is a corresponding link edge between the same nodes then a solid blue line is drawn.
-\item Or else a dotted blue line is drawn. 
-\end{enumerate}
-The bottom red arcs represent the oriented link grammar parses. For every link edge:
-\begin{enumerate}
-\item If there is a corresponding CoNLL arc between the same nodes then a solid red line is drawn.
-\item If the matching arc is facing the opposite direction, then the link edge is drawn thicker.
-\item Of the remaining edges, if an edge is a multiheaded link, then it is drawn with thick orange.
-\item The rest of the remaining edges are drawn with dotted red lines.
-\end{enumerate}
+% OLD
+% For every arc:
+% \begin{enumerate}
+% \item If there is a corresponding link between the same nodes then a solid blue line is drawn.
+% \item Or else a dotted blue line is drawn. 
+% \end{enumerate}
+% The bottom red arcs represent the oriented link grammar parses. For every link edge:
+% \begin{enumerate}
+% \item If there is a corresponding CoNLL arc between the same nodes then a solid red line is drawn.
+% \item If the matching arc is facing the opposite direction, then the link edge is drawn thicker.
+% \item Of the remaining edges, if an edge is a multiheaded link, then it is drawn with thick orange.
+% \item The rest of the remaining edges are drawn with dotted red lines.
+% \end{enumerate}
 
-\subsection{Link Parser Annotations}
-The sentence used in the middle of the parse is taken from the output of the link parser. We removed sentences with dropped words, but they would have shown up in the parse as [bracketed]. There are also words that the link parser did not recognize, but rather made a guess as to its part of speech. These words are tagged with a [!] symbol at the end. The dashes in the link grammar part of speech tag annotations mean that the link parser did not return one.
+% \subsection{Link Parser Annotations}
+% These sentences have been taken from the English bnews training data set. We chose to display sentences with complete link parses similar to the analysis section of this paper. 
+% 
+% \subsection{Parse Colorization}
+% The sentence used in the middle of the parse is taken from the output of the link parser. We removed sentences with dropped words, but they would have shown up in the parse as [bracketed]. 
+
+
 
 % Uncomment this to add in all of the parses. Warning: compilation will take a long time.
 %\input{figure/parses.tikz}
