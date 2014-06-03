@@ -20,6 +20,7 @@
 \usepackage{latexsym}
 \usepackage{amsmath}
 \usepackage{xspace}
+\usepackage{enumitem}
 
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \usepackage{soul}
@@ -84,15 +85,13 @@ Dependency parsing maps a sentence to a directed graph whose vertices are the wo
 In the special case $u=0$, the edge designates $v$ as playing some special top-level role in the sentence, e.g., as the main verb.  We disallow $v=0$.
 
 As recently discussed by \newcite{gomezrodriguez-nivre-2013}, one might impose various requirements on the parse graph:
-\begin{itemize}
-
+\begin{itemize}[noitemsep]
 \item {\sc Single-Head}: each word has $\leq 1$ parent
-\item {\sc Single-Head}: each word has at most one parent
 \item {\sc Acyclic}: there are no directed cycles
 \item {\sc Connected}: each pair of words has a undirected path between them
 \item {\sc Reachable}: each word can be reached from 0 by a directed path
   \noteJE{note that this implies connected?  or does connected not allow 0 words on the path, i.e., does it restrict 0 to one child, and if not, is there a principle for that?  If no one, mention in footnote 1.}
-\item {\sc Planar}: edges may not ``cross'' \\ (if there are edges between $u,v$ and between $i,j$, where $u < i < v$, then $u \leq j \leq v$)
+\item {\sc Planar}: edges may not ``cross'' \\ (if there are edges between $i,j$ and between $u,v$, where $i < u < j$, then $i \leq v \leq j$)
 \end{itemize}
 It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.\footnote{{\sc Projective} basically means {\sc Planar} + {\sc Reachable}.}  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
 
@@ -114,7 +113,9 @@ All of these options result in non-projective parses, so the parsers must use no
 
 It seems at first that no one has worked out annotation conventions for {\em projective} multi-headed dependency parsing.  However, this is not quite true.  Link Grammar \cite{SleatorTemperly91} is a grammar-based formalism for projective dependency parsing with {\em undirected} links.  It produces undirected connected planar graphs.  Annotation conventions are implicit in the detailed lexicon for the Link Grammar Parser,\noteJE{check caps}%
 \footnote{\url{http://www.abisource.com/projects/link-grammar/dict/introduction.html}.  The 122 link types in the English lexicon are documented at \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html}.} 
-which specifies for every word a constraint on the {\em sequence} of labeled leftward and rightward edges attached to it.  As remarked by \newcite{eisner-2000-iwptbook}, this is analogous to dependency grammar's use of head automata to constrain a word's sequence of left and right children.  For example, in {\em ``The boy that Jill skipped with fell down,''} the word {\em with} uses a lexical entry that requires it to link to a governing verb to the left, an extracted object farther to the left, and nothing to the right.
+which specifies for every word a constraint on the {\em sequence} of labeled leftward and rightward edges attached to it.  As remarked by \newcite{eisner-2000-iwptbook}, this is analogous to dependency grammar's use of head automata to constrain a word's sequence of left and right children.  For example, in {\em ``The boy that Jill skipped with fell down,''} the word {\em with} uses a lexical entry that requires it to link to a governing verb to the left, an extracted object farther to the left, and nothing to the right.  Each entry has a hand-assigned cost in \{0,1,2\} and the parser finds the parse of minimum total cost.
+% Information about cost is in this message from Linas Vepstas on 2014-02-01: 
+%   https://groups.google.com/d/msg/link-grammar/eeJw1Ofgc9U/diqPYSwuFfoJ
 
 Given a link grammar parse, it would be straightforward to convert it to an acyclic dependency parse by orienting all edges rightward.  However, the result may violate the {\sc Reachable} constraint.  Instead we could orient all edges by depth-first search from the root node, which yields a DAG satisfying all our constraints.  However, this might result in inconsistent annotation conventions, with some \texttt{S}-labeled links pointing from subject to verb and others from verb to subject.  
 
@@ -156,7 +157,7 @@ These two languages have the most complete lexicons at present, although lexicon
 
 %Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
 
-%For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped}of the non-disconnected sentences were removed, leaving us working only with complete link parses.
+%For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences were removed, leaving us working only with complete link parses.
 
 %\begin{figure}[ht!]
 %  \centering
