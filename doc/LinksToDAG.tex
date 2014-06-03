@@ -217,11 +217,13 @@ where $s_{ij} \geq 0$ is a slack variable that allows an edge token to point in 
 
 Our objective tries to minimize the number of allowed directions (by link type---cf.\@ \newcite{ravi2009}) and the total slack (by link token):
 \begin{align}\label{eqn:obj}
-\min \left( \sum_{L} r_L + \ell_L \right) + \frac{100}{N_L} \cdot \sum_{ij} s_{ij}
+\min \left( \sum_{L} r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij} s_{ij}
 \end{align}
-where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj} is willing to tolerate up to 1\% of those link tokens' using a disallowed direction before it prefers to allow {\em both} directions.
+where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj} is willing to tolerate up to 1/4 of those link tokens' using a disallowed direction before it prefers to allow {\em both} directions. \noteJE{check!}
 % CUT FOR SPACE
 % (i.e., $r_L+\ell_L=2$).  
+
+\NoteJE{It might be a good idea to have the second allowed direction still carry some lesser slack penalty, so that we break ties in favor of the preferred direction.  The two bits for each label would then say ``which direction is preferred?'' and ``is the other direction allowed?''}
 
 % OLD
 % We formulate an ILP to find the minimal set of link type to directionality assignments that would directionalize all the links in a set of link grammar parses, while still mandating that all of the resulting dependency parses would be connected DAGs, and with all the nodes reachable from the root. Our task of finding the smallest set of assignments that would explain the parses is also called model minimization\cite{ravi2009}. \noteJE{worth citing, but not quite the same thing}
@@ -238,7 +240,7 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
   \label{fig:parses}
 \end{figure*}
 
-We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took under an hour. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, !!! of !!! link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = !!!$ of !!! link {\em tokens} required a disallowed direction via slack.
+We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJE{update in final version}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, !!! of !!! link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = !!!$ of !!! link {\em tokens} required a disallowed direction via slack.
 \input{figure/conll_analysis_sentences_multiheaded}of the English sentences and !!! of the Russian sentences had at least one multiheaded word.
 
 \noteJE{fill these numbers in}
@@ -251,7 +253,7 @@ We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009
   \caption{Convergence to the direction mapping obtained on the largest run.  Precision relative to that run is very high even for small datasets.  Recall grows as more link types are seen.}\label{fig:convergence}
 \end{figure}
 
-We worried that the direction mapping might be unstable and sensitive to the input corpus.  Figure~\ref{fig:convergence} shows otherwise (for both English and Russian).  Using even a small prefix of the data got very high-precision results, in the sense that nearly all $r_L$ or $\ell_L$ variables that were 1 in this lightly trained mapping were also 1 in our largest run.  The only disadvantage to using small data is low recall relative to the large run---many of the labels $L$ are not observed yet and so we do not yet allow either direction ($r_L=\ell_L=0$).  
+We worried that the direction mapping might be unstable and sensitive to the input corpus.  Figure~\ref{fig:convergence} shows otherwise (for both English and Russian). \noteJE{IMPORTANT! current graph is with fine-grained tags; rerun with the coarse-grained tags as in the rest of the paper} Using even a small prefix of the data got very high-precision results, in the sense that nearly all $r_L$ or $\ell_L$ variables that were 1 in this lightly trained mapping were also 1 in our largest run.  The only disadvantage to using small data is low recall relative to the large run---many of the labels $L$ are not observed yet and so we do not yet allow either direction ($r_L=\ell_L=0$).  
 
 We used only coarse link tags as our labels, keeping only the capital letters of a tag (and merging all \texttt{ID} tags).  This is because other characters in a tag indicate fine-grained features such as plurality that generally do not affect link direction.  However, when we tried using fine tags as our labels instead, we found that all refinements of the same coarse tag would almost always spontaneously agree on their preferred direction.  This indicates that there is indeed a ``natural'' direction for the coarse tag and that we can find it.
 
@@ -263,11 +265,33 @@ We used only coarse link tags as our labels, keeping only the capital letters of
 
 \subsection{Linguistic Analysis}
 
-The resulting English corpus uses an multi-headed annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in Appendix~\ref{app:linktypes}, and the actual parses are contrasted in Figure~\ref{fig:parses} and Appendix~\ref{app:parses}.
+The resulting English corpus uses a syntactic annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in Appendix~\ref{app:linktypes}, and the actual parses are contrasted in Figure~\ref{fig:parses} and Appendix~\ref{app:parses}.
 
-\NoteJE{discuss linguistic differences!}
+The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  Of course, a few of the differences are due to parser attachment errors.
+
+The most vexing issue is that subject-verb links are handled inconsistently.  Under the English link grammar, a verb that governs a clause (or 0 for the main clause) will link to both the clause's subject and its last (main) verb.  This ought to give us the desired treatment of {\em ``Jill persuaded him to skip''}, in which {\em ``him''} has two parents.  Unfortunately, the grammar is inconsistent when the subject is missing ({\em ``Jill wanted to skip''}): the governing verb here links instead to the clause's first (tensed) verb but {\em no longer} to the last as well.  This favors a consistent solution where each auxiliary verb is a parent of the verb to its right ({\em to} $\rightarrow$ {\em skip}).  As a result, when the subject is present, it must be the {\em parent} of the first verb, which otherwise would not have a parent ({\em him} $\rightarrow$ {\em to} $\rightarrow$ {\em skip}).  Yet inconsistently, subjects must be {\em children} of verbs in a few  inconsistently handled constructions such as non-embedded reported speech ({\em ``It was impossible, they said''}), since the subject ({\em ``they''}) links only to the verb ({\em ``said''}) and so has no other possible parent.
 
 
+% Multiheaded:
+% IV (890/891) - multiheaded treatment of infinitivals
+% I (1783/2969) - multiheaded treatment of infinitivals
+% B (795/842) - leftward extraction from relative clauses
+% CV (1588/1799) - multiheaded treatment of subordination
+% AL (39/40) - compound determiners
+% PP (448/689) - subject attaches to aux as well as main verb
+% HA (3/3) -
+% JQ (2/2) - 
+% SF (85/111) - pleonastic subject
+% AF (6/12) - 
+% C (244/1813) - 
+% OF (155/291)
+% P (651/2060) - 
+% Q (12/30)- 
+% RS (300/305) - 
+% S (4256/7434) -
+% SX (4/6) - 
+% W (2321/4721) - 
+% WV (1800/4138) - 
 
 \NoteJE{what do we say about Russian?  ask Ryan for final version?}
 
@@ -283,11 +307,9 @@ The resulting English corpus uses an multi-headed annotation scheme that is some
 \bibliography{LinksToDAG}
 
 
-
-
-
-\clearpage
 \appendix
+\clearpage
+\onecolumn
 
 % OLD
 % \section{ILP Formulation}
@@ -342,19 +364,23 @@ The third column indicates where multi-headedness happens, by showing how often 
 
 The remaining columns compare to the CoNLL parses.  They show the fraction of $L$-labeled link tokens that were also present in the CoNLL reference parse---and on that fraction, whether the orientation matches CoNLL's and what the dominant CoNLL label was.
 
-\NoteJE{improve table formatting.  Numeric justification; longtable; remove most hlines.}
+\NoteJE{improve table formatting.  Numeric justification; en dashes; longtable; remove most hlines.}
 
 \renewcommand{\arraystretch}{1.2}    % more space between rows
 \input{figure/link_analysis_coarse_table.tex}
 
 \section{Sample English Parses}\label{app:parses}
 
+\NoteJE{show the fine-grained link labels in the parses, even though the ILP deals with coarse-grained.  Juneki tried already to hack this in but was getting double links.}
+
 Below we display the first 100 English sentences whose widths do not exceed the width of this page.  The blue upper half shows the CoNLL tagging and dependency parse.  The red lower half shows the link grammar's tagging and our orientation of the link parse.  
 % The dashes in the link grammar part of speech tag annotations mean that the link parser did not return one.
 A vertical edge to word token $v$ denotes an edge $0 \rightarrow v$.
 Words that were unknown to the link parser are flagged with \texttt{[!]}.  
 
-Edges are shown as dotted lines if they appear only in one parse and not in the other.  The solid edges in the link parse are drawn thickly if the corresponding CoNLL arc points in the opposite direction.  Multiple parents are shown using orange edges. \noteJE{not quite how orange is currently handled---fix}
+Edges are shown as solid lines if they appear in both parses.  They are drawn more thickly if the directions do not match.
+
+Edges are shown as dotted lines if they appear only in one parse and not in the other.  Such edges are highlighted in orange if the child has multiple parents.  
 
 % OLD
 % For every arc:
