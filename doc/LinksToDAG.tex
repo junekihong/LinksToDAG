@@ -149,7 +149,7 @@ We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED
 We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only 8,018 (of 10,000) Russian sentences, discarding the other sentences.\footnote{For Russian only, we permitted the parser to drop words if necessary.  Otherwise only 208 sentences were parseable.}
 These two languages have the most mature lexicons at present, although lexicons for 7 other languages are available.  
 
-The link grammar parses do differ in style from the single-headed CoNLL parses of the same English sentences.  They have !!!\% more edges overall.  Only !!!\% of the links match CoNLL arcs, and only !!!\% of the CoNLL arcs match links.
+The link grammar parses do differ in style from the single-headed CoNLL parses of the same English sentences.  They have \input{figure/conll_analysis_edge_percent.tex}more edges overall.  Only \input{figure/conll_analysis_precision.tex}of the links match CoNLL arcs, and only \input{figure/conll_analysis_recall.tex}of the CoNLL arcs match links.
 % DATA FOR THE ABOVE
 % \begin{figure}[ht!]
 %   \centering
@@ -238,8 +238,8 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
   \label{fig:parses}
 \end{figure*}
 
-We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took under an hour. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, !!! of !!! link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = !!!$ of !!! link {\em tokens} required a disallowed direction via slack.
-\input{figure/conll_analysis_sentences_multiheaded}of the English sentences and !!! of the Russian sentences had at least one multiheaded word.
+We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took under an hour. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total}link {\em tokens} required a disallowed direction via slack.
+\input{figure/conll_analysis_sentences_multiheaded}of the English sentences and 0.15\% of the Russian sentences had at least one multiheaded word.
 
 \noteJE{fill these numbers in}
 
