@@ -1,0 +1,57 @@
+%
+% File acl2014.tex
+%
+% Contact: koller@ling.uni-potsdam.de, yusuke@nii.ac.jp
+%%
+%% Based on the style files for ACL-2013, which were, in turn,
+%% Based on the style files for ACL-2012, which were, in turn,
+%% based on the style files for ACL-2011, which were, in turn, 
+%% based on the style files for ACL-2010, which were, in turn, 
+%% based on the style files for ACL-IJCNLP-2009, which were, in turn,
+%% based on the style files for EACL-2009 and IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt]{article}
+\usepackage{acl2014}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{amsmath}
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{soul}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{tikz-dependency}
+
+
+\newcommand{\Note}[1]{}
+\renewcommand{\Note}[1]{\hl{[#1]}}  % comment out this definition to suppress all Notes                                                                                
+\newcommand{\TODO}[1]{\Note{TODO: #1}}
+\newcommand{\NoteSigned}[3]{{\sethlcolor{#2}\Note{#1: #3}}}
+\newcommand{\NoteJE}[1]{\NoteSigned{JE}{LightBlue}{#1}}
+\newcommand{\NoteJH}[1]{\NoteSigned{JH}{YellowGreen}{#1}}
+
+
+
+\begin{document}
+
+
+
+
+\input{figure/parses.tikz}
+
+
+
+
+
+\bibliographystyle{acl2014}
+
+\end{document}
