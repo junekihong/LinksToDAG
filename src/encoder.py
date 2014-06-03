@@ -82,14 +82,14 @@ def getDataFromLinkParse(lines):
     links = links[:-1]
 
 
-
-    
     # clean up the '[' and ']' artifacts in the links. And store it as a list.
     for i in xrange(len(links)):
-
-
         links[i] = links[i].strip("[]").split()
         links[i][3] = links[i][3].strip("()")
+
+        # Make the label coarse grained
+        links[i][3] = getCoarseLabel(links[i][3])
+
 
     return (processedSentence, links)
 
@@ -184,6 +184,15 @@ def getLinkLabelMap(links):
     return linkLabel
 
 
+# Get the coarse grained label from the fine grained.
+def getCoarseLabel(label):
+    coarse_label = "".join(w for w in list(label) if w.isupper())
+    if len(list(coarse_label)) >= 2 and list(coarse_label)[0] == "I" and list(coarse_label)[1] == "D":
+        coarse_label = "ID"
+    return coarse_label
+
+
+
 # Produce the list of links out to a file
 def linksTXT(links, filename = "/tmp/LinksToDAG_links.txt", index = 0):
     index = str(index)
@@ -197,6 +206,8 @@ def linksTXT(links, filename = "/tmp/LinksToDAG_links.txt", index = 0):
         layer = link[2]
         label = link[3]
         
+        label = getCoarseLabel(label)
+
         string = ""
         #string = name+", "+
         string += node1+", "+node2+", "+layer+", "+label+", "+index+"\n"
