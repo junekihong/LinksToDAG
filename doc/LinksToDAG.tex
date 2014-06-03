@@ -38,7 +38,7 @@
 \newcommand{\eqnref}[1]{\eqref{eqn:#1}}
 
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}  % allows better color names
-\usepackage{todonotes}   % insert [disable] to disable all notes
+\usepackage[disable]{todonotes}   % insert [disable] to disable all notes
 % Note that these macros accept optional arguments such as 
 % [size=\small,bordercolor=red].
 \newcommand{\Note}[4][]{\todo[author=#2,color=#3,fancyline,#1]{#4}}
@@ -242,6 +242,7 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 
 We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJE{update in final version}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, !!! of !!! link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = !!!$ of !!! link {\em tokens} required a disallowed direction via slack.
 \input{figure/conll_analysis_sentences_multiheaded}of the English sentences and !!! of the Russian sentences had at least one multiheaded word.
+\noteJE{2 significant digits is enough}
 
 \noteJE{fill these numbers in}
 
@@ -269,7 +270,7 @@ The resulting English corpus uses a syntactic annotation scheme that is somewhat
 
 The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  Of course, a few of the differences are due to parser attachment errors.
 
-The most vexing issue is that subject-verb links are handled inconsistently.  Under the English link grammar, a verb that governs a clause (or 0 for the main clause) will link to both the clause's subject and its last (main) verb.  This ought to give us the desired treatment of {\em ``Jill persuaded him to skip''}, in which {\em ``him''} has two parents.  Unfortunately, the grammar is inconsistent when the subject is missing ({\em ``Jill wanted to skip''}): the governing verb here links instead to the clause's first (tensed) verb but {\em no longer} to the last as well.  This favors a consistent solution where each auxiliary verb is a parent of the verb to its right ({\em to} $\rightarrow$ {\em skip}).  As a result, when the subject is present, it must be the {\em parent} of the first verb, which otherwise would not have a parent ({\em him} $\rightarrow$ {\em to} $\rightarrow$ {\em skip}).  Yet inconsistently, subjects must be {\em children} of verbs in a few  inconsistently handled constructions such as non-embedded reported speech ({\em ``It was impossible, they said''}), since the subject ({\em ``they''}) links only to the verb ({\em ``said''}) and so has no other possible parent.
+The main vexation is that subject-verb links are handled inconsistently.  Under the English link grammar, the verb (or 0) that governs a clause will link to both the clause's subject and its last (main) verb.  This ought to give us the desired treatment of {\em ``Jill persuaded him to skip''}, in which {\em ``him''} has two parents.  Unfortunately, it does not, because of inconsistencies in the link grammar itself.\footnote{When the subject is missing ({\em ``Jill wanted to skip''}), the governing verb now links instead to the clause's first (tensed) verb but {\em no longer} to the last as well.  That favors a consistent solution where each auxiliary verb is a parent of the verb to its right ({\em to} $\rightarrow$ {\em skip}).  As a result, when the subject is present, it must be the {\em parent} of the first verb, which otherwise would not have a parent ({\em him} $\rightarrow$ {\em to} $\rightarrow$ {\em skip}).  Yet also, subjects must be {\em children} of verbs in a few  inconsistently handled constructions such as non-embedded reported speech ({\em ``It was impossible, they said''}), since the subject ({\em ``they''}) links only to the verb ({\em ``said''}) and so has no other possible parent.}
 
 
 % Multiheaded:
@@ -301,6 +302,11 @@ The most vexing issue is that subject-verb links are handled inconsistently.  Un
 % \subsection{Slack Hierarchy}
 % We would like to introduce slack on the link grammar types such that link types with the same coarse grained label would try and align the same way as the majority in the group, where the preceding capital letters of the link type denote the coarse grained label, while the subscript letters denote further information. This slack would place a prior on rare or never-before seen link types to be assigned in the same way as other similar link types. We think that this will give the ILP better flexibility to handle noise and novel link types while still trying to learn the overall link grammar.
 
+\section{Conclusions}
+
+We have presented an automatic ILP-based method to ``orient'' link grammar parses in multiple languages, turning them into rooted connected DAGs.  This improves their linguistic interpretability and provides new corpora for experimenting with multi-headed dependency parsers.  
+
+More generally, ILP may be a valuable technology for enriching existing annotated corpora.  For example, the Penn Treebank \cite{TREEBANK-1993} omitted types of annotations that plausibly could be reconstructed by rule.
 
 \newpage
 \bibliographystyle{acl2014}
@@ -382,7 +388,7 @@ Edges are shown as solid lines if they appear in both parses.  They are drawn mo
 
 Edges are shown as dotted lines if they appear only in one parse and not in the other.  Such edges are highlighted in orange if the child has multiple parents.  
 
-% OLD
+% OLD NERDVIEW EXPLANATION
 % For every arc:
 % \begin{enumerate}
 % \item If there is a corresponding link between the same nodes then a solid blue line is drawn.
@@ -395,14 +401,6 @@ Edges are shown as dotted lines if they appear only in one parse and not in the 
 % \item Of the remaining edges, if an edge is a multiheaded link, then it is drawn with thick orange.
 % \item The rest of the remaining edges are drawn with dotted red lines.
 % \end{enumerate}
-
-% \subsection{Link Parser Annotations}
-% These sentences have been taken from the English bnews training data set. We chose to display sentences with complete link parses similar to the analysis section of this paper. 
-% 
-% \subsection{Parse Colorization}
-% The sentence used in the middle of the parse is taken from the output of the link parser. We removed sentences with dropped words, but they would have shown up in the parse as [bracketed]. 
-
-
 
 % Uncomment this to add in all of the parses. Warning: compilation will take a long time.
 %\input{figure/parses.tikz}
