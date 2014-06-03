@@ -243,8 +243,8 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 \end{figure*}
 
 
-We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total}link {\em tokens} required a disallowed direction via slack.
-\input{figure/conll_analysis_sentences_multiheaded}of the English sentences and 0.15\% of the Russian sentences had at least one multiheaded word.
+We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, only \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total}link {\em tokens} required a disallowed direction via slack.
+\input{figure/conll_analysis_sentences_multiheaded}of the English sentences but (disappointingly) only 0.15\% of the Russian sentences had at least one multiheaded word.
 \noteJE{2 significant digits is enough}
 \noteJE{update these numbers}
 
@@ -408,7 +408,7 @@ Edges are shown as dotted lines if they appear only in one parse and not in the 
 % \end{enumerate}
 
 % Uncomment this to add in all of the parses. Warning: compilation will take a long time.
-%\input{figure/parses.tikz}
+\input{figure/parses.tikz}
 
 
 \end{document}
