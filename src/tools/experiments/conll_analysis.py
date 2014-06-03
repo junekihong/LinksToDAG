@@ -42,6 +42,12 @@ LATEX_FILE_SENTENCE_MULTIHEADED = LATEX_DIR+"conll_analysis_sentences_multiheade
 LATEX_FILE_SENTENCE_TOTAL = LATEX_DIR+"conll_analysis_sentences_total.tex"
 LATEX_FILE_SENTENCE_ORIGINAL = LATEX_DIR+"conll_analysis_sentences_original.tex"
 LATEX_FILE_ARCS = LATEX_DIR+"conll_analysis_arcs.tex"
+LATEX_FILE_CONLL_RECALL = LATEX_DIR+"conll_analysis_recall.tex"
+LATEX_FILE_CONLL_PRECISION = LATEX_DIR+"conll_analysis_precision.tex"
+LATEX_FILE_EDGE_PERCENT = LATEX_DIR+"conll_analysis_edge_percent.tex"
+
+
+
 if not os.path.exists(LATEX_DIR):
     os.makedirs(LATEX_DIR)
 
@@ -60,6 +66,9 @@ ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
 ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
 ALLOWED_LABELS_BOTH = TIKZ_DIR+"allowed_labels_both.tex"
 ALLOWED_LABELS_TOTAL = TIKZ_DIR+"allowed_labels_total.tex"
+
+LABEL_TOKEN_DISALLOWED = TIKZ_DIR+"label_token_disallowed.tex"
+LABEL_TOKEN_TOTAL = TIKZ_DIR+"label_token_total.tex"
 
 allowedLabel = {}
 ALLOWED_LABELS = ALLOWED_LABELS.readlines()
@@ -558,6 +567,12 @@ f.write(result)
 f.close()
 
 
+
+
+
+
+
+
 #---------------------------------------------------------------------
 # Take our generated numbers and put them in latex files 
 # to be called by the paper
@@ -849,6 +864,52 @@ f.close()
 
 
 pprint(link_direction_coarse_totals)
-#pprint(
-#for coarse_label in link_direction_coarse_totals:
-#    direction
+#pprint(allowedLabel)
+
+errors = 0
+total = 0
+for coarse_label in link_direction_coarse_totals:
+    direction = link_direction_coarse_totals[coarse_label]
+
+    left = direction.get("left",0)
+    right = direction.get("right",0)
+
+    allowedDirection = allowedLabel[coarse_label]
+    if not allowedDirection.get("0",False):
+        errors += left
+    if not allowedDirection.get("1",False):
+        errors += right
+
+    total += left + right
+
+
+f = open(LABEL_TOKEN_DISALLOWED, "w+")
+f.write(str(errors))
+f.close()
+
+f = open(LABEL_TOKEN_TOTAL, "w+")
+f.write(str(total))
+f.close()
+
+
+
+
+match_percent = str(0)
+if arc_total != 0:
+    match_percent = str(int(float(match_total)/arc_total * 100 + 0.5))+ "\\%"
+f = open(LATEX_FILE_CONLL_RECALL, "w+")
+f.write(match_percent)
+f.close()
+
+match_precision = str(0)
+if total != 0:
+    match_precision = str(int(float(match_total)/total * 100 + 0.5)) + "\\%"
+f = open(LATEX_FILE_CONLL_PRECISION, "w+")
+f.write(match_precision)
+f.close()
+
+edge_percent = str(0)
+edge_percent = str(int(float(total - arc_total) / float(arc_total) * 100 + 0.5)) + "\\%"
+f = open(LATEX_FILE_EDGE_PERCENT, "w+")
+f.write(edge_percent)
+f.close()
