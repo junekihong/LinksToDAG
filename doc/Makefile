@@ -2,7 +2,7 @@
 all:
 	pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error && bibtex LinksToDAG.aux && pdflatex LinksToDAG.tex && pdflatex LinksToDAG.tex
 
-parses.pdf:
+parses.pdf: figure/parses.tikz
 	pdflatex parses.tex
 
 
