@@ -234,10 +234,12 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 
 \section{Experiments and Results}
 \begin{figure*}[ht!]
+  \vspace{-6pt}
   \centering
   \input{figure/sentences.tikz}
   \caption{\small Example Parses: The blue upper edges show CoNLL dependency parses; the red lower edges show oriented link grammar parses. Vertical edges are those with parent 0.  See Appendix~\ref{app:parses} for formatting details and more examples.}
   \label{fig:parses}
+  \vspace{-6pt}
 \end{figure*}
 
 We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJE{update in final version}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, !!! of !!! link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = !!!$ of !!! link {\em tokens} required a disallowed direction via slack.
@@ -252,6 +254,7 @@ We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009
   \centering
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
   \caption{Convergence to the direction mapping obtained on the largest run.  Precision relative to that run is very high even for small datasets.  Recall grows as more link types are seen.}\label{fig:convergence}
+\vspace{-6pt}
 \end{figure}
 
 We worried that the direction mapping might be unstable and sensitive to the input corpus.  Figure~\ref{fig:convergence} shows otherwise (for both English and Russian). \noteJE{IMPORTANT! current graph is with fine-grained tags; rerun with the coarse-grained tags as in the rest of the paper} Using even a small prefix of the data got very high-precision results, in the sense that nearly all $r_L$ or $\ell_L$ variables that were 1 in this lightly trained mapping were also 1 in our largest run.  The only disadvantage to using small data is low recall relative to the large run---many of the labels $L$ are not observed yet and so we do not yet allow either direction ($r_L=\ell_L=0$).  
