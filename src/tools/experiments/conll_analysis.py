@@ -736,11 +736,19 @@ f.close()
 #---------------------------------------------------------------------
 LATEX_FILE_COARSE_LINKS = LATEX_DIR+"link_analysis_coarse_table.tex"
 f = open(LATEX_FILE_COARSE_LINKS, "w+")
+
+
+# TODO use tabular
 latex_table = "\\begin{tabular}{|l|l|l|l|l|l|}\n"
+end_table = "\\end{tabular}\n"
+
 header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\ \n"
 
 begin_figure = "\\begin{figure*}\n\\small\n\\centering\n"
 end_figure = "\\end{figure*}\n"
+
+def make_percentage_figure(top,bottom):
+    return str(int(float(top) / float(bottom) * 100 + 0.5))+"\\%" + " ("+str(top)+"/"+str(bottom)+")"
 
 
 table = begin_figure
@@ -752,27 +760,26 @@ for coarse_label in coarse_labels:
     count = link_label_coarse_counts[coarse_label]
     
     right = link_direction_coarse_totals[coarse_label].get("right",0)
-    right = str(int(float(right) / count * 100))+"\\%" + " ("+str(right)+"/"+str(count)+")"
+    right = make_percentage_figure(right,count)
 
     prediction_num = ""
     prediction_total = ""
     match_percent = ""
     mismatch_percent = ""
-    multiheaded = str(int(float(link_label_isMultiheaded.get(coarse_label,0)) / float(count) * 100 + 0.5))+"\\% ("+str(link_label_isMultiheaded.get(coarse_label, 0)) + "/" + str(count) + ")"
-
+    multiheaded = make_percentage_figure(link_label_isMultiheaded.get(coarse_label,0), count)
 
 
     prediction = coarse_predictions.get(coarse_label, "-")
     if prediction != "-":
         prediction_num = link_label_coarse_prediction[coarse_label][prediction]
         prediction_total = link_label_coarse_prediction_totals[coarse_label]
-        prediction += " "+str(int(float(prediction_num) / float(prediction_total) * 100 + 0.5)) + "\\%"
-        prediction += " (" +str(prediction_num) + "/" + str(prediction_total) + ")"
+        prediction = make_percentage_figure(prediction_num, prediction_total)
+        
 
     if prediction_num and prediction_total:
-        match_percent = str(int(float(prediction_total) / count * 100 + 0.5)) + "\\%" + " (" + str(prediction_total) + "/" + str(count) + ")"
+        match_percent = make_percentage_figure(prediction_total, count)
 
-        mismatch_percent = str(int(float(prediction_total - coarse_dir_mismatch.get(coarse_label,0)) / float(prediction_total) * 100 + 0.5)) + "\\%" + " (" + str(prediction_total - coarse_dir_mismatch.get(coarse_label,0)) + "/" + str(prediction_total) + ")"
+        mismatch_percent = make_percentage_figure(prediction_total - coarse_dir_mismatch.get(coarse_label,0), prediction_total)
     else:
         match_percent = "-"
         mismatch_percent = "-"
@@ -788,9 +795,9 @@ for coarse_label in coarse_labels:
     line += 1
     
     # Break up the table into smaller tables
-    if line % 50 == 0:
+    if line % 55 == 0:
         table += "\\hline\n"
-        table += "\\end{tabular}\n"
+        table += end_table
         table += end_figure
         table += begin_figure
         table += latex_table
@@ -798,7 +805,7 @@ for coarse_label in coarse_labels:
         table += header
     
 table += "\\hline\n"
-table += "\\end{tabular}\n"
+table += end_table
 table += end_figure
 
 f.write(table)
