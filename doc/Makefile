@@ -1,6 +1,6 @@
 
 all:
-	pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error && bibtex LinksToDAG.aux && pdflatex LinksToDAG.tex && pdflatex LinksToDAG.tex && (pdftk LinksToDAG.pdf cat 1-5 output body.pdf; pdftk LinksToDAG.pdf cat 6-end output supplement.pdf; zip supplement.zip supplement.pdf) && echo "Now submit body.pdf and supplement.zip"
+	bibtex LinksToDAG.aux && pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error && (pdftk LinksToDAG.pdf cat 1-5 output body.pdf; pdftk LinksToDAG.pdf cat 6-end output supplement.pdf; zip supplement.zip supplement.pdf) && echo "Now submit body.pdf and supplement.zip"
 
 parses.pdf: figure/parses.tikz
 	pdflatex parses.tex
