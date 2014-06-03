@@ -18,6 +18,7 @@ def decodeSCIPsolution(links, solutionFile, getAllowedLabels=False):
     decodedSolutions = {}
 
 
+
     for line in lines:
         if line.find("rLink#") == 0:
             line = line.split()
