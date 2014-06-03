@@ -736,7 +736,12 @@ f.close()
 #---------------------------------------------------------------------
 LATEX_FILE_COARSE_LINKS = LATEX_DIR+"link_analysis_coarse_table.tex"
 f = open(LATEX_FILE_COARSE_LINKS, "w+")
+
+
+# TODO use tabular
 latex_table = "\\begin{tabular}{|l|l|l|l|l|l|}\n"
+end_table = "\\end{tabular}\n"
+
 header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\ \n"
 
 begin_figure = "\\begin{figure*}\n\\small\n\\centering\n"
@@ -788,9 +793,9 @@ for coarse_label in coarse_labels:
     line += 1
     
     # Break up the table into smaller tables
-    if line % 50 == 0:
+    if line % 55 == 0:
         table += "\\hline\n"
-        table += "\\end{tabular}\n"
+        table += end_table
         table += end_figure
         table += begin_figure
         table += latex_table
@@ -798,7 +803,7 @@ for coarse_label in coarse_labels:
         table += header
     
 table += "\\hline\n"
-table += "\\end{tabular}\n"
+table += end_table
 table += end_figure
 
 f.write(table)
