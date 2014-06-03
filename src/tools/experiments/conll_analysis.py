@@ -371,8 +371,14 @@ for linkSentence in link_results:
         continue
 
 
+    # Remove sentences with [!] or [?] in them. I will have them later in the paper and explain what it means.
     sentenceCheck = True
-    linkSentenceCheck = linkSentence.split()
+    for line in link_results[linkSentence]:
+        line = line.split()
+        word = line[1]
+        if word.rfind("[!]") != -1 or word.rfind("[?]") != -1:
+            sentenceCheck = False
+            
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
@@ -665,7 +671,7 @@ for label in labels:
         prediction_num = link_label_prediction[label][prediction]
         prediction_total = link_label_prediction_totals[label]
     if prediction_num and prediction_total:
-        prediction_percent = str(int(float(prediction_num) / prediction_total * 100)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
+        prediction_percent = str(int(float(prediction_num) / prediction_total * 100 + 0.5)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
 
 
     table += "\\hline\n"
@@ -726,7 +732,7 @@ for coarse_label in coarse_labels:
         prediction_num = link_label_coarse_prediction[coarse_label][prediction]
         prediction_total = link_label_coarse_prediction_totals[coarse_label]
     if prediction_num and prediction_total:
-        prediction_percent = str(int(float(prediction_num) / prediction_total * 100)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
+        prediction_percent = str(int(float(prediction_num) / prediction_total * 100 + 0.5)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
 
 
     table += "\\hline\n"
