@@ -4,7 +4,7 @@ from encoder import *
 from solver import *
 from decoder import *
 from tools.cache import *
-import argparse, sys
+import argparse, sys, subprocess
 
 
 if __name__=="__main__":
@@ -61,7 +61,9 @@ if __name__=="__main__":
             wordTags.append(getWordTags(processedSentences[i]))
             linkLabels.append(getLinkLabelMap(links[i]))
             linksTXT(links[i],linksFile, i)
+
         
+        subprocess.call("src/sentlen.sh")
         ZimplProgram(zplFile, linksFile, sizeOfCorpus)
         solutionFile = SCIP(zplFile, solutionFile)
         

@@ -140,28 +140,33 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 \section{Data Sets}
-The data used for this work came from English bnews CoNLL dependency training data \noteJH{cite?} \noteJE{wait a minute, the bnews is not from CoNLL!  It is merely in CoNLL format.  It is from Ariya Rastrow, and is automatically parsed, I think.  We should be comparing on hand-parsed data.}  and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}} \noteJE{give citation}. 
+The data used for this work came from English Penn Tree Bank CoNLL dependency training data \noteJH{cite?} 
+%\noteJE{wait a minute, the bnews is not from CoNLL!  It is merely in CoNLL format.  It is from Ariya Rastrow, and is automatically parsed, I think.  We should be comparing on hand-parsed data.}  
+and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}} \cite{russiancorpus} \noteJE{give citation}. 
 
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained complete, connected parses for only !!! (of !!!) English sentences and !!! (of !!!) Russian sentences, discarding the other sentences. \noteJE{fill these !!! in automatically} These two languages have the most complete lexicons at present, although lexicons for !!! other languages are available.  
+
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained complete, connected parses for only \input{figure/conll_analysis_sentences_total.tex}of (\input{figure/conll_analysis_sentences_original.tex}) English sentences and only 206 (of 10,000) Russian sentences, discarding the other sentences. 
+%\noteJE{fill these !!! in automatically} 
+These two languages have the most complete lexicons at present, although lexicons for seven other languages are available.  
 
 % With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
 
-\subsection{Discarding Incomplete Link Parses}
+%\subsection{Discarding Incomplete Link Parses}
 
-\NoteJE{ideally we could cut this section given what I wrote above.  However, you seem to be saying that we did train on sentences with dropped words as long as the parses were connected.  Didn't we decide to drop those sentences too?}
+%\NoteJE{ideally we could cut this section given what I wrote above.  However, you seem to be saying that we did train on sentences with dropped words as long as the parses were connected.  Didn't we decide to drop those sentences too?}
 
-Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
+%Not all of the data was used for this work. From the given sentences, we discarded those that the link parser could not process and returned a parse with nodes disconnected from the root. \input{figure/conll_analysis_sentences_disconnected} of the English sentences were removed in this way. The ILP was run only on the connected parses to produce a corpus of directionalized link parses. 
 
-For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences were removed, leaving us working only with complete link parses.
+%For our analysis of these parses, we further discarded those that had dropped words, where the link parser could not attach links to every word in the sentence. About \input{figure/conll_analysis_sentences_dropped} of the non-disconnected sentences were removed, leaving us working only with complete link parses.
 
-\begin{figure}[ht!]
-  \centering
-  \small
-  \input{figure/conll_analysis_sentences.tex}
-  \caption{\small The English sentences used for this work.}
-\end{figure}
+%\begin{figure}[ht!]
+%  \centering
+%  \small
+%  \input{figure/conll_analysis_sentences.tex}
+%  \caption{\small The English sentences used for this work.}
+%\end{figure}
 
-\noteJH{The stability results come from the second row of this table. The analysis later in the paper uses the third row. Putting this section here might be confusing to readers?}
+%\noteJH{The stability results come from the second row of this table. The analysis later in the paper uses the third row. Putting this section here might be confusing to readers?}
 
 \section{Integer Linear Programming Model}
 
@@ -212,9 +217,16 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 % We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
 \section{Experiments and Results}
+\begin{figure*}[ht!]
+  \centering
+  \input{figure/sentences.tikz}
+  \caption{\small Example Parses: The top blue arcs represent conll dependencies; the bottom red arcs represent directionalized link grammar parses. See the Appendix for more details.}
+  \label{fig:parses}
+\end{figure*}
+
 
 We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  
-\NoteJE{give runtime here}
+\NoteJE{give runtime here}\NoteJH{A run of 8,192 sentences takes 1743 seconds}
 
 \subsection{Stability of Results}
 \begin{figure}[ht!]
@@ -223,8 +235,9 @@ We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
   \caption{\small Convergence to the results obtained on the largest run.  Precision relative to that run is very high even for small training sizes.  Recall grows as more link types are observed.}
 \end{figure}
-We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the largest run as the answer key, we compared how much the smaller runs deviated from it. 
-We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. \noteJE{this is not clear.  are we comparing the direction table or the parses?  If the parses, which parses?}
+We report on the convergence of the results of our ILP with increasing data. With increasing trials of sentences, we measure how similar the subsequent directional assignments would be with each other. Taking the direction table of the largest run as the answer key, we compared how much the solutions of the smaller runs deviated from it. 
+We recorded the precision of whether the assignments in the smaller runs could be found in those of the largest run, and similarly the recall of whether the assignments in the largest run could be found in the smaller runs. 
+%\noteJE{this is not clear.  are we comparing the direction table or the parses?  If the parses, which parses?}
 
 Because the precision values were high, we found that the solutions of the previous runs were consistent with the largest run, and as the data increased so did the recall values, and so we would continue to encounter novel link types and then incorporate them.
 
@@ -232,12 +245,6 @@ Because the precision values were high, we found that the solutions of the previ
 
 \subsection{English Link-Dependency Analysis}
 
-\begin{figure*}[ht!]
-  \centering
-  \input{figure/sentences.tikz}
-  \caption{\small Example Parses: The top blue arcs represent conll dependencies; the bottom red arcs represent directionalized link grammar parses. See the Appendix for more details.}
-  \label{fig:parses}
-\end{figure*}
 
 In the case of English, we had manually produced  single-headed 
  CoNLL annotations \cite{!!!}.
@@ -253,9 +260,7 @@ Using the sentences of the dependency corpus as comparison, we find that the lin
 
 we measure whether the direction we chose is the same as the original dependency data.  Finally, we look to see that given a link label, whether the original conll label can be recovered.
 
-Of the sentences with complete parses, about \input{figure/conll_analysis_sentences_multiheaded}
-\noteJE{why ``about''?}
-had at least one multiheaded word.
+Of the English sentences with complete parses, \input{figure/conll_analysis_sentences_multiheaded}had at least one multiheaded word.
 
 \NoteJE{discuss linguistic differences!}
 
@@ -344,7 +349,7 @@ We present our ILP formulation.
 
 
 
-\input{figure/link_analysis_table.tex}
+\input{figure/link_analysis_coarse_table.tex}
 
 
 

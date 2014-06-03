@@ -114,8 +114,10 @@ for l,coord in zip(labels,file_coord):
          PR:"+",
          RR:"+"}.get(l,".")
 
+    style = {RE:":",
+             RR:":"}.get(l,"-")
 
-    plt.plot(Xs,Ys, label=l, color=c, marker=m, linewidth=1.5)
+    plt.plot(Xs,Ys, label=l, color=c, marker=m, linewidth=1.5, markersize=10, linestyle=style)
 
 
 

@@ -211,6 +211,7 @@ def ZimplProgram(zplFilename, linkFilename, corpusSize):
     keyword = {}
     keyword["$LINKFILENAME$"] = linkFilename
     keyword["$CORPUSSIZE$"] = str(corpusSize)
+    keyword["$SENTLENFILENAME$"] = "/tmp/LinksToDAG_sentlen.txt"
 
     # Read in our Zimpl file template
     z = open("src/zimpl_template.zpl",'r')

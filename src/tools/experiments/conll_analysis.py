@@ -40,6 +40,7 @@ LATEX_FILE_SENTENCE_DISCONNECTED = LATEX_DIR+"conll_analysis_sentences_disconnec
 LATEX_FILE_SENTENCE_DROPPED = LATEX_DIR+"conll_analysis_sentences_dropped.tex"
 LATEX_FILE_SENTENCE_MULTIHEADED = LATEX_DIR+"conll_analysis_sentences_multiheaded.tex"
 LATEX_FILE_SENTENCE_TOTAL = LATEX_DIR+"conll_analysis_sentences_total.tex"
+LATEX_FILE_SENTENCE_ORIGINAL = LATEX_DIR+"conll_analysis_sentences_original.tex"
 LATEX_FILE_ARCS = LATEX_DIR+"conll_analysis_arcs.tex"
 if not os.path.exists(LATEX_DIR):
     os.makedirs(LATEX_DIR)
@@ -342,6 +343,7 @@ mismatch_directionality_counts = {}
 #mismatch_extra_counts = {}
 
 link_direction_totals = {}
+link_direction_coarse_totals = {}
 
 # --------------------------------------------------------------------
 # Variables for word analysis
@@ -404,10 +406,14 @@ for linkSentence in link_results:
     # analysis_links
     link_direction_counts = analysis_links(link_results[linkSentence])
     for label in link_direction_counts:
+        coarse_label = "".join(w for w in list(label) if w.isupper())
+
+        link_direction_coarse_totals[coarse_label] = link_direction_coarse_totals.get(coarse_label,{})
         link_direction_totals[label] = link_direction_totals.get(label,{})
+
         for direction in link_direction_counts[label]:
             link_direction_totals[label][direction] = link_direction_totals[label].get(direction, 0) + link_direction_counts[label][direction]
-
+            link_direction_coarse_totals[coarse_label][direction] = link_direction_coarse_totals[coarse_label].get(direction,0) + link_direction_counts[label][direction]
 
 
     (match_data, reverse_data, extra_data, word_data, mismatch_data, total) = analysis(conll_results[linkSentence], link_results[linkSentence])
@@ -513,7 +519,9 @@ f = open(LATEX_FILE_SENTENCE_TOTAL, "w+")
 f.write("{:,d}".format(link_sentence_total))
 f.close()
 
-
+f = open(LATEX_FILE_SENTENCE_ORIGINAL, "w+")
+f.write("{:,d}".format(TRIAL_NUM))
+f.close()
 
 #print result
 
@@ -536,15 +544,33 @@ f.close()
 # This will be used in a table of the appendix of the paper
 #---------------------------------------------------------------------
 link_label_prediction = {}
+link_label_coarse_prediction = {}
 for (label_conll, label_link) in all_match_counts:
     link_label_prediction[label_link] = link_label_prediction.get(label_link, {})
     link_label_prediction[label_link][label_conll] = link_label_prediction[label_link].get(label_conll, 0)
     link_label_prediction[label_link][label_conll] += all_match_counts[(label_conll, label_link)]
 
+    coarse_label_link = "".join(w for w in list(label_link) if w.isupper())
+    link_label_coarse_prediction[coarse_label_link] = link_label_coarse_prediction.get(coarse_label_link,{})
+    link_label_coarse_prediction[coarse_label_link][label_conll] = link_label_coarse_prediction[coarse_label_link].get(label_conll,0)
+    link_label_coarse_prediction[coarse_label_link][label_conll] += all_match_counts[(label_conll, label_link)]
+
+
 for (label_conll, label_link) in mismatch_directionality_counts:
     link_label_prediction[label_link] = link_label_prediction.get(label_link, {})
     link_label_prediction[label_link][label_conll] = link_label_prediction[label_link].get(label_conll, 0)
     link_label_prediction[label_link][label_conll] += mismatch_directionality_counts[(label_conll, label_link)]
+
+    coarse_label_link = "".join(w for w in list(label_link) if w.isupper())
+    link_label_coarse_prediction[coarse_label_link] = link_label_coarse_prediction.get(coarse_label_link,{})
+    link_label_coarse_prediction[coarse_label_link][label_conll] = link_label_coarse_prediction[coarse_label_link].get(label_conll,0)
+    link_label_coarse_prediction[coarse_label_link][label_conll] += mismatch_directionality_counts[(label_conll, label_link)]
+
+
+#pprint(link_label_coarse_prediction)    
+
+
+
 
 # Gives us total counts. The normalizing constants to use later.
 link_label_prediction_totals = {}
@@ -560,8 +586,25 @@ for label_link in link_label_prediction:
     conll_map = link_label_prediction[label_link]
     predictions[label_link] = max(conll_map.iteritems(), key=operator.itemgetter(1))[0]
 
+
+link_label_coarse_prediction_totals = {}
+for label in link_label_coarse_prediction:
+    conlls = link_label_coarse_prediction[label]
+    count = 0
+    for conll in conlls:
+        count += conlls[conll]
+    link_label_coarse_prediction_totals[label] = count
+
+coarse_predictions = {}
+for label_link in link_label_coarse_prediction:
+    conll_map = link_label_coarse_prediction[label_link]
+    coarse_predictions[label_link] = max(conll_map.iteritems(), key=operator.itemgetter(1))[0]
+
+
 #pprint(predictions)
 #pprint(link_label_prediction)
+#pprint(link_label_coarse_prediction)
+#pprint(coarse_predictions)
 
 
 #---------------------------------------------------------------------
@@ -569,6 +612,8 @@ for label_link in link_label_prediction:
 # which is used for a table in the appendix of the paper
 #---------------------------------------------------------------------
 #pprint(link_direction_totals)
+#pprint(link_direction_coarse_totals)
+
 link_label_counts = {}
 for label in link_direction_totals:
     count = 0
@@ -577,6 +622,15 @@ for label in link_direction_totals:
     link_label_counts[label] = count
 labels = link_label_counts.keys()
 labels.sort()
+
+link_label_coarse_counts = {}
+for label in link_direction_coarse_totals:
+    count = 0
+    for direction in link_direction_coarse_totals[label]:
+        count += link_direction_coarse_totals[label][direction]
+    link_label_coarse_counts[label] = count
+coarse_labels = link_label_coarse_counts.keys()
+coarse_labels.sort()
 
 #---------------------------------------------------------------------
 # Analysis/counts of the links, their labels, and their directions
@@ -637,6 +691,64 @@ f.close()
 
 
 
+
+
+#---------------------------------------------------------------------
+# Coarse analysis/counts of the links, their labels, and their directions
+# For the appendix section of the paper
+#---------------------------------------------------------------------
+LATEX_FILE_COARSE_LINKS = LATEX_DIR+"link_analysis_coarse_table.tex"
+f = open(LATEX_FILE_COARSE_LINKS, "w+")
+latex_table = "\\begin{tabular}{|l|l|l|l||l|l|}\n"
+header = "Label & Count & Left & Right & CoNLL & CoNLL Percentage\\\\ \n"
+
+begin_figure = "\\begin{figure*}\n"
+end_figure = "\\end{figure*}\n"
+
+table = begin_figure
+table += latex_table
+table += "\\hline\n"
+table += header
+line = 0
+for coarse_label in coarse_labels:
+    count = link_label_coarse_counts[coarse_label]
+    
+    left = link_direction_coarse_totals[coarse_label].get("left",0)
+    left = str(int(float(left) / count * 100))+"\\%" + " ("+str(left)+")"
+    right = link_direction_coarse_totals[coarse_label].get("right",0)
+    right = str(int(float(right) / count * 100))+"\\%" + " ("+str(right)+")"
+
+    prediction = coarse_predictions.get(coarse_label, "-")
+    prediction_num = ""
+    prediction_total = ""
+    prediction_percent = ""
+    if prediction != "-":
+        prediction_num = link_label_coarse_prediction[coarse_label][prediction]
+        prediction_total = link_label_coarse_prediction_totals[coarse_label]
+    if prediction_num and prediction_total:
+        prediction_percent = str(int(float(prediction_num) / prediction_total * 100)) + "\\%" + " (" + str(prediction_num) + "/" + str(prediction_total) + ")"
+
+
+    table += "\\hline\n"
+    table += " "+coarse_label+" & "+str(count)+" & "+left+" & "+right+" & "+prediction+" & "+prediction_percent+" \\\\ \n"
+    line += 1
+    
+    # Break up the table into smaller tables
+    if line % 52 == 0:
+        table += "\\hline\n"
+        table += "\\end{tabular}\n"
+        table += end_figure
+        table += begin_figure
+        table += latex_table
+        table += "\\hline\n"
+        table += header
+    
+table += "\\hline\n"
+table += "\\end{tabular}\n"
+table += end_figure
+
+f.write(table)
+f.close()
 
 
 

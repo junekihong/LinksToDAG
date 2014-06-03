@@ -28,6 +28,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
     for POS in graph_conll.POS_sequence:
         POS_conll.append("{\\scriptsize "+POS+"}")
 
+    graph_link.sentence = (" ".join(graph_link.sentence)).replace("&", "\\&").replace("$", "\\$").replace("%","\\%").split()
     link_sentence = " \& ".join(graph_link.sentence).replace("[", "\\lbrack ").replace("]", "\\rbrack")
     POS_sequence = " \& ".join(graph_link.POS_sequence).replace("$", "\\$")
 
@@ -46,7 +47,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
  
             if head in graph_link.table and child in graph_link.table[head]:
                 result += tikz_draw_edge(head, child, graph_link.getEdge(head,child), "below", "thick")
-                result += tikz_draw_edge(head, child, label, "above", "thick")
+                result += tikz_draw_edge(head, child, "\\small "+label, "above", "thick")
                 graph_link.deleteEdge(head,child)
 
                 #multiheads = graph_link.heads.get(child, [])
@@ -57,11 +58,11 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
             
             elif child in graph_link.table and head in graph_link.table[child]:
                 result += tikz_draw_edge(child, head, graph_link.getEdge(child,head), "below", "ultra thick")
-                result += tikz_draw_edge(head, child, label, "above", "thick")
+                result += tikz_draw_edge(head, child, "\\small "+label, "above", "thick")
                 graph_link.deleteEdge(child,head)
             
             else:
-                result += tikz_draw_edge(head, child, label, "above", "dotted")
+                result += tikz_draw_edge(head, child, "\\small "+label, "above", "dotted")
 
 
 
