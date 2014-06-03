@@ -786,13 +786,13 @@ f = open(LATEX_FILE_COARSE_LINKS, "w+")
 
 
 # TODO use tabular
-latex_table = "\\begin{tabular}{|l|l|l|l|l|l|}\n"
-end_table = "\\end{tabular}\n"
+latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n"
+end_table = "\\end{longtable}\n"
 
 header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\ \n"
 
-begin_figure = "\\begin{figure*}\n\\small\n\\centering\n"
-end_figure = "\\end{figure*}\n"
+begin_figure = "\\begin{small}\n\\centering\n"
+end_figure = "\\end{small}\n"
 
 def make_percentage_figure(top,bottom):
     return str(int(float(top) / float(bottom) * 100 + 0.5))+"\\%" + " ("+str(top)+"/"+str(bottom)+")"
