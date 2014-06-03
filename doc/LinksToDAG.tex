@@ -334,10 +334,10 @@ As noted earlier, the resulting English corpus uses an multi-headed annotation s
 
 Recall that \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html} documents the 122 link types in the English link grammar lexicon.  Below is the result of our largest English run, whose corpus uses !!! of these types.  
 
-Other researchers may postprocess link grammar parses simply by using the first two columns, which indicate whether a given link label $L$ tended to be oriented rightward or leftward by our ILP.  
+Other researchers could postprocess link grammar parses by using the first two columns.  These indicate whether a given link label $L$ tended to be oriented rightward or leftward by our ILP.  
 
 The labels that do not have a consistent direction are mainly those that connect a conjunction to its conjuncts.\footnote{See \url{http://www.abisource.com/projects/link-grammar/dict/coordination.html}.}  
-Our coarsening of the labels (see section~\ref{sec:stability}) discards the characters that distinguish left from right conjuncts.
+Our coarsening of the labels (see section~\ref{sec:stability}) discarded the characters that distinguish left from right conjuncts.
 
 The third column indicates where multi-headedness happens, by showing how often the child of an $L$ link had additional parents as well.
 
