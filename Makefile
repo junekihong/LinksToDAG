@@ -11,7 +11,7 @@ clean: clean_cache_SCIP clean_cache_linkparses
 
 # Paper
 paper:
-	cd doc; pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error
+	cd doc; make; cd .. #pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error
 
 clean_paper:
 	cd doc; ./clean.sh
