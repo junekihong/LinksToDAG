@@ -2712,6 +2712,26 @@
 \begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
+			{\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize .} \\
+			guarantee \& by \& Credit\lbrack !\rbrack \& Suisse\lbrack !\rbrack \& . \\
+			v \& - \& - \& - \& - \\
+		\end{deptext}
+		\depedge[edge below, edge style = {red, thick}]{1}{2}{MVp}
+		\depedge[edge above, edge style = {blue, thick}]{1}{2}{\small NMOD}
+		\depedge[edge above, edge style = {blue, dotted}]{1}{5}{\small P}
+		\deproot[edge below, edge style = {red, thick}]{1}{Wi}
+		\deproot[edge above, edge style = {blue, thick}]{1}{\small ROOT}
+		\depedge[edge above, edge style = {blue, dotted}]{2}{4}{\small PMOD}
+		\depedge[edge above, edge style = {blue, dotted}]{4}{3}{\small NMOD}
+		\depedge[edge below, edge style = {red, dotted}]{1}{4}{Osn}
+		\deproot[edge below, edge style = {red, dotted}]{5}{Xp}
+		\depedge[edge below, edge style = {red, dotted}]{2}{3}{Js}
+	\end{dependency}
+\end{figure*}
+
+\begin{figure*}[ht!]
+	\begin{dependency}
+		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize TO} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
 			Craig \& Forman\lbrack !\rbrack \& in \& London \& contributed \& to \& this \& article \& . \\
 			m \& - \& r \& l \& v-d \& r \& d \& n \& - \\
@@ -2738,7 +2758,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize } \& {\scriptsize CD} \& {\scriptsize .} \\
@@ -2763,7 +2783,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize RB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize TO} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize .} \\
@@ -2808,7 +2828,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize TO} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -2844,7 +2864,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize PD} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -2900,7 +2920,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize TO} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize .} \\
@@ -2941,7 +2961,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize CC} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -3015,7 +3035,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize ,} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize CD} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -3060,7 +3080,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize IN} \& {\scriptsize CD} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -3128,7 +3148,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize MD} \& {\scriptsize VB} \& {\scriptsize } \& {\scriptsize CD} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -3174,7 +3194,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize RB} \& {\scriptsize CD} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -3254,7 +3274,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize PR} \& {\scriptsize .} \\
@@ -3269,45 +3289,6 @@
 		\depedge[edge above, edge style = {blue, dotted}]{2}{4}{\small P}
 		\deproot[edge below, edge style = {red, dotted}]{3}{Wa}
 		\deproot[edge below, edge style = {red, dotted}]{4}{Xp}
-	\end{dependency}
-\end{figure*}
-
-\clearpage\begin{figure*}[ht!]
-	\begin{dependency}
-		\begin{deptext}
-			{\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize ,} \& {\scriptsize MD} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize CD} \& {\scriptsize NN} \& {\scriptsize .} \\
-			rebuilding \& that \& team \& , \& Mr. \& Lee \& predicted \& , \& will \& take \& another \& 10 \& years \& . \\
-			g \& j-d \& n \& - \& x \& b \& v \& - \& v \& v \& - \& - \& n \& - \\
-		\end{deptext}
-		\depedge[edge above, edge style = {blue, dotted}]{10}{13}{\small OBJ}
-		\depedge[edge above, edge style = {blue, dotted}]{13}{11}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{13}{12}{Dmcn}
-		\depedge[edge above, edge style = {blue, thick}]{13}{12}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{1}{3}{Os}
-		\depedge[edge above, edge style = {blue, thick}]{1}{3}{\small OBJ}
-		\deproot[edge above, edge style = {blue, dotted}]{9}{\small ROOT}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{Dsu}
-		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small NMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{7}{6}{\small SBJ}
-		\depedge[edge below, edge style = {red, ultra thick}]{8}{7}{VJlst}
-		\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{6}{5}{G}
-		\depedge[edge above, edge style = {blue, thick}]{6}{5}{\small NMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{9}{1}{\small SBJ}
-		\depedge[edge above, edge style = {blue, dotted}]{9}{4}{\small P}
-		\depedge[edge above, edge style = {blue, dotted}]{9}{7}{\small PRN}
-		\depedge[edge below, edge style = {red, thick}]{9}{10}{If}
-		\depedge[edge above, edge style = {blue, thick}]{9}{10}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}]{9}{14}{\small P}
-		\depedge[edge below, edge style = {red, dotted}]{10}{11}{Os}
-		\depedge[edge below, edge style = {red, dotted}]{1}{4}{Xc}
-		\deproot[edge below, edge style = {orange, ultra thick}]{6}{Wd}
-		\deproot[edge below, edge style = {red, dotted}]{8}{WV}
-		\deproot[edge below, edge style = {red, dotted}]{14}{Xp}
-		\depedge[edge below, edge style = {red, dotted}]{6}{1}{COp}
-		\depedge[edge below, edge style = {orange, ultra thick}]{8}{6}{Ss}
-		\depedge[edge below, edge style = {red, dotted}]{8}{9}{VJrst}
-		\depedge[edge below, edge style = {red, dotted}]{8}{13}{Op}
 	\end{dependency}
 \end{figure*}
 
