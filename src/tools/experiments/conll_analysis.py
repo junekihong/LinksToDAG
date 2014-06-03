@@ -863,7 +863,7 @@ f.close()
 
 
 
-pprint(link_direction_coarse_totals)
+#pprint(link_direction_coarse_totals)
 #pprint(allowedLabel)
 
 errors = 0
