@@ -140,14 +140,10 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 \section{Data Sets}
-The data used for this work came from English Penn Tree Bank CoNLL dependency training data \noteJH{cite?} 
-%\noteJE{wait a minute, the bnews is not from CoNLL!  It is merely in CoNLL format.  It is from Ariya Rastrow, and is automatically parsed, I think.  We should be comparing on hand-parsed data.}  
-and the Russian National Corpus\footnote{\url{http://ruscorpora.ru/en/}} \cite{russiancorpus} \noteJE{give citation}. 
+We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED-2007}, a subset of the Penn Treebank for which {\em single}-headed reference parses are available.  We also used a prefix of the Russian National Corpus.\footnote{That is, a prefix when considering the files in Unix sort order by filename.  We dropped sentences with $\leq 2$ words, as well as file 22592319, which appeared to contain charts.}
 
-
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained complete, connected parses for only \input{figure/conll_analysis_sentences_total.tex}of (\input{figure/conll_analysis_sentences_original.tex}) English sentences and only 206 (of 10,000) Russian sentences, discarding the other sentences. 
-%\noteJE{fill these !!! in automatically} 
-These two languages have the most complete lexicons at present, although lexicons for seven other languages are available.  
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only 8,018 (of 10,000) Russian sentences, discarding the other sentences.\footnote{For Russian only, we permitted the parser to drop words if necessary.  Otherwise only 208 sentences were parseable.}
+These two languages have the most complete lexicons at present, although lexicons for 7 other languages are available.  
 
 % With the English sentences we compared our link parse results to the original dependency annotations, and with the Russian sentences we only produced link parses.
 
