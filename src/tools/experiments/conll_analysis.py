@@ -419,7 +419,8 @@ for linkSentence in link_results:
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
     # Filter out sentences to only up to length 16
-    elif example_parses_count < example_parses_limit and len(linkSentence) <= 85:
+    elif example_parses_count < example_parses_limit and len(linkSentence) <= 100:
+    #elif example_parses_count < example_parses_limit:
         tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
         EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
         EXAMPLE_PARSES.write(tikz)

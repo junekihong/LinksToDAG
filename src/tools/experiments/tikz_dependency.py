@@ -58,7 +58,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
             
             elif child in graph_link.table and head in graph_link.table[child]:
                 result += tikz_draw_edge(child, head, graph_link.getEdge(child,head), "below", "ultra thick")
-                result += tikz_draw_edge(head, child, "\\small "+label, "above", "thick")
+                result += tikz_draw_edge(head, child, "\\small "+label, "above", "ultra thick")
                 graph_link.deleteEdge(child,head)
             
             else:
@@ -72,7 +72,7 @@ def tikz_dependency(conlls, links, sentence, ratio = 0.3, subfigure = True):
             label = graph_link.labels[(head,child)]
             
             if len(graph_link.heads[child]) > 1 :
-                result += tikz_draw_edge(head,child,label, "below", "ultra thick", "orange")
+                result += tikz_draw_edge(head,child,label, "below", "ultra thick, dotted", "orange")
             else:
                 result += tikz_draw_edge(head,child,label, "below", "dotted")
 
