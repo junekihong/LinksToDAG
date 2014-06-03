@@ -77,7 +77,7 @@ it is hard to train, test, or improve multi-headed parsers because few multi-hea
 To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs.  
 % OLD
 % ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
-We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, although their style does not match CoNLL-style parses of the same sentences; we discuss the differences.  
+We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, though differing in style from CoNLL-style parses of the same sentences; we discuss the differences.  
 \end{abstract}
 
 \section{Multi-Headed Dependency Parsing}
@@ -91,11 +91,10 @@ As recently discussed by \newcite{gomezrodriguez-nivre-2013}, one might impose v
 \item {\sc Single-Head}: each word has $\leq 1$ parent
 \item {\sc Acyclic}: there are no directed cycles
 \item {\sc Connected}: each pair of words has a undirected path between them
-\item {\sc Reachable}: each word can be reached from 0 by a directed path
-  \noteJE{note that this implies connected?  or does connected not allow 0 words on the path, i.e., does it restrict 0 to one child, and if not, is there a principle for that?  If no one, mention in footnote 1.}
-\item {\sc Planar}: edges may not ``cross'' \\ (if there are edges between $i,j$ and between $u,v$, where $i < u < j$, then $i \leq v \leq j$)
+\item {\sc Reachable}: each word can be reached from 0 by a directed path ($\Rightarrow$ {\sc Connected})
+\item {\sc Planar}: edges may not ``cross''\footnote{That is, if there are edges between $i,j$ and between $u,v$, where $i < u < j$, then {\sc Planar} requires $i \leq v \leq j$.}
 \end{itemize}
-It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.\footnote{{\sc Projective} basically means {\sc Planar} + {\sc Reachable}.}  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
+It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.\footnote{{\sc Projective} basically means {\sc Planar} + {\sc Reachable}.  Note: It does not prevent 0 from having multiple children.}  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
 
 In this paper, we are interested in relaxing the {\sc Single-Head} requirement while preserving all the others.  This means that the parse can have more than $n$ edges, allowing it to express more relationships between words.  In English, for example, here are some constructions that seem to call for a multi-headed analysis.  
 \begin{description}
@@ -126,7 +125,7 @@ Given a link grammar parse, it would be straightforward to convert it to an acyc
 
 We supposed that the link grammar lexicon designers actually had a consistent direction in mind for each edge type.  We would expect verbs to point to their subject arguments in dependency grammar, and so we surmise that all \texttt{S} links are intended to point leftward (from verb to subject: {\em ``Jack $\stackrel{\texttt{S}}{\leftarrow}$ is falling''}).  The link grammar designers take care to use a distinct \texttt{SI} label in cases of subject-verb inversion, and we surmise that \texttt{SI} links are intended to point rightward (again from verb to subject: {\em ``Is $\stackrel{\texttt{SI}}{\rightarrow}$ Jack falling?''}).
 
-Our goal in this paper is to recover these implicit directions by global optimization.  We seek a fixed mapping from labels to directions such that we can interpret link grammar parses as directed dependency parses that satisfy all of our constraints.
+Our goal in this paper is to recover these implicit directions by global optimization.  We seek a fixed mapping from labels to directions such that link grammar parses become directed dependency parses that satisfy all of our constraints.
 
 Our first thought was to seek a direction mapping such that no parsed word sequence allowed by the link grammar lexicon could possibly violate our constraints after directions were imposed.  This is a well-defined constraint programming problem.  For example, to prevent cyclicity, we would require (roughly speaking) that no word type in the lexicon could follow a sequence of directed rightward links through other word types and then a leftward link back to itself.  
 
@@ -235,7 +234,7 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 \begin{figure*}[ht!]
   \centering
   \input{figure/sentences.tikz}
-  \caption{\small Example Parses: The top blue arcs show CoNLL dependency parses; the bottom red arcs show oriented link grammar parses. See Appendix~\ref{app:parses} for formatting details and more examples.}
+  \caption{\small Example Parses: The blue upper edges show CoNLL dependency parses; the red lower edges show oriented link grammar parses. Vertical edges are those with parent 0.  See Appendix~\ref{app:parses} for formatting details and more examples.}
   \label{fig:parses}
 \end{figure*}
 
@@ -264,7 +263,7 @@ We used only coarse link tags as our labels, keeping only the capital letters of
 
 \subsection{Linguistic Analysis}
 
-As noted earlier, the resulting English corpus uses an multi-headed annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in Appendix~\ref{app:linktypes}, and the actual parses are contrasted in Figure~\ref{fig:parses} and Appendix~\ref{app:parses}.
+The resulting English corpus uses an multi-headed annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in Appendix~\ref{app:linktypes}, and the actual parses are contrasted in Figure~\ref{fig:parses} and Appendix~\ref{app:parses}.
 
 \NoteJE{discuss linguistic differences!}
 
@@ -343,13 +342,16 @@ The third column indicates where multi-headedness happens, by showing how often 
 
 The remaining columns compare to the CoNLL parses.  They show the fraction of $L$-labeled link tokens that were also present in the CoNLL reference parse---and on that fraction, whether the orientation matches CoNLL's and what the dominant CoNLL label was.
 
+\NoteJE{improve table formatting.  Numeric justification; longtable; remove most hlines.}
+
 \renewcommand{\arraystretch}{1.2}    % more space between rows
 \input{figure/link_analysis_coarse_table.tex}
 
 \section{Sample English Parses}\label{app:parses}
 
-Below we display the first 100 English sentences whose widths do not exceed the width of this page.  The blue top half shows the CoNLL tagging and dependency parse.  The red bottom half shows the link grammar's tagging and our orientation of the link parse.  
+Below we display the first 100 English sentences whose widths do not exceed the width of this page.  The blue upper half shows the CoNLL tagging and dependency parse.  The red lower half shows the link grammar's tagging and our orientation of the link parse.  
 % The dashes in the link grammar part of speech tag annotations mean that the link parser did not return one.
+A vertical edge to word token $v$ denotes an edge $0 \rightarrow v$.
 Words that were unknown to the link parser are flagged with \texttt{[!]}.  
 
 Edges are shown as dotted lines if they appear only in one parse and not in the other.  The solid edges in the link parse are drawn thickly if the corresponding CoNLL arc points in the opposite direction.  Multiple parents are shown using orange edges. \noteJE{not quite how orange is currently handled---fix}
