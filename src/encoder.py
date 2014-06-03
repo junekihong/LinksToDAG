@@ -88,7 +88,7 @@ def getDataFromLinkParse(lines):
         links[i][3] = links[i][3].strip("()")
 
         # Make the label coarse grained
-        #links[i][3] = getCoarseLabel(links[i][3])
+        links[i][3] = getCoarseLabel(links[i][3])
 
 
     return (processedSentence, links)
