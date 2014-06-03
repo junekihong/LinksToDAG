@@ -94,6 +94,12 @@ subto every_token_has_parent:
             (rLink[j,i,layer,label,sentence]));
 
 
-subto s_left:
-      allowedLabel["S",1] == 0;
+
+#subto s_right:
+#      allowedLabel["S",0] == 0;
  
+
+#subto s_left:
+#      allowedLabel["S",1] == 0;
+ 
+
