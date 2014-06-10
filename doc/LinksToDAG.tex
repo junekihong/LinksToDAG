@@ -38,7 +38,7 @@
 \newcommand{\eqnref}[1]{\eqref{eqn:#1}}
 
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}  % allows better color names
-\usepackage[disable]{todonotes}   % insert [disable] to disable all notes
+\usepackage{todonotes}   % insert [disable] to disable all notes
 % Note that these macros accept optional arguments such as 
 % [size=\small,bordercolor=red].
 \newcommand{\Note}[4][]{\todo[author=#2,color=#3,fancyline,#1]{#4}}
@@ -314,7 +314,7 @@ We have presented an automatic ILP-based method to ``orient'' link grammar parse
 
 More generally, ILP may be a valuable technology for enriching existing annotated corpora.  For example, the Penn Treebank \cite{TREEBANK-1993} omitted types of annotations that plausibly could be reconstructed by rule.
 
-\newpage
+% \newpage
 \bibliographystyle{acl2014}
 \bibliography{LinksToDAG}
 
@@ -376,7 +376,7 @@ The third column indicates where multi-headedness happens, by showing how often 
 
 The remaining columns compare to the CoNLL parses.  They show the fraction of $L$-labeled link tokens that were also present in the CoNLL reference parse---and on that fraction, whether the orientation matches CoNLL's and what the dominant CoNLL label was.
 
-\NoteJE{improve table formatting.  Numeric justification; en dashes; longtable; remove most hlines.}
+%\NoteJE{improve table formatting.  Numeric justification; en dashes; longtable; remove most hlines.}
 
 \renewcommand{\arraystretch}{1.2}    % more space between rows
 \input{figure/link_analysis_coarse_table.tex}
