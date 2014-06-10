@@ -10,7 +10,7 @@ DEBUG = False
 
 # The directory containing the original conll data file
 CONLL_DIR = "data/"
-CONLL_LOC = CONLL_DIR+"english_bnews_train.conll"
+CONLL_LOC = CONLL_DIR+"english_ptb_train.conll"
 if len(sys.argv) > 2:
     CONLL_LOC = sys.argv[2]
 if not os.path.exists(CONLL_DIR):
@@ -786,10 +786,10 @@ f = open(LATEX_FILE_COARSE_LINKS, "w+")
 
 
 # TODO use tabular
-latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n"
+latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n\\hline\n"
 end_table = "\\end{longtable}\n"
 
-header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\ \n"
+header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\"
 
 begin_figure = "\\begin{small}\n\\centering\n"
 end_figure = "\\end{small}\n"
@@ -800,8 +800,13 @@ def make_percentage_figure(top,bottom):
 
 table = begin_figure
 table += latex_table
-table += "\\hline\n"
-table += header
+
+table += header + "\\hline\n"
+table += "\\endhead\n"
+table += "\n"
+
+table += "\\hline\n\\endfoot\n\n"
+
 line = 0
 for coarse_label in coarse_labels:
     count = link_label_coarse_counts[coarse_label]
@@ -833,7 +838,7 @@ for coarse_label in coarse_labels:
         match_percent = "-"
         mismatch_percent = "-"
 
-    table += "\\hline\n"
+    #table += "\\hline\n"
     table += coarse_label
     table += " & "+right
     table += " & "+multiheaded
@@ -844,7 +849,7 @@ for coarse_label in coarse_labels:
     line += 1
     
     # Break up the table into smaller tables
-    if line % 55 == 0:
+    """if line % 55 == 0:
         table += "\\hline\n"
         table += end_table
         table += end_figure
@@ -852,8 +857,8 @@ for coarse_label in coarse_labels:
         table += latex_table
         table += "\\hline\n"
         table += header
-    
-table += "\\hline\n"
+    """
+#table += "\\hline\n"
 table += end_table
 table += end_figure
 
