@@ -81,10 +81,10 @@ subto depth_recursive_R:
     forall <i,j,layer,label,sentence> in LINK: 
         depth[j,sentence] + (1+sentenceLen[sentence])*(1-rLink[i,j,layer,label,sentence]) >= depth[i,sentence] + 1;  # skip constraint on j if left link i <-- j
 
-# # Jason thinks this is unnecessary, but it seems to affect performance.
-# subto depth_zero_initialization: 
-#     forall <0,sentence> in NODE: depth[0,sentence] == 1;   
-# 
+# Jason thinks this is unnecessary, but it seems to affect performance.
+subto depth_zero_initialization: 
+    forall <0,sentence> in NODE: depth[0,sentence] == 1;   
+
 # # The root has the smallest depth.
 # subto root_depth:
 #     forall <i,sentence> in NODE: depth[0,sentence] <= depth[i,sentence];
