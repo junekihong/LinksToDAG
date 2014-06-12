@@ -47,7 +47,6 @@ LATEX_FILE_CONLL_PRECISION = LATEX_DIR+"conll_analysis_precision.tex"
 LATEX_FILE_EDGE_PERCENT = LATEX_DIR+"conll_analysis_edge_percent.tex"
 
 
-
 if not os.path.exists(LATEX_DIR):
     os.makedirs(LATEX_DIR)
 
@@ -64,11 +63,12 @@ EXAMPLE_PARSES = open(EXAMPLE_PARSES_LOC, 'w+')
 
 ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
 ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
-ALLOWED_LABELS_BOTH = TIKZ_DIR+"allowed_labels_both.tex"
-ALLOWED_LABELS_TOTAL = TIKZ_DIR+"allowed_labels_total.tex"
+ALLOWED_LABELS_BOTH = LATEX_DIR+"allowed_labels_both.tex"
+ALLOWED_LABELS_TOTAL = LATEX_DIR+"allowed_labels_total.tex"
 
-LABEL_TOKEN_DISALLOWED = TIKZ_DIR+"label_token_disallowed.tex"
-LABEL_TOKEN_TOTAL = TIKZ_DIR+"label_token_total.tex"
+LABEL_TOKEN_DISALLOWED = LATEX_DIR+"label_token_disallowed.tex"
+LABEL_TOKEN_TOTAL = LATEX_DIR+"label_token_total.tex"
+
 
 allowedLabel = {}
 ALLOWED_LABELS = ALLOWED_LABELS.readlines()
@@ -81,6 +81,7 @@ for line in ALLOWED_LABELS:
     direction = line[1]
     allowedLabel[label] = allowedLabel.get(label,{})
     allowedLabel[label][direction] = True
+
 
 bothCount = 0
 for label in allowedLabel:
@@ -95,6 +96,10 @@ f.close()
 f = open(ALLOWED_LABELS_TOTAL,"w+")
 f.write(str(len(allowedLabel)))
 f.close()
+
+
+
+
 
 
 # --------------------------------------------------------------------
