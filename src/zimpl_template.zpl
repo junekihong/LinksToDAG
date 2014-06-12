@@ -73,7 +73,8 @@ subto right_token_ok:
 # # Assign a depth to each node, which must be greater than the depth of any parents it has. Used to enforce acyclicity.
 
 subto depth_bound:
-    forall <i,sentence> in NODE: depth[i,sentence] <= sentenceLen[sentence];
+    forall <i,sentence> in NODE: depth[i,sentence] <= sentenceLen[sentence] + 1;
+
 subto depth_recursive_L: 
     forall <i,j,layer,label,sentence> in LINK: 
         depth[i,sentence] + (1+sentenceLen[sentence])*rLink[i,j,layer,label,sentence] >= depth[j,sentence] + 1;  # skip constraint on i if right link i --> j
