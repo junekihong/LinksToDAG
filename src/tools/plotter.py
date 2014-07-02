@@ -139,8 +139,8 @@ for l,coord in zip(labels,file_coord):
 
 
 if args.legend:
-    #ax.legend(loc='lower right')
-    ax.legend(loc="upper left")
+    ax.legend(loc='lower right')
+    #ax.legend(loc="upper left")
 
 plt.xlim(xmin + -0.015*xmax, xmax + 0.015*xmax)
 plt.ylim(ymin, 1.04*ymax)
