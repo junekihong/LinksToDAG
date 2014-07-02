@@ -447,14 +447,26 @@ for linkSentence in link_results:
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
-    bannedWords = []
+    """bannedWords = []
     for word in bannedWords:
         if word in linkSentenceCheck:
             sentenceCheck = False
             break
+    """
+
+
+    tempSentence = [] 
+    linkData = link_results[linkSentence]
+    for line in linkData:
+        line = line.split("\t")
+        tempSentence.append(line[1])
+    tempSentence = " ".join(tempSentence)
+    sentenceLength = len(tempSentence)
+
+
 
     # Link parses to put in the paper. Takes sentences of only length 5.
-    if (paper_sentence_count < paper_sentence_limit) and len(linkSentence.split()) == 5 and sentenceCheck:
+    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 25 and sentenceLength <= 30 and sentenceCheck:
         if paper_sentence_skip > 0:
             paper_sentence_skip -= 1
         else:
@@ -464,7 +476,7 @@ for linkSentence in link_results:
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
     # Filter out sentences to only up to length 16
-    elif example_parses_count < example_parses_limit and len(linkSentence) <= 100:
+    elif example_parses_count < example_parses_limit and sentenceLength <= 95:
     #elif example_parses_count < example_parses_limit:
         tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
         EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
