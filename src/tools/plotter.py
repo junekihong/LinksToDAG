@@ -13,6 +13,8 @@ parser.add_argument("-y","--y", dest="yLabel", default="Run Time (seconds)",
                     help="Specify the y axis.")
 parser.add_argument("-loff","--legend_off", dest="legend", default=True, action="store_false",
                     help="Turn the legend off")
+parser.add_argument("-xlog","--xaxis_log", dest="xlog", default=False, action="store_true",
+                    help="Use the log scale on the x axis")
 parser.add_argument("-ylog","--yaxis_log", dest="ylog", default=False, action="store_true",
                     help="Use the log scale on the y axis")
 parser.add_argument("strings", nargs="*")
@@ -142,12 +144,15 @@ if args.legend:
     ax.legend(loc='lower right')
     #ax.legend(loc="upper left")
 
-plt.xlim(xmin + -0.015*xmax, xmax + 0.015*xmax)
-plt.ylim(ymin, 1.04*ymax)
+plt.xlim(xmin + -0.015*xmax, 1.015*xmax)
+plt.ylim(ymin + -0.015*ymax, 1.015*ymax)
 
 
 if args.ylog:
     ax.set_yscale("log")
+
+if args.xlog:
+    ax.set_xscale("log")
 
 #plt.show()
     
