@@ -1,0 +1,73 @@
+START Conference Manager    
+Conference on Empirical Methods in Natural Language Processing
+EMNLP 2014
+
+Author Response
+
+Title: 	Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses
+Authors: 	Juneki Hong and Jason Eisner
+
+Instructions
+
+The author response period has begun. The reviews for your submission are displayed on this page. If you want to respond to the points raised in the reviews, you may do so in the box provided below.
+
+Please note: you are not obligated to respond to the reviews.
+
+Review #1
+
+    Comments
+
+    This paper adds to recent work on dependency representations that are not necessarily tree-shaped. It presents a method for converting undirected Link Grammar analyses into directed dependency graphs. The resulting graphs are planar, connected dags; but they are not necessarily trees, because a node may have more than one incoming edge. This should allow for more natural analyses of phenomena such as control, relativization, and conjunction.
+
+    The technical part of the paper is well-done and easy to follow. The authors cast the conversion problem into a combinatorial optimization problem where for each relation type of the Link Grammar, they aim to find a consistent direction (left-to-right or right-to-left) across a set of parses, which appears to be a reasonable approach given how these relation types are used in Link Grammar. The authors evaluate their approach by comparing the resulting dependency graphs against the CoNLL-2007 dependency version of the Penn Treebank, with encouraging result. This seems to suggest that the new data source could make a useful resource for future research on graph-based dependency parsing. One drawback of the proposed technique however is the relatively low coverage of the Link Grammar, 60% on the CoNLL data.
+
+    The authors could do more to relate their findings to other research on dependency representations and graph-based dependency parsing. One popular dependency representation with non-tree graphs are the (standard) Stanford Dependencies, where e.g. a control construction such as “Jill likes to skip” indeed would have two subject dependencies (called subj and xsubj), as discussed by the authors. Reference: Marie-Catherine de Marneffe and Christopher D. Manning. The Stanford Typed Dependencies Representation. In
+
+    *Proceedings of the Workshop on Cross-Framework and Cross-Domain Parser Evaluation*, pages 1–8, Manchester, UK, 2008. I would like to see a discussion of the differences and similarity between Stanford Dependencies and the Link Grammar graphs obtained in the present paper. Other types of representations that the authors may want to compare to are the three representations used for the [SemEval-2014 Task on Broad-Coverage Semantic Dependency Parsing](http://alt.qcri.org/semeval2014/). (Note however that these graphs are not necessarily connected.)
+
+    Apart from these general comments, I have a number of more specific suggestions:
+
+    * “Under multi-headed dependency grammar, a parse is a directed acyclic graph rather than a tree.” This statement is a bit imprecise, given that the dependency graphs considered in this paper are not general dags but additionally satisfy Reachable (and Planar, which [in the form considered in this paper] is orthogonal to the dag/tree constraint). I suggest to write “connected directed acyclic graph” to make this clear.
+
+    * Gómez-Rodríguez and Nivre (2013) were not the first to discuss the structural constraints listed in §1. I suggest that the authors also cite previous work; a canonical choice would be: Marco Kuhlmann and Joakim Nivre. Mildly Non-Projective Dependency Structures. In *Proceedings of the 21st International Conference on Computational Linguistics (COLING) and 44th Annual Meeting of the Association for Computational Linguistics (ACL) Main Conference Poster Sessions*, pages 507–514, Sydney, Australia, 2006.
+
+    * “researchers have sometimes converted corpora from other formats such as HPSG” This statement warrants a reference. One suggestion would be: Angelina Ivanova, Stephan Oepen, Lilja Øvrelid, and Dan Flickinger. Who Did What to Whom? A Contrastive Study of Syntacto-Semantic Dependencies. In *Proceedings of the 6th Linguistic Annotation Workshop*, pages 2–11, Jeju Island, Republic of Korea, 2012.
+
+    * “It seems at first that no one has worked out annotation conventions for
+
+    *projective* multi-headed dependency parsing. However, this is not quite true.” This and the following discussion suggest that such conventions have been developed in the context of Link Grammar. However, the primary structures of Link Grammar are *undirected* graphs. While it makes perfect sense to convert these graphs into directed graphs (under linguistically plausible assumptions), it is *not* the case that the resulting graphs are the result of manual annotation – just as in the case of the HPSG conversion. I suggest to rephrase this part of the paper to avoid any misunderstanding on this point.
+
+    * “However, working directly with the link grammar lexicon format is somewhat tricky.” This is very vague, and is a rather useless statement to make given that the constraint satisfaction approach was not adopted in this paper. In general, in I suggest to remove from the paper (especially considering that it’s a Short) all parts that talk about things that were not done and focus on the things that were done.
+
+Review #2
+
+    Comments
+
+    The aim of the paper is rather limited – to add linguistically-motivated and possibly uniform directions to edges in the undirected graph output by the Link grammar. This is justified by the need for multi-headed dependency banks to train parsers able to produce such multi-headed structures. The authors claim that converting from other formalisms, e.g., HPSG, results in non-projective structures, so it is not a viable option if the constraint to be relaxed with respect to the usual approaches is “single-head”, but this claim is left without any justification (I'd like to see some).
+
+    The adopted approach, based on Integer Linear Programming, is very interesting, but it is not clear to me to what extent it works, i.e., there is no real evaluation of the results. Such quantitative evaluation should be possible on the basis of CoNLL dependency parses, although it would require defining rules translating such parses to the Link format, e.g., “translate ADV edge to EB edge”, “translate SBJ edge to *reversed* S edge”, etc. (Although, to be fair, it is not clear to me to what extent such translation really can be defined…)
+
+    I am intrigued about experiments on Russian. Given the free word order of most Slavic languages, insistance on uniform directionality seems misguided here, or at least it should be significantly relaxed in comparison to English. Also, what is the explanation of the dramatic difference between English and Russian in terms of multiheaded words? Russian has control, coordination, relative clauses, etc., just as English does.
+
+Review #3
+
+    Comments
+
+    The paper presents an approach to use Link Parser output to produce dependency DAG parses.
+
+    I liked the linguistic insight and discussion of multi-head parsers.
+
+    The dependency DAGs are assigned using ILP. The same technique could be used more generally to relate various parse formats and to add omitted link types.
+
+    The proposed method is a relatively simple extension to Link Grammar parsing. Therefore, I am not too excited about this paper as such, but the work on this may continue, producing more interesting results into the next paper.
+
+    I wonder if the approach could be extended towards multi-planar link grammars.
+
+    The evaluation is not satisfactory for a full paper; even for a short paper, I would have expected more.
+
+Submit Response
+
+Use the following box to enter your response to the reviews. Please limit your comments to 300 words (longer responses will not be accepted by the system).
+
+
+ 
