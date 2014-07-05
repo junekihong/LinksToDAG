@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import math, argparse, sys
+import math, numpy, argparse, sys
 import matplotlib.pyplot as plt
 from pprint import pprint
 
@@ -10,7 +10,13 @@ parser.add_argument("-o", "--output", dest="output", default="sol/runtimes.png",
 parser.add_argument("-x","--x", dest="xLabel", default="Sentences",
                     help="Specify the x axis.")
 parser.add_argument("-y","--y", dest="yLabel", default="Run Time (seconds)", 
-                    help="Speciyf the y axis.")
+                    help="Specify the y axis.")
+parser.add_argument("-loff","--legend_off", dest="legend", default=True, action="store_false",
+                    help="Turn the legend off")
+parser.add_argument("-xlog","--xaxis_log", dest="xlog", default=False, action="store_true",
+                    help="Use the log scale on the x axis")
+parser.add_argument("-ylog","--yaxis_log", dest="ylog", default=False, action="store_true",
+                    help="Use the log scale on the y axis")
 parser.add_argument("strings", nargs="*")
 
 args = parser.parse_args()
@@ -77,18 +83,32 @@ for lines in file_lines:
     file_coord.append(coord)
 
 
-# Get the minimum, maximum X values
+# Get the minimum, maximum X,Y values
 xmax = None
 xmin = 0
-for coord in file_coord:
-    temp_max = max(coord)
-    if xmax == None or xmax < temp_max:
-        xmax = temp_max
+ymax = None
+ymin = 0
 
-    temp_min = min(coord)
-    if xmin > temp_min:
-        xmin = temp_min
-xmax = xmax[0]
+for coord in file_coord:
+
+    temp_xmax = max([i[0] for i in coord])
+    if xmax == None or xmax < temp_xmax:
+        xmax = temp_xmax
+
+    temp_xmin = min([i[0] for i in coord])
+    if xmin > temp_xmin:
+        xmin = temp_xmin
+
+
+    temp_ymax = max([i[1] for i in coord])
+    if ymax == None or ymax < temp_ymax:
+        ymax = temp_ymax
+
+    temp_ymin = min([i[1] for i in coord])
+    if ymin > temp_ymin:
+        ymin = temp_ymin
+
+
 
 
 
@@ -106,7 +126,7 @@ for l,coord in zip(labels,file_coord):
          RE:"red",
          PR:"DeepSkyBlue",
          RR:"blue"
-         }.get(l,"blue")
+         }.get(l,numpy.random.rand(3,1))
 
 
     m = {PE:".",
@@ -120,12 +140,19 @@ for l,coord in zip(labels,file_coord):
     plt.plot(Xs,Ys, label=l, color=c, marker=m, linewidth=1.5, markersize=10, linestyle=style)
 
 
+if args.legend:
+    ax.legend(loc='lower right')
+    #ax.legend(loc="upper left")
 
-ax.legend(loc='lower right')
-plt.xlim(-0.015*xmax, xmax + 0.015*xmax)
-plt.ylim(0,1.04)
+plt.xlim(xmin + -0.015*xmax, 1.015*xmax)
+plt.ylim(ymin + -0.015*ymax, 1.015*ymax)
 
 
+if args.ylog:
+    ax.set_yscale("log")
+
+if args.xlog:
+    ax.set_xscale("log")
 
 #plt.show()
     

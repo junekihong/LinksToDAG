@@ -10,7 +10,7 @@ DEBUG = False
 
 # The directory containing the original conll data file
 CONLL_DIR = "data/"
-CONLL_LOC = CONLL_DIR+"english_bnews_train.conll"
+CONLL_LOC = CONLL_DIR+"english_ptb_train.conll"
 if len(sys.argv) > 2:
     CONLL_LOC = sys.argv[2]
 if not os.path.exists(CONLL_DIR):
@@ -47,7 +47,6 @@ LATEX_FILE_CONLL_PRECISION = LATEX_DIR+"conll_analysis_precision.tex"
 LATEX_FILE_EDGE_PERCENT = LATEX_DIR+"conll_analysis_edge_percent.tex"
 
 
-
 if not os.path.exists(LATEX_DIR):
     os.makedirs(LATEX_DIR)
 
@@ -64,11 +63,12 @@ EXAMPLE_PARSES = open(EXAMPLE_PARSES_LOC, 'w+')
 
 ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
 ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
-ALLOWED_LABELS_BOTH = TIKZ_DIR+"allowed_labels_both.tex"
-ALLOWED_LABELS_TOTAL = TIKZ_DIR+"allowed_labels_total.tex"
+ALLOWED_LABELS_BOTH = LATEX_DIR+"allowed_labels_both.tex"
+ALLOWED_LABELS_TOTAL = LATEX_DIR+"allowed_labels_total.tex"
 
-LABEL_TOKEN_DISALLOWED = TIKZ_DIR+"label_token_disallowed.tex"
-LABEL_TOKEN_TOTAL = TIKZ_DIR+"label_token_total.tex"
+LABEL_TOKEN_DISALLOWED = LATEX_DIR+"label_token_disallowed.tex"
+LABEL_TOKEN_TOTAL = LATEX_DIR+"label_token_total.tex"
+
 
 allowedLabel = {}
 ALLOWED_LABELS = ALLOWED_LABELS.readlines()
@@ -81,6 +81,7 @@ for line in ALLOWED_LABELS:
     direction = line[1]
     allowedLabel[label] = allowedLabel.get(label,{})
     allowedLabel[label][direction] = True
+
 
 bothCount = 0
 for label in allowedLabel:
@@ -95,6 +96,10 @@ f.close()
 f = open(ALLOWED_LABELS_TOTAL,"w+")
 f.write(str(len(allowedLabel)))
 f.close()
+
+
+
+
 
 
 # --------------------------------------------------------------------
@@ -442,14 +447,26 @@ for linkSentence in link_results:
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
-    bannedWords = []
+    """bannedWords = []
     for word in bannedWords:
         if word in linkSentenceCheck:
             sentenceCheck = False
             break
+    """
+
+
+    tempSentence = [] 
+    linkData = link_results[linkSentence]
+    for line in linkData:
+        line = line.split("\t")
+        tempSentence.append(line[1])
+    tempSentence = " ".join(tempSentence)
+    sentenceLength = len(tempSentence)
+
+
 
     # Link parses to put in the paper. Takes sentences of only length 5.
-    if (paper_sentence_count < paper_sentence_limit) and len(linkSentence.split()) == 5 and sentenceCheck:
+    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 25 and sentenceLength <= 30 and sentenceCheck:
         if paper_sentence_skip > 0:
             paper_sentence_skip -= 1
         else:
@@ -459,7 +476,7 @@ for linkSentence in link_results:
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
     # Filter out sentences to only up to length 16
-    elif example_parses_count < example_parses_limit and len(linkSentence) <= 100:
+    elif example_parses_count < example_parses_limit and sentenceLength <= 95:
     #elif example_parses_count < example_parses_limit:
         tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
         EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
@@ -786,10 +803,10 @@ f = open(LATEX_FILE_COARSE_LINKS, "w+")
 
 
 # TODO use tabular
-latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n"
+latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n\\hline\n"
 end_table = "\\end{longtable}\n"
 
-header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\ \n"
+header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\"
 
 begin_figure = "\\begin{small}\n\\centering\n"
 end_figure = "\\end{small}\n"
@@ -800,8 +817,13 @@ def make_percentage_figure(top,bottom):
 
 table = begin_figure
 table += latex_table
-table += "\\hline\n"
-table += header
+
+table += header + "\\hline\n"
+table += "\\endhead\n"
+table += "\n"
+
+table += "\\hline\n\\endfoot\n\n"
+
 line = 0
 for coarse_label in coarse_labels:
     count = link_label_coarse_counts[coarse_label]
@@ -833,7 +855,7 @@ for coarse_label in coarse_labels:
         match_percent = "-"
         mismatch_percent = "-"
 
-    table += "\\hline\n"
+    #table += "\\hline\n"
     table += coarse_label
     table += " & "+right
     table += " & "+multiheaded
@@ -844,7 +866,7 @@ for coarse_label in coarse_labels:
     line += 1
     
     # Break up the table into smaller tables
-    if line % 55 == 0:
+    """if line % 55 == 0:
         table += "\\hline\n"
         table += end_table
         table += end_figure
@@ -852,8 +874,8 @@ for coarse_label in coarse_labels:
         table += latex_table
         table += "\\hline\n"
         table += header
-    
-table += "\\hline\n"
+    """
+#table += "\\hline\n"
 table += end_table
 table += end_figure
 
