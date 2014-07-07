@@ -39,8 +39,8 @@ for line in f:
     sentence.append(word)
     heads.append(tuple(head))
     
-    if len(head) > 1:
-        print word, head
+    #if len(head) > 1:
+    #    print word, head
 
 
 print multiheadedSentenceCount
