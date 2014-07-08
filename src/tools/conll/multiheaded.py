@@ -43,6 +43,6 @@ for line in f:
     #    print word, head
 
 
-print multiheadedSentenceCount
+#print multiheadedSentenceCount
 #print sentenceCount
-#print float(multiheadedSentenceCount) / float(sentenceCount)
+print str(round(float(multiheadedSentenceCount) / float(sentenceCount), 2))+"\%"
