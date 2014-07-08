@@ -3,7 +3,8 @@
 typeset -i i END
 
 
-END=10000
+END=100
+#END=10000
 #END=60030
 #END=16384
 #INCREMENT=1
@@ -49,6 +50,17 @@ if [ $LANGUAGE -a $LANGUAGE = "ru" ]; then
     if [ $i -ne $END -a $((i/2)) -ne $END ]; then
         bash src/tools/experiments/trial_ru.sh $SENTENCES $END
     fi
+
+    mv sol/links.conll sol/links_ru.conll
+    mv sol/allowedLinks.txt sol/allowedLinks_ru.txt
+
+    echo $END > doc/figure/russian_original_sentence_count.tex
+    python src/tools/conll/multiheaded.py sol/links_ru.conll > doc/figure/russian_multiheaded.tex
+    python src/tools/conll/printsentence.py sol/links_ru.conll > temp
+    wc -l temp | cut -d ' ' -f1 > doc/figure/russian_sentence_count.tex
+    rm -f temp
+
+
 else     
     for ((i=1;i<=$END;i=$((i*2))));
     do
