@@ -86,9 +86,9 @@ subto depth_recursive_R:
 subto depth_zero_initialization: 
     forall <0,sentence> in NODE: depth[0,sentence] == 1;   
 
-# # The root has the smallest depth.
-# subto root_depth:
-#     forall <i,sentence> in NODE: depth[0,sentence] <= depth[i,sentence];
+# The root has the smallest depth.
+subto root_depth:
+    forall <i,sentence> in NODE: depth[0,sentence] <= depth[i,sentence];
 
 # Jason: may need to rewrite in terms of indexed sets if the pattern matching doesn't work
 # Juneki: Constraint rewritten in terms of rLink.
