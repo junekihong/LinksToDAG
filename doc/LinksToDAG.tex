@@ -38,7 +38,7 @@
 \newcommand{\eqnref}[1]{\eqref{eqn:#1}}
 
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}  % allows better color names
-\usepackage{todonotes}   % insert [disable] to disable all notes
+\usepackage[disable]{todonotes}   % insert [disable] to disable all notes
 % Note that these macros accept optional arguments such as 
 % [size=\small,bordercolor=red].
 \newcommand{\Note}[4][]{\todo[author=#2,color=#3,fancyline,#1]{#4}}
@@ -144,9 +144,11 @@ Thus, we chose to use a sample of {\em actual} sentences parsed by the link gram
 % Dependency parsing is the task of mapping a sentence to a projective (not always projective?) directed acyclic tree. Link parsing in contrast produces a multiheaded planar graph with undirected edges, where every edge has a label describing the relationship between two constituents in a parse. In this paper we explore whether these relationships include dependencies. To determine the directional dependencies within the link edge labels we will use integer linear programming, encoding the problem in the Zimpl little language \cite{Koch2004}. It turns out that the link parses roughly only match half of the conll dependency corpus. However this is because \todo{}. 
 
 \section{Data Sets}
-We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED-2007}---a subset of the Penn Treebank for which {\em single}-headed reference parses are available.  We also used a prefix of the Russian National Corpus,\footnote{That is, a prefix when considering the files in Unix sort order by filename.  We dropped sentences with $\leq 2$ words, as well as file 22592319, which appeared to contain charts.} which is unparsed.
+We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED-2007}---a subset of the Penn Treebank for which {\em single}-headed reference parses are available. 
+%We also used a prefix of the Russian National Corpus,\footnote{That is, a prefix when considering the files in Unix sort order by filename.  We dropped sentences with $\leq 2$ words, as well as file 22592319, which appeared to contain charts.} which is unparsed.
+We also used a prefix of the Russian News Commentary data from the ACL 2013 Shared Task of Machine Translation,\footnote{\url{http://www.statmt.org/wmt13/training-monolingual-nc-v8.tgz}} which is unparsed.
 
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only 8,018 (of 10,000) Russian sentences, discarding the other sentences.\footnote{For Russian only, we permitted the parser to drop words if necessary.  Otherwise only 208 sentences were parseable.}
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only \input{figure/russian_sentence_count.tex}(of \input{figure/russian_original_sentence_count.tex}$\!\!$) Russian sentences, discarding the other sentences.
 These two languages have the most mature lexicons at present, although lexicons for 7 other languages are available.  
 
 The link grammar parses do differ in style from the single-headed CoNLL parses of the same English sentences.  They have \input{figure/conll_analysis_edge_percent.tex}more edges overall.  Only \input{figure/conll_analysis_precision.tex}of the links match CoNLL arcs, and only \input{figure/conll_analysis_recall.tex}of the CoNLL arcs match links.
@@ -243,10 +245,10 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 \end{figure*}
 
 
-We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, only \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total}link {\em tokens} required a disallowed direction via slack.
-\input{figure/conll_analysis_sentences_multiheaded}of the English sentences but only 0.15\% of the Russian ones had at least one multiheaded word.
-\noteJE{2 significant digits is enough}
-\noteJE{update these numbers}
+We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, only \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total.tex}link {\em tokens} required a disallowed direction via slack.
+\input{figure/conll_analysis_sentences_multiheaded.tex}of the English sentences but only \input{figure/russian_multiheaded.tex}of the Russian ones had at least one multiheaded word.
+%\noteJE{2 significant digits is enough}
+%\noteJE{update these numbers}
 
 
 
@@ -365,7 +367,7 @@ More generally, ILP may be a valuable technology for enriching existing annotate
 
 \section{English Link Types}\label{app:linktypes}
 
-Recall that \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html} documents the 122 link types in the English link grammar lexicon.  Below is the result of our largest English run, whose corpus uses 107 of these types. \noteJH{automatically generate this number}
+Recall that \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html} documents the 122 link types in the English link grammar lexicon.  Below is the result of our largest English run, whose corpus uses \input{figure/allowed_labels_total.tex}of these types. \noteJH{automatically generate this number correctly: 107}
 
 Other researchers could postprocess link grammar parses by using the first two columns.  These indicate whether a given link label $L$ tended to be oriented rightward or leftward by our ILP.  
 
