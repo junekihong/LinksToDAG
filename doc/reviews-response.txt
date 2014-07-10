@@ -1,0 +1,19 @@
+Our SUPPLEMENTARY MATERIAL speaks to your evaluation concerns!
+
+Reviewer #2: The last 3 columns of Appendix A show how the directed link parses line up with the CoNLL parses.  Most link grammar label types map cleanly to a single direction.  Usually this agrees with the CoNLL direction and corresponds strongly to a single CoNLL label.  We also provided 100 actual parses in Appendix B so that researchers could see further whether our DAG parses would suit their research needs.
+
+(Row 1 shows that translating each link grammar "A" edge to a leftward CoNLL "NMOD" edge would match the CoNLL direction+label in 99% of the cases when CoNLL has a corresponding edge; that's 365 of 426 cases.)
+
+But agreement with CoNLL wasn't our goal!  Our questions:
+
+* Can we help people working on parsing algorithms?  Apparently yes.  We have produced a multi-headed projective DAG corpus.  The parses aren't gold, might not agree with other annotation schemes, or be linguistically defensible.  But they still give a GENERALLY PLAUSIBLE TRAINING/TEST SET for experimenting with the speed/accuracy of DAG parsing ALGORITHMS.  Someone should then build a gold corpus.
+
+* Can ILP be used to enhance incomplete annotations?  Yes: we show how to enforce internal consistency along with well-formedness requirements.
+
+* Did the link grammar writers have a link direction "in mind" even though it's not annotated?  Apparently yes.  In Appendix A we supply the solution.
+
+* Can we ACLers make any use of the ignored labor of the link grammar writers?  Maybe.  These directed parses may serve as a source of extra features for other tasks.
+
+Reviewer #3: No multi-planar link grammars exist at present.  If there were, our ILP method would immediately extend.  In the meantime, one can do research on 2-planar DAG parsing by overlaying our DAG parses on the CoNLL trees. 
+
+Reviewer #1: Thanks for the citations and suggestions.  We like the suggestions of other semantic dependency representations to compare (perhaps non-planar, disconnected, or not-manually-checked).

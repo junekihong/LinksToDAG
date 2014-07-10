@@ -1,0 +1,19 @@
+Happily, Reviewers #2 and #3's concerns about evaluation may be answered in the supplementary material. (You were not required to review the supplementary material, but we can point to it in our author response.)  We do not think that there is an evaluation gap in the paper, except for Reviewer #1's excellent suggestion that we could also compare with other semantic dependency representations (which may however be non-planar, disconnected, or not manually checked).
+
+Appendix A in fact contains an evaluation like what is requested by reviewer #2.  Consider for example the first row.  It shows that translating each link grammar "A" edge to a leftward CoNLL "NMOD" edge would indeed be successful: this matches the CoNLL direction and label in 99% of the cases when CoNLL has an edge there at all (which is true for 86% of the 426 "A" links).
+
+Scanning the last 3 columns of this table gives a clear picture of where the directed link parses line up with the CoNLL parses.  We could have artificially summarized the Appendix A table using one or two numbers.  However, we felt that the real information was in the line-by-line (type-by-type) pattern, in particular the fact that most link grammar label types mapped cleanly to a single direction, and that in most cases this agreed with the CoNLL direction and corresponded strongly to a single CoNLL label.  We also provided 100 actual parses in Appendix B so that researchers could see further whether our DAG parses would suit their research needs.
+
+Note, however, that we are not holding out the converted link grammar parses as an ideal syntactic representation.  Indeed, we strongly believe that the "real" way to work on DAG parsers would be to produce an annotation scheme and a gold annotated resource.  Lacking one, the questions that we aimed to answer here were:
+
+* Our experimental hypothesis was that the link grammar writers mentally associated a consistent direction with each link type, even though they did not annotate it.  We found that we could indeed recover consistent directions that satisfy the DAG constraints.  The first column of Appendix A can be directly applied to transform link parses into DAG parses without re-running the ILP.
+
+* Are the converted link grammar parses good enough that people could use them to test PARSING ALGORITHMS?  This does not require that the parses agree with other annotation schemes (or even that they are linguistically defensible).  To experiment with the speed and accuracy of algorithms, one only needs a PLAUSIBLE distribution of data for train/test, which mimics the kind of data that one might have in a gold standard.  This is what we provide.  The point of the supplementary material is to demonstrate the plausibility.
+
+* There has been a lot of ongoing development on link grammars for English and other languages, but it has been almost entirely outside the ACL community.  Is there a way to bring this work into the fold?  As far as we know, this is the first attempt.  These parses may serve as a source of extra features for other prediction or learning tasks (we actually had particular uses in mind that motivated the work).
+
+* We pioneer the idea of using ILP to enhance incomplete annotations, using the ILP constraints to enforce internal consistency as well as formal requirements or linguistic preferences.
+
+To Reviewer #3: There are no multi-planar link grammars at present.  If there were, yes, our ILP method would immediately extend.  In the meantime, one could do research on multi-planar DAG parsing by overlaying our DAG parses on the CoNLL trees (2 planes). 
+
+Thanks very much to Reviewer #1 for the additional citations and other suggestions.  (Regarding "converting corpora from other formats such as HPSG," we were referring to the work cited in the previous sentence.)
