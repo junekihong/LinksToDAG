@@ -447,12 +447,11 @@ for linkSentence in link_results:
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
-    """bannedWords = []
+    bannedWords = ["consensus"]
     for word in bannedWords:
-        if word in linkSentenceCheck:
-            sentenceCheck = False
-            break
-    """
+        sentenceCheck = False
+        break
+    
 
 
     tempSentence = [] 
@@ -466,7 +465,7 @@ for linkSentence in link_results:
 
 
     # Link parses to put in the paper. Takes sentences of only length 5.
-    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 25 and sentenceLength <= 30 and sentenceCheck:
+    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 20 and sentenceLength <= 25 and sentenceCheck:
         if paper_sentence_skip > 0:
             paper_sentence_skip -= 1
         else:
