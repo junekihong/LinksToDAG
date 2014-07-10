@@ -449,8 +449,9 @@ for linkSentence in link_results:
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
     bannedWords = ["consensus"]
     for word in bannedWords:
-        sentenceCheck = False
-        break
+        if word in linkSentence:
+            sentenceCheck = False
+            break
     
 
 
