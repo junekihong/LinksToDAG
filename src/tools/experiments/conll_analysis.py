@@ -447,7 +447,7 @@ for linkSentence in link_results:
     # I am preventing certain sentences from appearing in the paper.
     # I just wanted to skip over some sentences because they didn't look cool enough
     #bannedWords = ["salees", "soldiers", "word", "serwer", "reason"]
-    bannedWords = ["consensus"]
+    bannedWords = ["consensus", ":"]
     for word in bannedWords:
         if word in linkSentence:
             sentenceCheck = False
