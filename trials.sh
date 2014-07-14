@@ -4,10 +4,11 @@ typeset -i i END
 
 
 
-END=100
+#END=100
+#END=64
 #END=10000
 #END=60030
-#END=18577
+END=18577
 #INCREMENT=1
 
 SENTENCES="data/english_ptb_train.sentences"
@@ -52,8 +53,12 @@ if [ $LANGUAGE -a $LANGUAGE = "ru" ]; then
         bash src/tools/experiments/trial_ru.sh $SENTENCES $END
     fi
 
-    mv sol/links.conll sol/links_ru.conll
-    mv sol/allowedLinks.txt sol/allowedLinks_ru.txt
+
+    #head sol/links.conll sol/allowedLinks.txt
+    
+
+    cp sol/links.conll sol/links_ru.conll
+    cp sol/allowedLinks.txt sol/allowedLinks_ru.txt
 
     echo $END > doc/figure/russian_original_sentence_count.tex
     python src/tools/conll/multiheaded.py sol/links_ru.conll > doc/figure/russian_multiheaded.tex

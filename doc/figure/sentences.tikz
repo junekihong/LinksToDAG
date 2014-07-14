@@ -1,19 +1,19 @@
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize .} \\
-			terms \& were \& n't \& disclosed \& . \\
-			n \& v-d \& - \& v-d \& - \\
+			{\scriptsize PR} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize .} \\
+			my \& universe \& has \& changed \& . \\
+			p \& n \& v \& v-d \& - \\
 		\end{deptext}
-		\deproot[edge above, edge style = {blue, dotted}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{2}{3}{N}
-		\depedge[edge above, edge style = {blue, thick}]{2}{3}{\small VMOD}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{P}
-		\depedge[edge above, edge style = {blue, thick}]{2}{4}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{5}{\small P}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
+		\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
+		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{PP}
+		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small VC}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small P}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
+		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
+		\deproot[edge below, edge style = {red, dotted}]{2}{W}
 		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{4}{WV}
 		\deproot[edge below, edge style = {red, dotted}]{5}{X}
 	\end{dependency}
@@ -21,41 +21,42 @@
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize JJ} \& {\scriptsize .} \\
-			it \& 's \& also \& unnecessary \& . \\
-			- \& v \& e \& a \& - \\
+			{\scriptsize RB} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
+			now \& it \& 's \& on \& the \& fence \& . \\
+			r \& - \& v \& - \& - \& n \& - \\
 		\end{deptext}
-		\deproot[edge below, edge style = {red, thick}]{2}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{2}{3}{EB}
-		\depedge[edge above, edge style = {blue, thick}]{2}{3}{\small ADV}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{P}
-		\depedge[edge above, edge style = {blue, thick}]{2}{4}{\small VMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{5}{\small P}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
-		\deproot[edge below, edge style = {red, dotted}]{5}{X}
+		\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{1}{\small ADV}
+		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{3}{4}{P}
+		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small ADV}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{7}{\small P}
+		\depedge[edge below, edge style = {red, thick}]{4}{6}{J}
+		\depedge[edge above, edge style = {blue, thick}]{4}{6}{\small PMOD}
+		\depedge[edge below, edge style = {red, thick}]{6}{5}{D}
+		\depedge[edge above, edge style = {blue, thick}]{6}{5}{\small NMOD}
+		\deproot[edge below, edge style = {red, dotted}]{2}{W}
+		\deproot[edge below, edge style = {red, dotted}]{7}{X}
+		\depedge[edge below, edge style = {red, dotted}]{2}{1}{CO}
 	\end{dependency}
 \end{subfigure}
 \begin{subfigure}[b]{0.3233\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize CC} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize .} \\
-			but \& the \& ballplayers \& disagree \& . \\
-			ij \& - \& - \& v \& - \\
+			{\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize .} \\
+			he \& listens \& impassively \& . \\
+			- \& v \& - \& - \\
 		\end{deptext}
-		\deproot[edge below, edge style = {red, thick}]{4}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{4}{\small ROOT}
-		\depedge[edge below, edge style = {red, thick}]{3}{2}{D}
-		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small NMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{4}{1}{\small CC}
-		\depedge[edge below, edge style = {red, ultra thick}]{3}{4}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{4}{3}{\small SBJ}
-		\depedge[edge above, edge style = {blue, dotted}]{4}{5}{\small P}
-		\depedge[edge below, edge style = {red, dotted}]{1}{3}{W}
+		\deproot[edge below, edge style = {red, thick}]{2}{WV}
+		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
+		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{2}{3}{MV}
+		\depedge[edge above, edge style = {blue, thick}]{2}{3}{\small ADV}
+		\depedge[edge above, edge style = {blue, dotted}]{2}{4}{\small P}
 		\deproot[edge below, edge style = {red, dotted}]{1}{W}
-		\deproot[edge below, edge style = {red, dotted}]{5}{X}
+		\deproot[edge below, edge style = {red, dotted}]{4}{X}
 	\end{dependency}
 \end{subfigure}
 

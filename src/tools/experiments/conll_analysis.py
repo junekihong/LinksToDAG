@@ -466,7 +466,7 @@ for linkSentence in link_results:
 
 
     # Link parses to put in the paper. Takes sentences of only length 5.
-    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 20 and sentenceLength <= 25 and sentenceCheck:
+    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 24 and sentenceLength <= 28 and sentenceCheck:
         if paper_sentence_skip > 0:
             paper_sentence_skip -= 1
         else:
