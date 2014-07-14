@@ -4,10 +4,10 @@ typeset -i i END
 
 
 
-#END=100
+END=100
 #END=10000
 #END=60030
-END=18577
+#END=18577
 #INCREMENT=1
 
 SENTENCES="data/english_ptb_train.sentences"
@@ -57,8 +57,11 @@ if [ $LANGUAGE -a $LANGUAGE = "ru" ]; then
 
     echo $END > doc/figure/russian_original_sentence_count.tex
     python src/tools/conll/multiheaded.py sol/links_ru.conll > doc/figure/russian_multiheaded.tex
+
+
+
     python src/tools/conll/printsentence.py sol/links_ru.conll > temp
-    wc -l temp | cut -d ' ' -f1 > doc/figure/russian_sentence_count.tex
+    wc -l temp | cut -d ' ' -f1 | bash src/tools/addcommas.sh > doc/figure/russian_sentence_count.tex
     rm -f temp
 
 
