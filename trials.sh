@@ -60,7 +60,7 @@ if [ $LANGUAGE -a $LANGUAGE = "ru" ]; then
     cp sol/links.conll sol/links_ru.conll
     cp sol/allowedLinks.txt sol/allowedLinks_ru.txt
 
-    echo $END > doc/figure/russian_original_sentence_count.tex
+    echo $END | bash src/tools/addcommas.sh > doc/figure/russian_original_sentence_count.tex
     python src/tools/conll/multiheaded.py sol/links_ru.conll > doc/figure/russian_multiheaded.tex
 
 
