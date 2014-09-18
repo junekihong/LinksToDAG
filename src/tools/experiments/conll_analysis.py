@@ -52,14 +52,16 @@ if not os.path.exists(LATEX_DIR):
 
 # Tikz directory and files
 TIKZ_DIR = "doc/figure/"
-EXAMPLE_SENTENCES_LOC = TIKZ_DIR+"sentences.tikz"
 if not os.path.exists(TIKZ_DIR):
     os.makedirs(TIKZ_DIR)
+EXAMPLE_SENTENCES_LOC = TIKZ_DIR+"sentences.tikz"
 PAPER_TIKZ = open(EXAMPLE_SENTENCES_LOC, 'w+')
 
 EXAMPLE_PARSES_LOC = TIKZ_DIR+"parses.tikz"
 EXAMPLE_PARSES = open(EXAMPLE_PARSES_LOC, 'w+')
 
+SAMPLE_EXAMPLE_SENTENCES_LOC = TIKZ_DIR+"sample_parses.tikz"
+SAMPLE_EXAMPLE_PARSES = open(SAMPLE_EXAMPLE_SENTENCES_LOC, 'w+')
 
 ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
 ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
@@ -430,6 +432,9 @@ paper_sentence_limit = 3
 example_parses_count = 0
 example_parses_limit = 100
 
+sample_example_parses_count = 0
+sample_example_parses_limit = 4
+
 
 for linkSentence in link_results:
     if linkSentence not in conll_results:
@@ -475,6 +480,16 @@ for linkSentence in link_results:
             paper_sentence_count += 1
             if paper_sentence_count % 3 == 0:
                 PAPER_TIKZ.write("\n")
+    elif sample_example_parses_count < sample_example_parses_limit and sentenceLength >= 40 and sentenceLength <= 50:
+        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97 / 2)
+        #SAMPLE_EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
+        SAMPLE_EXAMPLE_PARSES.write(tikz)
+        #SAMPLE_EXAMPLE_PARSES.write("\\end{figure*}\n\n")
+        sample_example_parses_count += 1
+        if sample_example_parses_count % 2 == 0:
+            SAMPLE_EXAMPLE_PARSES.write("\n")
+
+
     # Filter out sentences to only up to length 16
     elif example_parses_count < example_parses_limit and sentenceLength <= 95:
     #elif example_parses_count < example_parses_limit:
@@ -934,4 +949,100 @@ edge_percent = str(0)
 edge_percent = str(int(float(total - arc_total) / float(arc_total) * 100 + 0.5)) + "\\%"
 f = open(LATEX_FILE_EDGE_PERCENT, "w+")
 f.write(edge_percent)
+f.close()
+
+
+
+
+
+
+
+
+
+#---------------------------------------------------------------------
+# Sample coarse analysis/counts of the links, their labels, and their directions
+# For the paper
+#---------------------------------------------------------------------
+SAMPLE_LATEX_FILE_COARSE_LINKS = LATEX_DIR+"sample_link_analysis_coarse_table.tex"
+f = open(SAMPLE_LATEX_FILE_COARSE_LINKS, "w+")
+
+
+# TODO use tabular
+latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n\\hline\n"
+end_table = "\\end{longtable}\n"
+
+header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\"
+
+begin_figure = "\\begin{small}\n\\centering\n"
+end_figure = "\\end{small}\n"
+
+def make_percentage_figure(top,bottom):
+    return str(int(float(top) / float(bottom) * 100 + 0.5))+"\\%" + " ("+str(top)+"/"+str(bottom)+")"
+
+
+table = begin_figure
+table += latex_table
+
+table += header + "\\hline\n"
+table += "\\endhead\n"
+table += "\n"
+
+table += "\\hline\n\\endfoot\n\n"
+
+line = 0
+for coarse_label in coarse_labels[:10]:
+    count = link_label_coarse_counts[coarse_label]
+    
+    right = link_direction_coarse_totals[coarse_label].get("right",0)
+    right = make_percentage_figure(right,count)
+
+    prediction_num = ""
+    prediction_total = ""
+    match_percent = ""
+    mismatch_percent = ""
+    multiheaded = make_percentage_figure(link_label_isMultiheaded.get(coarse_label,0), count)
+
+
+    prediction = coarse_predictions.get(coarse_label, "-")
+    if prediction != "-":
+        prediction_num = link_label_coarse_prediction[coarse_label][prediction]
+        prediction_total = link_label_coarse_prediction_totals[coarse_label]
+        prediction += " "+ make_percentage_figure(prediction_num, prediction_total)
+        
+
+    if prediction_num and prediction_total:
+        match_percent = make_percentage_figure(prediction_total, count)
+
+        mismatch_percent = make_percentage_figure((prediction_total - coarse_dir_mismatch.get(coarse_label,0)), prediction_total)
+
+
+    else:
+        match_percent = "-"
+        mismatch_percent = "-"
+
+    #table += "\\hline\n"
+    table += coarse_label
+    table += " & "+right
+    table += " & "+multiheaded
+    table += " & "+match_percent
+    table += " & "+mismatch_percent
+    table += " & "+prediction
+    table += " \\\\ \n"
+    line += 1
+    
+    # Break up the table into smaller tables
+    """if line % 55 == 0:
+        table += "\\hline\n"
+        table += end_table
+        table += end_figure
+        table += begin_figure
+        table += latex_table
+        table += "\\hline\n"
+        table += header
+    """
+#table += "\\hline\n"
+table += end_table
+table += end_figure
+
+f.write(table)
 f.close()
