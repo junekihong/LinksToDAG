@@ -1,47 +1,43 @@
 \begin{subfigure}[b]{0.9700\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize VB} \& {\scriptsize PR} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize PO} \& {\scriptsize NN} \& {\scriptsize .} \\
-			mourning \& for \& the \& father \& is \& overshadowed \& by \& the \& shame \& of \& burying \& him \& in \& a \& pauper \& 's \& grave \& . \\
-			g \& p \& - \& n-m \& v \& v-d \& - \& - \& n \& - \& v \& - \& r \& - \& n \& p \& n \& - \\
+			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize } \& {\scriptsize CD} \& {\scriptsize CD} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize .} \\
+			the \& bank \& holding \& company \& will \& auction \& another \& \$ \& 50 \& million \& in \& each \& maturity \& next \& Tuesday \& . \\
+			- \& n \& v \& n-u \& v \& v \& - \& - \& - \& - \& r \& - \& n-u \& a \& - \& - \\
 		\end{deptext}
-		\depedge[edge below, edge style = {red, thick}]{11}{12}{O}
-		\depedge[edge above, edge style = {blue, thick}]{11}{12}{\small OBJ}
-		\depedge[edge below, edge style = {red, thick}]{11}{13}{MV}
-		\depedge[edge above, edge style = {blue, thick}]{11}{13}{\small ADV}
-		\depedge[edge below, edge style = {red, thick}]{10}{11}{M}
-		\depedge[edge above, edge style = {blue, thick}]{10}{11}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{13}{17}{J}
-		\depedge[edge above, edge style = {blue, thick}]{13}{17}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{15}{14}{D}
+		\depedge[edge below, edge style = {red, thick}]{11}{13}{J}
+		\depedge[edge above, edge style = {blue, thick}]{11}{13}{\small PMOD}
+		\depedge[edge below, edge style = {red, thick}]{13}{12}{D}
+		\depedge[edge above, edge style = {blue, thick}]{13}{12}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{15}{14}{DT}
 		\depedge[edge above, edge style = {blue, thick}]{15}{14}{\small NMOD}
-		\depedge[edge below, edge style = {red, ultra thick}]{16}{15}{YS}
-		\depedge[edge above, edge style = {blue, ultra thick}]{15}{16}{\small NMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{17}{15}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{1}{2}{MV}
-		\depedge[edge above, edge style = {blue, thick}]{1}{2}{\small ADV}
 		\deproot[edge above, edge style = {blue, dotted}]{5}{\small ROOT}
-		\depedge[edge below, edge style = {red, thick}]{2}{4}{J}
-		\depedge[edge above, edge style = {blue, thick}]{2}{4}{\small PMOD}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{5}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{5}{1}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{5}{6}{P}
+		\depedge[edge above, edge style = {blue, dotted}]{5}{4}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{5}{6}{I}
 		\depedge[edge above, edge style = {blue, thick}]{5}{6}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}, edge unit distance =1.2ex]{5}{18}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{4}{3}{D}
-		\depedge[edge above, edge style = {blue, thick}]{4}{3}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{7}{9}{J}
-		\depedge[edge above, edge style = {blue, thick}]{7}{9}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{6}{7}{MV}
-		\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small LGS}
-		\depedge[edge below, edge style = {red, thick}]{9}{8}{D}
-		\depedge[edge above, edge style = {blue, thick}]{9}{8}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{9}{10}{M}
-		\depedge[edge above, edge style = {blue, thick}]{9}{10}{\small NMOD}
-		\depedge[edge below, edge style = {red, dotted}]{17}{16}{D}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
+		\depedge[edge above, edge style = {blue, dotted}, edge unit distance=1.5ex]{5}{16}{\small P}
+		\depedge[edge above, edge style = {blue, dotted}]{4}{1}{\small NMOD}
+		\depedge[edge above, edge style = {blue, dotted}]{4}{2}{\small NMOD}
+		\depedge[edge below, edge style = {red, ultra thick}]{3}{4}{O}
+		\depedge[edge above, edge style = {blue, ultra thick}]{4}{3}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{6}{8}{O}
+		\depedge[edge above, edge style = {blue, thick}]{6}{8}{\small IOBJ}
+		\depedge[edge below, edge style = {red, thick}, edge unit distance=1.5ex]{6}{15}{MV}
+		\depedge[edge above, edge style = {blue, thick}, edge unit distance=1.5ex]{6}{15}{\small OBJ}
+		\depedge[edge below, edge style = {red, thick}]{8}{7}{NI}
+		\depedge[edge above, edge style = {blue, thick}]{8}{7}{\small NMOD}
+		\depedge[edge above, edge style = {blue, dotted}]{8}{9}{\small AMOD}
+		\depedge[edge below, edge style = {red, thick}]{8}{10}{NM}
+		\depedge[edge above, edge style = {blue, thick}]{8}{10}{\small AMOD}
+		\depedge[edge above, edge style = {blue, dotted}]{8}{11}{\small NMOD}
+		\depedge[edge below, edge style = {red, dotted}]{10}{9}{NN}
+		\deproot[edge below, edge style = {red, dotted}]{2}{W}
 		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{6}{WV}
-		\deproot[edge below, edge style = {red, dotted}]{18}{X}
+		\deproot[edge below, edge style = {red, dotted}]{16}{X}
+		\depedge[edge below, edge style = {red, dotted}]{2}{1}{D}
+		\depedge[edge below, edge style = {red, dotted}]{2}{3}{M}
+		\depedge[edge below, edge style = {red, dotted}]{2}{5}{S}
+		\depedge[edge below, edge style = {red, dotted}, edge unit distance=1.5ex]{6}{11}{MV}
 	\end{dependency}
 \end{subfigure}
 
