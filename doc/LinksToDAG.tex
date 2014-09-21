@@ -238,13 +238,24 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 % \subsection{Slack}
 % We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
+% 
+% \begin{figure*}[ht!]
+%   \vspace{-6pt}
+%   \centering
+%   \input{figure/sample_parses.tikz}
+%   \vspace{-6pt}
+% \end{figure*}
+
+
+
+
 \section{Experiments and Results}
 
 \begin{figure*}[ht!]
   \vspace{-6pt}
   \centering
   \input{figure/sentences.tikz}
-  \input{figure/sample_parses.tikz}
+  \input{figure/long_parses.tikz}
   \caption{\small The blue upper edges show CoNLL dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse; these are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} at \url{http://tidyurl.com/LinksToDAG_supplement}.}
   \label{fig:parses}
   \vspace{-6pt}
@@ -440,7 +451,7 @@ Edges are shown as dotted lines if they appear only in one parse and not in the 
 % \end{enumerate}
 
 % Uncomment this to add in all of the parses. Warning: compilation will take a long time.
-%\input{figure/parses.tikz}
+\input{figure/parses.tikz}
 
 
 \end{document}

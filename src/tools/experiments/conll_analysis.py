@@ -60,8 +60,8 @@ PAPER_TIKZ = open(EXAMPLE_SENTENCES_LOC, 'w+')
 EXAMPLE_PARSES_LOC = TIKZ_DIR+"parses.tikz"
 EXAMPLE_PARSES = open(EXAMPLE_PARSES_LOC, 'w+')
 
-SAMPLE_EXAMPLE_SENTENCES_LOC = TIKZ_DIR+"sample_parses.tikz"
-SAMPLE_EXAMPLE_PARSES = open(SAMPLE_EXAMPLE_SENTENCES_LOC, 'w+')
+LONG_EXAMPLE_SENTENCES_LOC = TIKZ_DIR+"long_parses.tikz"
+LONG_EXAMPLE_PARSES = open(LONG_EXAMPLE_SENTENCES_LOC, 'w+')
 
 ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
 ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
@@ -427,13 +427,13 @@ multiheaded_sentence_count = 0
 # --------------------------------------------------------------------
 paper_sentence_count = 0
 paper_sentence_skip = 0
-paper_sentence_limit = 3
+paper_sentence_limit = 2
 
 example_parses_count = 0
 example_parses_limit = 100
 
-sample_example_parses_count = 0
-sample_example_parses_limit = 4
+long_example_parses_count = 0
+long_example_parses_limit = 1
 
 
 for linkSentence in link_results:
@@ -471,23 +471,23 @@ for linkSentence in link_results:
 
 
     # Link parses to put in the paper. Takes sentences of only length 5.
-    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 24 and sentenceLength <= 28 and sentenceCheck:
+    if (paper_sentence_count < paper_sentence_limit) and sentenceLength >= 45 and sentenceLength <= 45 and sentenceCheck:
         if paper_sentence_skip > 0:
             paper_sentence_skip -= 1
         else:
-            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97 / 3)            
+            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97 / 2)      
             PAPER_TIKZ.write(tikz)
             paper_sentence_count += 1
-            if paper_sentence_count % 3 == 0:
+            if paper_sentence_count % 2 == 0:
                 PAPER_TIKZ.write("\n")
-    elif sample_example_parses_count < sample_example_parses_limit and sentenceLength >= 40 and sentenceLength <= 50:
-        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97 / 2)
-        #SAMPLE_EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
-        SAMPLE_EXAMPLE_PARSES.write(tikz)
-        #SAMPLE_EXAMPLE_PARSES.write("\\end{figure*}\n\n")
-        sample_example_parses_count += 1
-        if sample_example_parses_count % 2 == 0:
-            SAMPLE_EXAMPLE_PARSES.write("\n")
+    elif long_example_parses_count < long_example_parses_limit and sentenceLength >= 90 and sentenceLength <= 90 and sentenceCheck:
+        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97)
+        #LONG_EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
+        LONG_EXAMPLE_PARSES.write(tikz)
+        #LONG_EXAMPLE_PARSES.write("\\end{figure*}\n\n")
+        long_example_parses_count += 1
+        #if long_example_parses_count % 1 == 0:
+        LONG_EXAMPLE_PARSES.write("\n")
 
 
     # Filter out sentences to only up to length 16
@@ -498,7 +498,7 @@ for linkSentence in link_results:
         EXAMPLE_PARSES.write(tikz)
         EXAMPLE_PARSES.write("\\end{figure*}\n\n")
         example_parses_count += 1
-        if example_parses_count % 3 == 0:
+        if example_parses_count % 18 == 0:
             EXAMPLE_PARSES.write("\clearpage")
 
 
@@ -968,8 +968,8 @@ f = open(SAMPLE_LATEX_FILE_COARSE_LINKS, "w+")
 
 
 # TODO use tabular
-latex_table = "\\begin{longtable}{|l|l|l|l|l|l|}\n\\hline\n"
-end_table = "\\end{longtable}\n"
+latex_table = "\\begin{tabular}{|l|l|l|l|l|l|}\n\\hline\n"
+end_table = "\\end{tabular}\n"
 
 header = "Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match & CoNLL Label\\\\"
 
@@ -984,10 +984,11 @@ table = begin_figure
 table += latex_table
 
 table += header + "\\hline\n"
-table += "\\endhead\n"
+#table += "\\endhead\n"
 table += "\n"
 
-table += "\\hline\n\\endfoot\n\n"
+#table += "\\hline\n\\endfoot\n\n"
+table += "\\hline\n\n\n"
 
 line = 0
 for coarse_label in coarse_labels[:10]:
@@ -1040,7 +1041,7 @@ for coarse_label in coarse_labels[:10]:
         table += "\\hline\n"
         table += header
     """
-#table += "\\hline\n"
+table += "\\hline\n"
 table += end_table
 table += end_figure
 

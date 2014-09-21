@@ -1,62 +1,59 @@
-\begin{subfigure}[b]{0.3233\textwidth}
+\begin{subfigure}[b]{0.4850\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize PR} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize .} \\
-			my \& universe \& has \& changed \& . \\
-			p \& n \& v \& v-d \& - \\
+			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize RB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize .} \\
+			the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+			- \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
 		\end{deptext}
 		\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
 		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
 		\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{3}{4}{PP}
-		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small P}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{4}{\small ADV}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small ADV}
+		\depedge[edge below, edge style = {red, thick}]{3}{6}{I}
+		\depedge[edge above, edge style = {blue, thick}]{3}{6}{\small VC}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{10}{\small P}
 		\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
+		\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small ADV}
+		\depedge[edge below, edge style = {red, thick}]{6}{7}{P}
+		\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small VC}
+		\depedge[edge below, edge style = {red, thick}]{8}{9}{J}
+		\depedge[edge above, edge style = {blue, thick}]{8}{9}{\small PMOD}
 		\deproot[edge below, edge style = {red, dotted}]{2}{W}
-		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{4}{WV}
-		\deproot[edge below, edge style = {red, dotted}]{5}{X}
+		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{7}{WV}
+		\deproot[edge below, edge style = {red, dotted}]{10}{X}
+		\depedge[edge below, edge style = {red, dotted}]{6}{4}{E}
+		\depedge[edge below, edge style = {red, dotted}]{6}{5}{E}
 	\end{dependency}
 \end{subfigure}
-\begin{subfigure}[b]{0.3233\textwidth}
+\begin{subfigure}[b]{0.4850\textwidth}
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize RB} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
-			now \& it \& 's \& on \& the \& fence \& . \\
-			r \& - \& v \& - \& - \& n \& - \\
+			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
+			the \& Paris \& bank \& does \& n't \& publish \& that \& figure \& . \\
+			- \& b \& n \& v \& - \& v \& j-d \& n \& - \\
 		\end{deptext}
-		\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
-		\depedge[edge above, edge style = {blue, dotted}]{3}{1}{\small ADV}
-		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{3}{4}{P}
-		\depedge[edge above, edge style = {blue, thick}]{3}{4}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{3}{7}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{4}{6}{J}
-		\depedge[edge above, edge style = {blue, thick}]{4}{6}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{6}{5}{D}
-		\depedge[edge above, edge style = {blue, thick}]{6}{5}{\small NMOD}
-		\deproot[edge below, edge style = {red, dotted}]{2}{W}
-		\deproot[edge below, edge style = {red, dotted}]{7}{X}
-		\depedge[edge below, edge style = {red, dotted}]{2}{1}{CO}
-	\end{dependency}
-\end{subfigure}
-\begin{subfigure}[b]{0.3233\textwidth}
-	\begin{dependency}
-		\begin{deptext}
-			{\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize .} \\
-			he \& listens \& impassively \& . \\
-			- \& v \& - \& - \\
-		\end{deptext}
-		\deproot[edge below, edge style = {red, thick}]{2}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{2}{3}{MV}
-		\depedge[edge above, edge style = {blue, thick}]{2}{3}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{4}{\small P}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
-		\deproot[edge below, edge style = {red, dotted}]{4}{X}
+		\deproot[edge above, edge style = {blue, dotted}]{4}{\small ROOT}
+		\depedge[edge below, edge style = {red, thick}]{3}{1}{D}
+		\depedge[edge above, edge style = {blue, thick}]{3}{1}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{AN}
+		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{6}{8}{O}
+		\depedge[edge above, edge style = {blue, thick}]{6}{8}{\small OBJ}
+		\depedge[edge below, edge style = {red, ultra thick}]{3}{4}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{4}{3}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{4}{5}{N}
+		\depedge[edge above, edge style = {blue, thick}]{4}{5}{\small VMOD}
+		\depedge[edge below, edge style = {red, thick}]{4}{6}{I}
+		\depedge[edge above, edge style = {blue, thick}]{4}{6}{\small VC}
+		\depedge[edge above, edge style = {blue, dotted}]{4}{9}{\small P}
+		\depedge[edge below, edge style = {red, thick}]{8}{7}{D}
+		\depedge[edge above, edge style = {blue, thick}]{8}{7}{\small NMOD}
+		\deproot[edge below, edge style = {red, dotted}]{3}{W}
+		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{6}{WV}
+		\deproot[edge below, edge style = {red, dotted}]{9}{X}
 	\end{dependency}
 \end{subfigure}
 
