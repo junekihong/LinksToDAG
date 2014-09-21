@@ -235,25 +235,24 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 % We introduced slack such that the link types were allowed to deviate from the majority one percent of the time before the ILP would assign both label/direction variables to \textsc{true}. This allows for flexibility against noise in the link parser's label assignments, balanced with allowing for both directions to be assigned if necessary.
 
 \section{Experiments and Results}
+
 \begin{figure*}[ht!]
   \vspace{-6pt}
   \centering
   \input{figure/sentences.tikz}
-  \caption{\small Example Parses: The blue upper edges show CoNLL dependency parses; the red lower edges show oriented link grammar parses. Vertical edges are those with parent 0.  See Appendix~\ref{app:parses} for formatting details and more examples.}
+  \input{figure/sample_parses.tikz}
+  \caption{\small The blue upper edges show CoNLL dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse; these are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} at \url{http://tidyurl.com/LinksToDAG_supplement}.}
   \label{fig:parses}
   \vspace{-6pt}
 \end{figure*}
 
+\begin{table*}[ht]
+% \renewcommand{\arraystretch}{1.2}    % more space between rows
+\input{figure/sample_link_analysis_coarse_table.tex}
+\caption{Our solution, i.e., our reconstruction of the ``intended'' direction for each link type in the English Link Grammar.  We also indicate the extent to which each of these link types (1) has a single dominant direction, (2) participates in multi-headed constructions, and (3) corresponds to CoNLL links of a predictable direction and type.  For space reasons, we show only the start of this table---the full table can be found in Appendix~\ref{app:linktypes} at \url{http://tidyurl.com/LinksToDAG_supplement}.}\label{tab:linktypes}
+\end{table*}
 
-We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  Detailed results from this run are included as Appendix~\ref{app:linktypes}.  On English, only \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total.tex}link {\em tokens} required a disallowed direction via slack.
-\input{figure/conll_analysis_sentences_multiheaded.tex}of the English sentences but only \input{figure/russian_multiheaded.tex}of the Russian ones had at least one multiheaded word.
-%\noteJE{2 significant digits is enough}
-%\noteJE{update these numbers}
-
-
-
-\subsection{Stability of Results}\label{sec:stability}
-\begin{figure}[ht!]
+\begin{figure}[t!]
   \small
   \centering
   \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
@@ -261,7 +260,16 @@ We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009
 \vspace{-6pt}
 \end{figure}
 
-We worried that the direction mapping might be unstable and sensitive to the input corpus.  Figure~\ref{fig:convergence} shows otherwise (for both English and Russian). \noteJE{IMPORTANT! current graph is with fine-grained tags; rerun with the coarse-grained tags as in the rest of the paper} Using even a small prefix of the data got very high-precision results, in the sense that nearly all $r_L$ or $\ell_L$ variables that were 1 in this lightly trained mapping were also 1 in our largest run.  The only disadvantage to using small data is low recall relative to the large run---many of the labels $L$ are not observed yet and so we do not yet allow either direction ($r_L=\ell_L=0$).  
+
+We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  On English, only \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total.tex}link {\em tokens} required a disallowed direction via slack.
+\input{figure/conll_analysis_sentences_multiheaded.tex}of the English sentences but (alas) only \input{figure/russian_multiheaded.tex}of the Russian ones had at least one multiheaded word.  See Table~\ref{tab:linktypes} and 
+Appendix~\ref{app:linktypes} for detailed results.
+%\noteJE{2 significant digits is enough}
+%\noteJE{update these numbers}
+
+\subsection{Stability of Results}\label{sec:stability}
+
+We worried that the direction mapping might be unstable and sensitive to the input corpus.  Happily, Figure~\ref{fig:convergence} shows otherwise (for both English and Russian). \noteJE{IMPORTANT! current graph is with fine-grained tags; rerun with the coarse-grained tags as in the rest of the paper} Using even a small prefix of the data got very high-precision results, in the sense that nearly all $r_L$ or $\ell_L$ variables that were 1 in this lightly trained mapping were also 1 in our largest run.  The only disadvantage to using small data is low recall relative to the large run---many of the labels $L$ are not observed yet and so we do not yet allow either direction ($r_L=\ell_L=0$).  
 
 We used only coarse link tags as our labels, keeping only the capital letters of a tag (and merging all \texttt{ID} tags).  This is because other characters in a tag indicate fine-grained features such as plurality that generally do not affect link direction.  However, when we tried using fine tags as our labels instead, we found that all refinements of the same coarse tag would almost always spontaneously agree on their preferred direction.  This indicates that there is indeed a ``natural'' direction for the coarse tag and that we can find it.
 
@@ -273,7 +281,10 @@ We used only coarse link tags as our labels, keeping only the capital letters of
 
 \subsection{Linguistic Analysis}
 
-The resulting English corpus uses a syntactic annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in Appendix~\ref{app:linktypes}, and the actual parses are contrasted in Figure~\ref{fig:parses} and Appendix~\ref{app:parses}.
+The resulting English corpus uses a syntactic annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in
+Appendix~\ref{app:linktypes}, while the actual parses are contrasted in Appendix~\ref{app:parses}.  By permission of the program chairs, these 
+appendices are available at the anonymous URL \url{http://tidyurl.com/LinksToDAG_supplement}.  Fragments are shown in 
+Table~\ref{tab:linktypes} and Figure~\ref{fig:parses}.
 
 The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  Of course, a few of the differences are due to parser attachment errors.
 
@@ -314,34 +325,23 @@ the subject ({\em ``they''}) links only to the verb ({\em ``said''}) and so must
 
 We have presented an automatic ILP-based method to ``orient'' link grammar parses in multiple languages, turning them into rooted connected DAGs.  This improves their linguistic interpretability and provides new corpora for experimenting with multi-headed dependency parsers.  
 
-More generally, ILP may be a valuable technology for enriching existing annotated corpora.  For example, the Penn Treebank \cite{TREEBANK-1993} omitted types of annotations that plausibly could be reconstructed by rule.
+ILP may {\em in general} be a valuable technology for enriching existing annotated corpora.  For example, the Penn Treebank project \cite{TREEBANK-1993} deliberately omitted types of annotations that plausibly could be added automatically.  ILP can help by leveraging unsupervised corpus-wide information \cite{ravi2009}, enforcing annotations that are simultaneously well-formed per sentence and consistent across sentences.
 
-\onecolumn
-\section{Sample of Appendix}
-For further explanations, the complete table of English Link Types, and an additional 100 example English parses, see \url{http://tidyurl.com/LinksToDAG_supplement}.
-
-
-\subsection{Sample of English Link Types}
-
-\renewcommand{\arraystretch}{1.2}    % more space between rows
-\input{figure/sample_link_analysis_coarse_table.tex}
-
-
-\subsection{Sample of English Parses}
-
-\begin{figure*}[ht!]
-  \vspace{-6pt}
-  \centering
-  \input{figure/sample_parses.tikz}
-  \vspace{-6pt}
-\end{figure*}
+% \subsection{Sample of English Parses}
+% 
+% \begin{figure*}[ht!]
+%   \vspace{-6pt}
+%   \centering
+%   \input{figure/sample_parses.tikz}
+%   \vspace{-6pt}
+% \end{figure*}
 
 
 
 
 %\twocolumn
 
-% \newpage
+\newpage
 \bibliographystyle{acl2014}
 \bibliography{LinksToDAG}
 
