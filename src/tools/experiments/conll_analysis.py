@@ -63,6 +63,11 @@ EXAMPLE_PARSES = open(EXAMPLE_PARSES_LOC, 'w+')
 LONG_EXAMPLE_SENTENCES_LOC = TIKZ_DIR+"long_parses.tikz"
 LONG_EXAMPLE_PARSES = open(LONG_EXAMPLE_SENTENCES_LOC, 'w+')
 
+LONG_EXAMPLE_SENTENCES2_LOC = TIKZ_DIR+"long_parse2.tikz"
+LONG_EXAMPLE_PARSES2 = open(LONG_EXAMPLE_SENTENCES2_LOC, 'w+')
+
+
+
 ALLOWED_LABELS = SOL_DIR + "allowedLinks.txt"
 ALLOWED_LABELS = open(ALLOWED_LABELS, "r")
 ALLOWED_LABELS_BOTH = LATEX_DIR+"allowed_labels_both.tex"
@@ -430,11 +435,16 @@ paper_sentence_skip = 0
 paper_sentence_limit = 2
 
 example_parses_count = 0
+example_parses_skip = 0
 example_parses_limit = 100
 
 long_example_parses_count = 0
-long_example_parses_skip = 6
+long_example_parses_skip = 90
 long_example_parses_limit = 1
+
+long_example_parses2_count = 0
+long_example_parses2_skip = 0
+long_example_parses2_limit = 0
 
 
 for linkSentence in link_results:
@@ -481,11 +491,12 @@ for linkSentence in link_results:
             paper_sentence_count += 1
             if paper_sentence_count % 2 == 0:
                 PAPER_TIKZ.write("\n")
-    elif long_example_parses_count < long_example_parses_limit and sentenceLength >= 90 and sentenceLength <= 90 and sentenceCheck:
+    elif long_example_parses_count < long_example_parses_limit and sentenceLength >= 85 and sentenceLength <= 90 and sentenceCheck:
         if long_example_parses_skip > 0:
             long_example_parses_skip -= 1
         else:
             tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97)
+
             #LONG_EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
             LONG_EXAMPLE_PARSES.write(tikz)
             #LONG_EXAMPLE_PARSES.write("\\end{figure*}\n\n")
@@ -493,16 +504,37 @@ for linkSentence in link_results:
             #if long_example_parses_count % 1 == 0:
             LONG_EXAMPLE_PARSES.write("\n")
 
+
+
+    elif long_example_parses2_count < long_example_parses2_limit and sentenceLength >= 90 and sentenceLength <= 90 and sentenceCheck:
+        if long_example_parses2_skip > 0:
+            long_example_parses2_skip -= 1
+        else:
+            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97)
+            #LONG_EXAMPLE_PARSES2.write("\\begin{figure*}[ht!]\n")
+            LONG_EXAMPLE_PARSES2.write(tikz)
+            #LONG_EXAMPLE_PARSES2.write("\\end{figure*}\n\n")
+            long_example_parses2_count += 1
+            #if long_example_parses2_count % 1 == 0:
+            LONG_EXAMPLE_PARSES2.write("\n")
+    
+
+            
     # Filter out sentences to only up to length 16
     elif example_parses_count < example_parses_limit and sentenceLength <= 95:
-    #elif example_parses_count < example_parses_limit:
-        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
-        EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
-        EXAMPLE_PARSES.write(tikz)
-        EXAMPLE_PARSES.write("\\end{figure*}\n\n")
-        example_parses_count += 1
-        if example_parses_count % 18 == 0:
-            EXAMPLE_PARSES.write("\clearpage")
+    #elif example_parses_count < example_parses_limit and sentenceLength >= 85 and sentenceLength <= 90 and sentenceCheck:
+        if example_parses_skip > 0:
+            example_parses_skip -= 1
+
+        else:
+            #elif example_parses_count < example_parses_limit:
+            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, 1.0, False)
+            EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
+            EXAMPLE_PARSES.write(tikz)
+            EXAMPLE_PARSES.write("\\end{figure*}\n\n")
+            example_parses_count += 1
+            if example_parses_count % 18 == 0:
+                EXAMPLE_PARSES.write("\clearpage")
 
 
     # analysis_links
@@ -994,7 +1026,7 @@ table += "\n"
 table += "\\hline\n\n\n"
 
 line = 0
-for coarse_label in coarse_labels[:10]:
+for coarse_label in coarse_labels[:25]:
     count = link_label_coarse_counts[coarse_label]
     
     right = link_direction_coarse_totals[coarse_label].get("right",0)
