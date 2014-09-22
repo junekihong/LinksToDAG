@@ -64,7 +64,7 @@
 
 \date{}
 
-\setlength\titlebox{4cm}    % Expanding the titlebox
+\setlength\titlebox{6.5cm}    % Expanding the titlebox
 
 \begin{document}
 \maketitle
@@ -256,6 +256,7 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
   \centering
   \input{figure/sentences.tikz}
   \input{figure/long_parses.tikz}
+  %\input{figure/long_parse2.tikz}
   \caption{\small The blue upper edges show CoNLL gold dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse; these are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} at \url{http://tidyurl.com/LinksToDAG_supplement}.}
   \label{fig:parses}
   \vspace{-6pt}

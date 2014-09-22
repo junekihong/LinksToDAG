@@ -12,7 +12,7 @@
 		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small ADV}
 		\depedge[edge below, edge style = {red, thick}]{3}{6}{I}
 		\depedge[edge above, edge style = {blue, thick}]{3}{6}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}]{3}{10}{\small P}
+		\depedge[edge above, edge style = {blue, dotted}, edge unit distance =1.6ex]{3}{10}{\small P}
 		\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
 		\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
@@ -48,7 +48,7 @@
 		\depedge[edge above, edge style = {blue, thick}]{4}{5}{\small VMOD}
 		\depedge[edge below, edge style = {red, thick}]{4}{6}{I}
 		\depedge[edge above, edge style = {blue, thick}]{4}{6}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}]{4}{9}{\small P}
+		\depedge[edge above, edge style = {blue, dotted}, edge unit distance = 1.7ex]{4}{9}{\small P}
 		\depedge[edge below, edge style = {red, thick}]{8}{7}{D}
 		\depedge[edge above, edge style = {blue, thick}]{8}{7}{\small NMOD}
 		\deproot[edge below, edge style = {red, dotted}]{3}{W}

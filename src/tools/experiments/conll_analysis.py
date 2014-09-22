@@ -433,6 +433,7 @@ example_parses_count = 0
 example_parses_limit = 100
 
 long_example_parses_count = 0
+long_example_parses_skip = 6
 long_example_parses_limit = 1
 
 
@@ -481,14 +482,16 @@ for linkSentence in link_results:
             if paper_sentence_count % 2 == 0:
                 PAPER_TIKZ.write("\n")
     elif long_example_parses_count < long_example_parses_limit and sentenceLength >= 90 and sentenceLength <= 90 and sentenceCheck:
-        tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97)
-        #LONG_EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
-        LONG_EXAMPLE_PARSES.write(tikz)
-        #LONG_EXAMPLE_PARSES.write("\\end{figure*}\n\n")
-        long_example_parses_count += 1
-        #if long_example_parses_count % 1 == 0:
-        LONG_EXAMPLE_PARSES.write("\n")
-
+        if long_example_parses_skip > 0:
+            long_example_parses_skip -= 1
+        else:
+            tikz = tikz_dependency(conll_results[linkSentence], link_results[linkSentence], linkSentence, .97)
+            #LONG_EXAMPLE_PARSES.write("\\begin{figure*}[ht!]\n")
+            LONG_EXAMPLE_PARSES.write(tikz)
+            #LONG_EXAMPLE_PARSES.write("\\end{figure*}\n\n")
+            long_example_parses_count += 1
+            #if long_example_parses_count % 1 == 0:
+            LONG_EXAMPLE_PARSES.write("\n")
 
     # Filter out sentences to only up to length 16
     elif example_parses_count < example_parses_limit and sentenceLength <= 95:
