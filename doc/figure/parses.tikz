@@ -158,49 +158,6 @@
 \begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize DT} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize IN} \& {\scriptsize IN} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize .} \\
-			this \& occurred \& partly \& because \& of \& more \& competition \& as \& the \& number \& of \& new \& businesses \& surged \& . \\
-			p \& v-d \& e \& - \& - \& - \& n-u \& e \& - \& d \& - \& a \& n \& v-d \& - \\
-		\end{deptext}
-		\depedge[edge below, edge style = {red, ultra thick}]{13}{11}{J}
-		\depedge[edge above, edge style = {blue, ultra thick}]{11}{13}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{10}{9}{D}
-		\depedge[edge above, edge style = {blue, thick}]{10}{9}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{10}{11}{OF}
-		\depedge[edge above, edge style = {blue, thick}]{10}{11}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{13}{12}{A}
-		\depedge[edge above, edge style = {blue, thick}]{13}{12}{\small NMOD}
-		\depedge[edge below, edge style = {red, ultra thick}]{8}{14}{CV}
-		\depedge[edge above, edge style = {blue, ultra thick}]{14}{8}{\small VMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{14}{10}{\small SBJ}
-		\deproot[edge below, edge style = {red, thick}]{2}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{4}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{14}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{15}{\small P}
-		\depedge[edge below, edge style = {red, ultra thick}]{3}{4}{MV}
-		\depedge[edge above, edge style = {blue, ultra thick}]{4}{3}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{4}{5}{OF}
-		\depedge[edge above, edge style = {blue, thick}]{4}{5}{\small DEP}
-		\depedge[edge above, edge style = {blue, dotted}]{4}{7}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{7}{6}{D}
-		\depedge[edge above, edge style = {blue, thick}]{7}{6}{\small NMOD}
-		\depedge[edge below, edge style = {red, dotted}]{13}{10}{D}
-		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{13}{14}{S}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
-		\deproot[edge below, edge style = {red, dotted}]{15}{X}
-		\depedge[edge below, edge style = {red, dotted}]{2}{3}{MV}
-		\depedge[edge below, edge style = {red, dotted}]{2}{8}{MV}
-		\depedge[edge below, edge style = {red, dotted}]{5}{7}{J}
-		\depedge[edge below, edge style = {red, dotted}]{8}{13}{C}
-	\end{dependency}
-\end{figure*}
-
-\begin{figure*}[ht!]
-	\begin{dependency}
-		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize VB} \& {\scriptsize NN} \& {\scriptsize .} \\
 			Mr. \& Bakes\lbrack !\rbrack \& previously \& had \& a \& turn \& at \& running \& Continental\lbrack !\rbrack \& . \\
 			x \& - \& - \& v-d \& - \& n \& - \& v \& - \& - \\
@@ -643,7 +600,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -668,7 +625,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize CD} \& {\scriptsize TO} \& {\scriptsize CD} \& {\scriptsize CD} \& {\scriptsize .} \\
@@ -1234,7 +1191,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -1274,7 +1231,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize RB} \& {\scriptsize ,} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize TO} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -1600,47 +1557,6 @@
 \begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
-			{\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize TO} \& {\scriptsize DT} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
-			they \& attached \& a \& second \& gene \& {,} \& for \& herbicide \& resistance \& {,} \& to \& the \& pollen-inhibiting \& gene \& . \\
-			- \& v-d \& - \& a \& n \& - \& p \& n-u \& n-u \& - \& r \& - \& - \& n \& - \\
-		\end{deptext}
-		\depedge[edge below, edge style = {red, thick}]{11}{14}{J}
-		\depedge[edge above, edge style = {blue, thick}]{11}{14}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{14}{12}{D}
-		\depedge[edge above, edge style = {blue, thick}]{14}{12}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{14}{13}{AN}
-		\depedge[edge above, edge style = {blue, thick}]{14}{13}{\small NMOD}
-		\deproot[edge below, edge style = {red, thick}]{2}{WV}
-		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
-		\depedge[edge below, edge style = {red, ultra thick}]{1}{2}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{2}{1}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{2}{5}{O}
-		\depedge[edge above, edge style = {blue, thick}]{2}{5}{\small OBJ}
-		\depedge[edge below, edge style = {red, thick}]{2}{11}{MV}
-		\depedge[edge above, edge style = {blue, thick}]{2}{11}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{2}{15}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{5}{3}{D}
-		\depedge[edge above, edge style = {blue, thick}]{5}{3}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{5}{4}{A}
-		\depedge[edge above, edge style = {blue, thick}]{5}{4}{\small NMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{6}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{5}{7}{MX}
-		\depedge[edge above, edge style = {blue, thick}]{5}{7}{\small NMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{10}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{7}{9}{J}
-		\depedge[edge above, edge style = {blue, thick}]{7}{9}{\small PMOD}
-		\depedge[edge below, edge style = {red, thick}]{9}{8}{AN}
-		\depedge[edge above, edge style = {blue, thick}]{9}{8}{\small NMOD}
-		\deproot[edge below, edge style = {red, dotted}]{1}{W}
-		\deproot[edge below, edge style = {red, dotted}]{15}{X}
-		\depedge[edge below, edge style = {red, dotted}]{7}{6}{X}
-		\depedge[edge below, edge style = {red, dotted}]{7}{10}{X}
-	\end{dependency}
-\end{figure*}
-
-\begin{figure*}[ht!]
-	\begin{dependency}
-		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize CD} \& {\scriptsize CD} \& {\scriptsize .} \\
 			fees \& 2 \& 1\/8 \& . \\
 			n \& - \& - \& - \\
@@ -1826,7 +1742,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize RB} \& {\scriptsize ,} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize IN} \& {\scriptsize PR} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize .} \\
@@ -1898,7 +1814,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize RB} \& {\scriptsize ,} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -2454,7 +2370,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize CD} \& {\scriptsize TO} \& {\scriptsize CD} \& {\scriptsize RB} \& {\scriptsize IN} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -2528,7 +2444,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize PR} \& {\scriptsize MD} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize .} \\
@@ -3108,7 +3024,7 @@
 	\end{dependency}
 \end{figure*}
 
-\clearpage\begin{figure*}[ht!]
+\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize VB} \& {\scriptsize CD} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize ,} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize .} \\
@@ -3203,7 +3119,7 @@
 	\end{dependency}
 \end{figure*}
 
-\begin{figure*}[ht!]
+\clearpage\begin{figure*}[ht!]
 	\begin{dependency}
 		\begin{deptext}
 			{\scriptsize WR} \& {\scriptsize MD} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize RB} \& {\scriptsize .} \\
@@ -3274,52 +3190,6 @@
 		\deproot[edge above, edge style = {blue, thick}]{2}{\small ROOT}
 		\depedge[edge below, edge style = {red, thick}]{2}{1}{G}
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
-	\end{dependency}
-\end{figure*}
-
-\begin{figure*}[ht!]
-	\begin{dependency}
-		\begin{deptext}
-			{\scriptsize RB} \& {\scriptsize ,} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize RB} \& {\scriptsize JJ} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize ,} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize .} \\
-			however \& {,} \& the \& problem \& is \& that \& once \& most \& poison \& pills \& are \& adopted \& {,} \& they \& survive \& forever \& . \\
-			e \& - \& - \& n \& v \& j-c \& e \& - \& a \& n \& v \& v-d \& - \& - \& v \& e \& - \\
-		\end{deptext}
-		\depedge[edge above, edge style = {blue, dotted}]{11}{7}{\small VMOD}
-		\depedge[edge below, edge style = {red, ultra thick}]{10}{11}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{11}{10}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{11}{12}{P}
-		\depedge[edge above, edge style = {blue, thick}]{11}{12}{\small VC}
-		\depedge[edge above, edge style = {blue, dotted}]{10}{8}{\small NMOD}
-		\depedge[edge below, edge style = {red, thick}]{10}{9}{A}
-		\depedge[edge above, edge style = {blue, thick}]{10}{9}{\small NMOD}
-		\depedge[edge below, edge style = {red, ultra thick}]{6}{15}{CV}
-		\depedge[edge above, edge style = {blue, ultra thick}]{15}{6}{\small VMOD}
-		\depedge[edge above, edge style = {blue, dotted}]{15}{11}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{15}{13}{\small P}
-		\depedge[edge below, edge style = {red, ultra thick}]{14}{15}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{15}{14}{\small SBJ}
-		\depedge[edge below, edge style = {red, thick}]{15}{16}{MV}
-		\depedge[edge above, edge style = {blue, thick}]{15}{16}{\small ADV}
-		\deproot[edge above, edge style = {blue, dotted}]{5}{\small ROOT}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{1}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{2}{\small P}
-		\depedge[edge below, edge style = {red, ultra thick}]{4}{5}{S}
-		\depedge[edge above, edge style = {blue, ultra thick}]{5}{4}{\small SBJ}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{15}{\small ADV}
-		\depedge[edge above, edge style = {blue, dotted}]{5}{17}{\small P}
-		\depedge[edge below, edge style = {red, thick}]{4}{3}{D}
-		\depedge[edge above, edge style = {blue, thick}]{4}{3}{\small NMOD}
-		\depedge[edge below, edge style = {red, dotted}]{14}{7}{CO}
-		\depedge[edge below, edge style = {red, dotted}]{1}{2}{X}
-		\deproot[edge below, edge style = {red, dotted}]{4}{W}
-		\deproot[edge below, edge style = {red, dotted}]{17}{X}
-		\depedge[edge below, edge style = {red, dotted}]{5}{6}{TH}
-		\depedge[edge below, edge style = {red, dotted}]{4}{1}{CO}
-		\depedge[edge below, edge style = {red, dotted}]{7}{10}{C}
-		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{7}{12}{CV}
-		\depedge[edge below, edge style = {red, dotted}]{7}{13}{X}
-		\depedge[edge below, edge style = {red, dotted}]{6}{14}{C}
-		\depedge[edge below, edge style = {red, dotted}]{9}{8}{EA}
 	\end{dependency}
 \end{figure*}
 
@@ -3447,6 +3317,98 @@
 		\deproot[edge below, edge style = {red, dotted}]{2}{W}
 		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{5}{WV}
 		\deproot[edge below, edge style = {red, dotted}]{6}{X}
+	\end{dependency}
+\end{figure*}
+
+\begin{figure*}[ht!]
+	\begin{dependency}
+		\begin{deptext}
+			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize NN} \\
+			Leslie \& Falls\lbrack !\rbrack \& Humphries\lbrack !\rbrack \\
+			b \& - \& - \\
+		\end{deptext}
+		\deproot[edge below, edge style = {red, thick}]{3}{W}
+		\deproot[edge above, edge style = {blue, thick}]{3}{\small ROOT}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{1}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{G}
+		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small NMOD}
+		\depedge[edge below, edge style = {red, dotted}]{2}{1}{G}
+	\end{dependency}
+\end{figure*}
+
+\begin{figure*}[ht!]
+	\begin{dependency}
+		\begin{deptext}
+			{\scriptsize CC} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize DT} \& {\scriptsize VB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize PR} \& {\scriptsize VB} \& {\scriptsize JJ} \& {\scriptsize IN} \& {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize PO} \& {\scriptsize JJ} \& {\scriptsize NN} \& {\scriptsize .} \\
+			but \& he \& said \& this \& does \& n't \& mean \& he \& is \& satisfied \& with \& the \& market \& 's \& big \& swings \& . \\
+			ij \& - \& v-d \& p \& v \& - \& v \& - \& v \& a \& - \& - \& n \& p \& a \& n \& - \\
+		\end{deptext}
+		\depedge[edge below, edge style = {red, thick}]{11}{16}{J}
+		\depedge[edge above, edge style = {blue, thick}]{11}{16}{\small PMOD}
+		\depedge[edge below, edge style = {red, thick}]{10}{11}{MV}
+		\depedge[edge above, edge style = {blue, thick}]{10}{11}{\small AMOD}
+		\depedge[edge below, edge style = {red, thick}]{13}{12}{D}
+		\depedge[edge above, edge style = {blue, thick}]{13}{12}{\small NMOD}
+		\depedge[edge below, edge style = {red, ultra thick}]{14}{13}{YS}
+		\depedge[edge above, edge style = {blue, ultra thick}]{13}{14}{\small NMOD}
+		\depedge[edge above, edge style = {blue, dotted}]{16}{13}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{16}{15}{A}
+		\depedge[edge above, edge style = {blue, thick}]{16}{15}{\small NMOD}
+		\deproot[edge below, edge style = {red, thick}]{3}{WV}
+		\deproot[edge above, edge style = {blue, thick}]{3}{\small ROOT}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{1}{\small CC}
+		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small OBJ}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{17}{\small P}
+		\depedge[edge below, edge style = {red, ultra thick}]{4}{5}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{5}{4}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{5}{6}{N}
+		\depedge[edge above, edge style = {blue, thick}]{5}{6}{\small VMOD}
+		\depedge[edge below, edge style = {red, thick}]{5}{7}{I}
+		\depedge[edge above, edge style = {blue, thick}]{5}{7}{\small VC}
+		\depedge[edge below, edge style = {red, thick}]{7}{9}{CV}
+		\depedge[edge above, edge style = {blue, thick}]{7}{9}{\small OBJ}
+		\depedge[edge below, edge style = {red, ultra thick}]{8}{9}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{9}{8}{\small SBJ}
+		\depedge[edge below, edge style = {red, thick}]{9}{10}{P}
+		\depedge[edge above, edge style = {blue, thick}]{9}{10}{\small VMOD}
+		\depedge[edge below, edge style = {red, dotted}]{16}{14}{D}
+		\depedge[edge below, edge style = {red, dotted}]{1}{2}{W}
+		\deproot[edge below, edge style = {red, dotted}]{1}{W}
+		\deproot[edge below, edge style = {red, dotted}]{17}{X}
+		\depedge[edge below, edge style = {red, dotted}]{3}{4}{C}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{3}{7}{CV}
+		\depedge[edge below, edge style = {red, dotted}]{7}{8}{C}
+	\end{dependency}
+\end{figure*}
+
+\begin{figure*}[ht!]
+	\begin{dependency}
+		\begin{deptext}
+			{\scriptsize NN} \& {\scriptsize NN} \& {\scriptsize CC} \& {\scriptsize NN} \& {\scriptsize VB} \& {\scriptsize CD} \& {\scriptsize TO} \& {\scriptsize CD} \& {\scriptsize .} \\
+			Sumitomo\lbrack !\rbrack \& Realty\lbrack !\rbrack \& \& \& Development\lbrack !\rbrack \& rose \& 40 \& to \& 2170\lbrack !\rbrack \& . \\
+			- \& - \& - \& - \& v-d \& - \& j-ru \& - \& - \\
+		\end{deptext}
+		\deproot[edge below, edge style = {red, thick}]{5}{WV}
+		\deproot[edge above, edge style = {blue, thick}]{5}{\small ROOT}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{1}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{3}{2}{G}
+		\depedge[edge above, edge style = {blue, thick}]{3}{2}{\small COORD}
+		\depedge[edge below, edge style = {red, ultra thick}]{4}{3}{G}
+		\depedge[edge above, edge style = {blue, ultra thick}]{3}{4}{\small COORD}
+		\depedge[edge above, edge style = {blue, dotted}]{5}{3}{\small SBJ}
+		\depedge[edge above, edge style = {blue, dotted}]{5}{6}{\small OBJ}
+		\depedge[edge below, edge style = {red, thick}]{5}{7}{OD}
+		\depedge[edge above, edge style = {blue, thick}]{5}{7}{\small ADV}
+		\depedge[edge above, edge style = {blue, dotted}]{5}{9}{\small P}
+		\depedge[edge below, edge style = {red, thick}]{7}{8}{NI}
+		\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small PMOD}
+		\deproot[edge below, edge style = {red, dotted}]{4}{W}
+		\deproot[edge below, edge style = {red, dotted}]{9}{X}
+		\depedge[edge below, edge style = {red, dotted}]{2}{1}{G}
+		\depedge[edge below, edge style = {orange, ultra thick, dotted}]{4}{5}{S}
+		\depedge[edge below, edge style = {red, dotted}]{7}{6}{NI}
 	\end{dependency}
 \end{figure*}
 
