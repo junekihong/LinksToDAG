@@ -257,7 +257,7 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
   \input{figure/sentences.tikz}
   \input{figure/long_parses.tikz}
   %\input{figure/long_parse2.tikz}
-  \caption{\small The blue upper edges show CoNLL gold dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse; these are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} at \url{http://tidyurl.com/LinksToDAG_supplement}.}
+  \caption{\small The blue upper edges show CoNLL gold dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse. Edges are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} at \url{http://tidyurl.com/LinksToDAG_supplement}.}
   \label{fig:parses}
   \vspace{-6pt}
 \end{figure*}
@@ -435,7 +435,9 @@ Words that were unknown to the link parser are flagged with \texttt{[!]}.
 
 Edges are shown as solid lines if they appear in both parses.  They are drawn more thickly if the directions do not match.
 
-Edges are shown as dotted lines if they appear only in one parse and not in the other.  Such edges are highlighted in orange if the child has multiple parents.  
+Edges are shown as dotted lines if they appear only in one parse and not in the other.  
+
+Edges are highlighted in orange if the child has multiple parents.  
 
 % OLD NERDVIEW EXPLANATION
 % For every arc:
