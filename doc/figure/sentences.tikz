@@ -17,7 +17,7 @@
 		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
 		\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
 		\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small ADV}
-		\depedge[edge below, edge style = {red, thick}]{6}{7}{P}
+		\depedge[edge below, edge style = {orange, thick}]{6}{7}{P}
 		\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small VC}
 		\depedge[edge below, edge style = {red, thick}]{8}{9}{J}
 		\depedge[edge above, edge style = {blue, thick}]{8}{9}{\small PMOD}
@@ -46,7 +46,7 @@
 		\depedge[edge above, edge style = {blue, ultra thick}]{4}{3}{\small SBJ}
 		\depedge[edge below, edge style = {red, thick}]{4}{5}{N}
 		\depedge[edge above, edge style = {blue, thick}]{4}{5}{\small VMOD}
-		\depedge[edge below, edge style = {red, thick}]{4}{6}{I}
+		\depedge[edge below, edge style = {orange, thick}]{4}{6}{I}
 		\depedge[edge above, edge style = {blue, thick}]{4}{6}{\small VC}
 		\depedge[edge above, edge style = {blue, dotted}, edge unit distance = 1.7ex]{4}{9}{\small P}
 		\depedge[edge below, edge style = {red, thick}]{8}{7}{D}
