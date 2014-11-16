@@ -1,9 +1,9 @@
 
 all:
-	bibtex LinksToDAG.aux && pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error && (pdftk LinksToDAG.pdf cat 1-6 output body.pdf; pdftk LinksToDAG.pdf cat 7-end output supplement.pdf; zip supplement.zip supplement.pdf) && echo "Now submit body.pdf and supplement.zip"
+	pdflatex LinksToDAG_final.tex && pdflatex LinksToDAG.tex && bibtex LinksToDAG_final.aux && pdflatex LinksToDAG_final.tex -output-format pdf -halt-on-error -file-line-error && bibtex LinksToDAG.aux && pdflatex LinksToDAG.tex --output-format pdf -halt-on-error -file-line-error && (pdftk LinksToDAG_final.pdf cat 1-10 output body.pdf; pdftk LinksToDAG.pdf cat 7-end output supplement.pdf; zip supplement.zip supplement.pdf) && echo "Now submit body.pdf and supplement.zip"
 
 paper:
-	bibtex LinksToDAG.aux && pdflatex LinksToDAG.tex -output-format pdf -halt-on-error -file-line-error
+	bibtex LinksToDAG_final.aux && pdflatex LinksToDAG_final.tex -output-format pdf -halt-on-error -file-line-error
 
 parses.pdf: figure/parses.tikz
 	pdflatex parses.tex
