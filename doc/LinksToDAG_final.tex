@@ -18,10 +18,13 @@
 \usepackage[T1]{fontenc}         
 \usepackage{pslatex}
 
+
 \usepackage{hyperref}
 \pagestyle{empty}
 
+
 \bibliographystyle{plain}
+%\bibliographystyle{acl2014}
 
 
 %\documentclass[11pt]{article}
@@ -30,6 +33,7 @@
 %\usepackage{url}
 %\usepackage{latexsym}
 \usepackage{amsmath}
+
 %\usepackage{xspace}
 \usepackage{enumitem}
 \usepackage[small]{caption}
@@ -60,20 +64,16 @@
 \newcommand{\NoteJE}[2][]{\noteJE[inline,#1]{#2}}
 \newcommand{\Notewho}[3][]{\notewho[inline,#1]{#2}{#3}}  % extra arg with miscellaneous author
 
-% \newcommand{\root}{\texttt{\$}}
 
 
-
-
-
-\title{Deriving Multi-Headed Projective Dependency Parses \\ from Link Grammar Parses}
+\title{Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses}
 % Oriented link grammar: Creating a multi-headed dependency corpus.
 
-\author{Juneki Hong and Jason Eisner\\
-   Department of Computer Science \\
-   Johns Hopkins University \\
-   Baltimore, MD 21218, USA \\ 
-   {\tt \{juneki,jason\}@cs.jhu.edu} \\
+\author{Juneki Hong and Jason Eisner
+  \\[0.5cm] Department of Computer Science
+  \\Johns Hopkins University
+  \\Baltimore, MD 21218, USA 
+  \\{\tt \{juneki,jason\}@cs.jhu.edu}
 }
 
 \date{}
@@ -89,13 +89,19 @@ Under multi-headed dependency grammar, a parse is a connected DAG rather than a 
 it is hard to train, test, or improve multi-headed parsers because few multi-headed corpora exist, particularly for the projective case.
 % OLD
 % investigate the benefit of such parsers or to work on making them faster or more accurate.  
-To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs.  
+To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs, and so we wanted to determine whether these could be converted into directionalized dependency parses.
 % OLD
 % ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
-We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, though differing in style from CoNLL-style parses of the same sentences; we discuss the differences.  
+We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. 
+%The resulting parses in English appear reasonably linguistically plausible, though differing in style from CoNLL-style parses of the same sentences; we discuss the differences.  
+However, the resulting parses in English differ in style from CoNLL-style parses of the same sentences; we discuss the differences. 
+
+
 \end{abstract}
 
 \thispagestyle{empty}
+
+%\newpage
 
 \section{Multi-Headed Dependency Parsing}
 
@@ -152,7 +158,10 @@ Our first thought was to seek a direction mapping such that no parsed word seque
 % However, working directly with the link grammar lexicon format is somewhat tricky. We also feared
 However, we feared that there would not be a feasible solution---because of errors in the lexicon or linguistically unnatural word sequences not anticipated by the grammar designers.  In this case it would be unclear how to relax our constraints.
 
-Thus, we chose to use a sample of {\em actual} sentences parsed by the link grammar, and to seek a direction mapping so that {\em these} parses would not violate our constraints after directions were imposed.  If no such mapping exists, then we are willing to orient a few edge tokens in the wrong direction to ensure that the parses are still well-formed---but we minimize the number of such violations.  In this way, the empirical distribution of sentences guides our assignment of directions.  The resulting directed corpus can be used for research on multi-headed dependency parsing.
+% OLD
+% Thus, we chose to use a sample of {\em actual} sentences parsed by the link grammar, and to seek a direction mapping so that {\em these} parses would not violate our constraints after directions were imposed.  
+Thus, we chose to use a sample of sentences sucessfully parsed by the link grammar, and to seek a direction mapping that would not violate our constraints after directions were imposed.
+If no such mapping exists, then we are willing to orient a few edge tokens in the wrong direction to ensure that the parses are still well-formed---but we minimize the number of such violations.  In this way, the empirical distribution of sentences guides our assignment of directions.  The resulting directed corpus could be used for research on multi-headed dependency parsing.
 
 % Link grammars are a grammatical system equivalent to context-free grammars that assign linking requirements to every given word. A link parser then tries to satisfy all of these requirements for every word of a sentence while still maintaining planarity. The resulting links describe the relationships between constituents in a parse. 
 
@@ -169,10 +178,10 @@ We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED
 %We also used a prefix of the Russian National Corpus,\footnote{That is, a prefix when considering the files in Unix sort order by filename.  We dropped sentences with $\leq 2$ words, as well as file 22592319, which appeared to contain charts.} which is unparsed.
 We also used a prefix of the Russian News Commentary data from the ACL 2013 Shared Task of Machine Translation,\footnote{\url{http://www.statmt.org/wmt13/training-monolingual-nc-v8.tgz}} which is unparsed.
 
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only \input{figure/russian_sentence_count.tex}(of \input{figure/russian_original_sentence_count.tex}$\!\!$) Russian sentences, discarding the other sentences.
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only \input{figure/russian_sentence_count.tex}(of \input{figure/russian_original_sentence_count.tex}$\!\!$) Russian sentences, discarding the other sentences\footnote{When the link parser fails, it outputs a disconnected graph representing its best effort parse within a timelimit. We removed these sentences because our ILP encoding tries to satisfy the edges of an entire connected parse. Given a solution, it would be possible to return to these disconnected parses, directionalize the edges, and include them along with the rest of the corpus. It would also be possible to include these sentences for the ILP to solve by modifying the ILP to satisfy the edges of all disconnected components of a parse.}
 These two languages have the most mature lexicons at present, although lexicons for 7 other languages are available.  
 
-The link grammar parses do differ in style from the single-headed CoNLL parses of the same English sentences.  They have \input{figure/conll_analysis_edge_percent.tex}more edges overall.  Only \input{figure/conll_analysis_precision.tex}of the links match CoNLL arcs, and only \input{figure/conll_analysis_recall.tex}of the CoNLL arcs match links.
+The link grammar parses differ in style from the single-headed CoNLL parses of the same English sentences, and the multiheaded arcs are used sparingly with only \input{figure/conll_analysis_edge_percent.tex}more edges overall.  Only \input{figure/conll_analysis_precision.tex}of the links match CoNLL arcs, and only \input{figure/conll_analysis_recall.tex}of the CoNLL arcs match links.
 % DATA FOR THE ABOVE
 % \begin{figure}[ht!]
 %   \centering
@@ -350,14 +359,6 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 \end{figure*}
 
 
-
-\begin{table*}[ht]
-% \renewcommand{\arraystretch}{1.2}    % more space between rows
-\hspace*{-1in}
-\input{figure/sample_link_analysis_coarse_table.tex}
-\caption{Our solution, i.e., our reconstruction of the ``intended'' direction for each link type in the English Link Grammar.  We also indicate the extent to which each of these link types (1) has a single dominant direction, (2) participates in multi-headed constructions, and (3) corresponds to CoNLL links of a predictable direction and type.  For space reasons, we show only the start of this table---the full table can be found in Appendix~\ref{app:linktypes} at \url{http://tidyurl.com/LinksToDAG_supplement}.}\label{tab:linktypes}
-\end{table*}
-
 \begin{figure}[t!]
   \small
   \centering
@@ -365,6 +366,16 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
   \caption{Convergence to the direction mapping obtained on the largest run.  Precision relative to that run is very high even for small datasets.  Recall grows as more link types are seen.}\label{fig:convergence}
 \vspace{-6pt}
 \end{figure}
+
+
+
+
+\begin{table*}[ht]
+% \renewcommand{\arraystretch}{1.2}    % more space between rows
+\hspace*{-1in}
+\input{figure/sample_link_analysis_coarse_table.tex}
+\caption{Our solution, i.e., our reconstruction of the ``intended'' direction for each link type in the English Link Grammar.  We also indicate the extent to which each of these link types (1) has a single dominant direction, (2) participates in multi-headed constructions, and (3) corresponds to CoNLL links of a predictable direction and type.  For space reasons, we show only the start of this table---the full table can be found in Appendix~\ref{app:linktypes} at \url{http://tidyurl.com/LinksToDAG_supplement}.}\label{tab:linktypes}
+\end{table*}
 
 
 We solved our ILP problem using the SCIP Optimization Suite \cite{achterberg2009scip}, encoding it using the ZIMPL language \cite{Koch2004}.  Our largest run took 1.5 hours. \noteJH{A run of 10,000 sentences takes 3142 seconds (update in final version!)}  On English, only \input{figure/allowed_labels_both.tex}of \input{figure/allowed_labels_total.tex}link {\em types} allowed both directions, and only $\sum_{ij} s_{ij} = \input{figure/label_token_disallowed}$ of \input{figure/label_token_total.tex}link {\em tokens} required a disallowed direction via slack.
@@ -448,9 +459,11 @@ ILP may {\em in general} be a valuable technology for enriching existing annotat
 %\twocolumn
 
 %\newpage
+
 \begin{bibliography}{LinksToDAG_final}
 
 %\bibliographystyle{acl2014}
+
 %\bibliography{LinksToDAG}
 \end{bibliography}
 
