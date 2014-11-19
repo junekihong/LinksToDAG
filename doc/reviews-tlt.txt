@@ -1,0 +1,154 @@
+We are pleased to inform you that the following submission has been accepted for oral presentation at the 13th International Workshop on Treebanks and Linguistic Theories (TLT13):
+
+Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses
+
+Please inform your co-author(s), if any. Each submission has been reviewed by three reviewers; please find attached their comments. Please take a close look at these comments and take them into consideration as much as possible when preparing your final paper.
+
+At least one (co-)author has to register for TLT13. Any additional (co-)authors who plan to attend the workshop have to register as participants of TLT13 as well. For registration information, please visit the TLT13 webpage: http://tlt13.sfs.uni-tuebingen.de/local/registration/
+
+*** IMPORTANT: ***
+Please confirm your participation in TLT13 by registering no later than November 20. This is the prerequisite for including your paper in the workshop proceedings.
+
+We plan to publish online proceedings of the workshop with all accepted papers and posters on the workshop website. The deadline for submission of final manuscripts (6-10 pages in length for full papers) is November 20. The style files are available via the workshop website: http://tlt13.sfs.uni-tuebingen.de/submissions/
+
+When making your travel arrangements to Tübingen, please note that on Thursday, December 11, the day immediately preceding TLT, a one-day workshop on "Current trends in language technology and linguistic modeling" will take place in Tübingen. This workshop is open to all TLT participants and other interested researchers. No separate registration fee is required. If you would like to register and participate in this workshop, all you need to do is to indicate this in your registration form.
+
+We look forward to your presentation at TLT and to welcoming you to Tübingen in December.
+
+Best Regards,
+
+TLT 13 program co-chairs (tlt13-chairs@sfs.uni-tuebingen.de)
+
+Verena Henrich (Tübingen)
+Erhard Hinrichs (Tübingen)
+Petya Osenova (Sofia)
+Adam Przepiórkowski (Warsaw)
+
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 8
+TITLE: Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses
+AUTHORS: Juneki Hong and Jason Eisner
+
+OVERALL EVALUATION: 2 (accept)
+REVIEWER'S CONFIDENCE: 5 (expert)
+Appropriateness: Does this paper fit in TLT 12? (Should be true for most papers.): 5 (excellent)
+Originality: Are the results/ideas novel and previously unknown?: 3 (fair)
+Soundness: Is this paper technically sound and complete?: 4 (good)
+Readability: Is the paper well-organized & easy to understand?: 5 (excellent)
+Language: Is the paper written in correct English and style?: 5 (excellent)
+Meaningful Comparison: Are the references adequate? Does the author make clear where the problems and methods sit with respect to existing literature?: 4 (good)
+
+----------- REVIEW -----------
+This paper that introduces a method for deriving multi-headed dependency graphs from Link Grammar parsers. This is a nice and potentially useful idea, but there are two aspects of the paper that I don't find totally convincing.
+
+The first is the notion of "direction" that the authors try to learn for a label set. As far as I understand, "direction" here means left or right, so that the goal is to learn whether a particular dependency relation tends to be consistently left- or right-headed. This may be appropriate for a language like English, where many relations have a consistent left-to-right direction, but it seems quite weird for languages with freer word order, where for example arguments can either precede or follow the verb. It seems much more natural to try to learn a consistent order between linguistic categories. For example, if a verb and a noun are linked by a "subject" relation, then the verb is the head and the noun the dependent. This is something that needs to be discussed in more detail.
+
+The second issue concerns the accuracy of the parser and the relation to the gold standard used in the evaluation. Since the two annotation schemes are not compatible, it seems completely impossible to tell how much of the mismatch is due to parsing errors and how much is due to different annotation schemes. This undermines the usefulness of the evaluation.
+
+Minor comment: I think it would be better to use the term "planar" instead of "projective" in the detail, since this seems to be what is actually enforced. (Projectivity is properly defined only for trees, and it is unclear how it should be generalized to DAGs.)
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 8
+TITLE: Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses
+AUTHORS: Juneki Hong and Jason Eisner
+
+OVERALL EVALUATION: 0 (borderline paper)
+REVIEWER'S CONFIDENCE: 3 (medium)
+Appropriateness: Does this paper fit in TLT 12? (Should be true for most papers.): 4 (good)
+Originality: Are the results/ideas novel and previously unknown?: 4 (good)
+Soundness: Is this paper technically sound and complete?: 3 (fair)
+Readability: Is the paper well-organized & easy to understand?: 3 (fair)
+Language: Is the paper written in correct English and style?: 4 (good)
+Meaningful Comparison: Are the references adequate? Does the author make clear where the problems and methods sit with respect to existing literature?: 3 (fair)
+
+----------- REVIEW -----------
+This paper provides a method for derived directed dependency parses from link grammar parses, which thereby also become multi-headed parses.  Such parses do a better job of capturing phenomena such as raising/control, relativization, and conjunction, as they link up (syntactic/semantic) arguments with predicates.
+
+While I really like this focus and appreciate the connection between link grammar and more standard dependency formalisms nowadays, I had a few issues with the current presentation:
+
+- Although there was a lot of (what seemed to be rather sound) technical detail, the core insights were lost at times. I might be wrong in my assessment of what's important (and what you were trying to say), but these are implicit points which I thought needed more explicit discussion: 1) despite not encoding direction directly, link grammar labels are informative w.r.t. dependency direction; 2) there is some linguistic reason that particular dependency labels are always leftward-branching and some are always rightward-branching (though, things like verbal adjuncts must pose a problem); and 3) even though #2 may be generally true, there are enough exceptions that make hand writing rules at least partially unappealing, and thus ILP needs to be explored. e.g., regarding this last point: when I read that subjects were consistently pointing in the wrong direction (sec. 5.2), my first thought was: why not just write a rule?
+
+- As another point that wasn't fully explained: by assigning direction to links, you are making the trees directed.  You get multi-headed parses (I think) because link grammar assigns more links than the number of words in a sentence.  (Since you have a constraints that ensures that every word has at least one head, this has to be true, right?)  In other words: your stated goal is to get multi-headed parses, but the work seems more about getting directed parses (which results in multi-headed parses).
+
+- I wasn't entirely sure of what the impact was going to be of discarding sentences that the parser fails on.  If this is to help corpus-building, how big of a problem is it if you have to discard 40-70% of the data?
+
+- I wasn't sure what Figure 2 was measuring: is precision w.r.t. the enforcement of left/right-ness for dependency types?
+
+- The paper is too long, according to TLT standards, given that you have a two-column, more ACL-like standard.  It is thus hard to compare the relative value of this paper with other papers.
+
+More minor comments include:
+
+- I wasn't sure at first if this paper was more about corpus-building or about the conversion method.  The introduction starting with formal definitions didn't help that point (though, the material is obviously germane to your overall points).
+
+- sec. 2: what exactly do 0, 1, and 2 denote?  I understand that they are costs, but why three costs instead of two?
+
+- sec. 2, end: The paragraph on using actual sentences was a bit unclear to me.  An example may have helped.
+
+- sec. 3, end: it would be interesting to explore what the differences are between the CoNLL parses and the link grammar parses.
+
+- sec. 4, objective (4): why 1/4?
+
+- sec. 5, under Figure 2: any idea why Russian had so few multiheaded words?  Does this have to do with the coverage of the grammar?
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 8
+TITLE: Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses
+AUTHORS: Juneki Hong and Jason Eisner
+
+OVERALL EVALUATION: -2 (reject)
+REVIEWER'S CONFIDENCE: 4 (high)
+Appropriateness: Does this paper fit in TLT 12? (Should be true for most papers.): 4 (good)
+Originality: Are the results/ideas novel and previously unknown?: 4 (good)
+Soundness: Is this paper technically sound and complete?: 3 (fair)
+Readability: Is the paper well-organized & easy to understand?: 4 (good)
+Language: Is the paper written in correct English and style?: 4 (good)
+Meaningful Comparison: Are the references adequate? Does the author make clear where the problems and methods sit with respect to existing literature?: 4 (good)
+
+----------- REVIEW -----------
+This paper starts with the assumption that projective multi-headed
+corpora are needed and then develops a sophisticated ILP-based
+approach to deriving such a corpus based on Link Grammar parses.
+While there is a clear interest in developing multi-headed corpora for
+potentially improved semantic analysis, for this reviewer the case is
+not effectively made that it it makes sense to pursue the projective
+case; moreover, it is also unclear why the ILP-based optimization
+should be based on automatic Link Grammar parses rather than gold
+standard dependencies.
+
+As the authors acknowledge, there is growing interest in multi-headed
+dependency representations, so a key aspect of the motivation for this
+paper is the focus on the projective multi-headed dependencies.
+However, it is unclear whether it really makes sense linguistically to
+focus on this case.  For example, de Marneffe et al. DepLing-13
+paper (see citation info below) extend the Stanford Dependency scheme
+to handle difficult cases such as 'tough'-movement and free relatives,
+and in so doing choose to add secondary (dashed) dependences that not
+only make the representations multi-headed, but also non-projective
+and cyclic.  As such, this reviewer would need to see additional
+argumentation to be convinced that the direction pursued here is
+worthwhile.
+
+The second motivational issue is that the authors do not make the case
+that it makes sense to begin with automatic Link Grammar parses, which
+surely contain errors, rather than a gold standard representation.  In
+Section 5.2, an assertion is made that parser errors are few in
+number, but this statement is not quantified, and in any case the
+typical assumption made in corpus development is that gold standard
+representations are to be preferred.
+
+Finally, the abstract asserts that the automatically oriented parses
+appear (reasonably) linguistically plausible (though differing in
+"style" from CoNLL parses), but the way the method orients subject
+relations backwards would seem to cast serious doubt on this
+conclusion.
+
+---
+
+Marie-Catherine de Marneffe, Miriam Connor, Natalia Silveira, Samuel
+R. Bowman, Timothy Dozat and Christopher D. Manning. 2013. "More
+constructions, more genres: Extending Stanford Dependencies". In
+DepLing 2013.
+
