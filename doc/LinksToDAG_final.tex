@@ -69,12 +69,21 @@
 \title{Deriving Multi-Headed Projective Dependency Parses from Link Grammar Parses}
 % Oriented link grammar: Creating a multi-headed dependency corpus.
 
-\author{Juneki Hong and Jason Eisner
-  \\[0.5cm] Department of Computer Science
-  \\Johns Hopkins University
-  \\Baltimore, MD 21218, USA 
-  \\{\tt \{juneki,jason\}@cs.jhu.edu}
+\author{
+  Juneki Hong \\
+  [0.5cm] Language Technologies Institute\\
+  Carnegie Mellon University\thanks{Work done while attending Johns Hopkins University}\\
+  Pittsburgh, PA 15213, USA\\
+  {\texttt{juneki@cs.cmu.edu}}
+  \and
+  Jason Eisner\\
+  [0.5cm] Department of Computer Science\\
+  Johns Hopkins University\\
+  Baltimore, MD 21218, USA \\
+  {\texttt{jason@cs.jhu.edu}}
 }
+
+
 
 \date{}
 
@@ -352,7 +361,7 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
   
 
   %\input{figure/long_parse2.tikz}
-  \caption{\small The blue upper edges show CoNLL gold dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse. Edges are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} at \url{http://tidyurl.com/LinksToDAG_supplement}.}
+  \caption{\small The blue upper edges show CoNLL gold dependency parses; the red lower edges show our oriented version of the link grammar parses. Edges are shown as dotted lines if they appear only in one parse. Edges are highlighted in orange if the child has multiple parents.  Edges that appear in both parses are solid lines, drawn thicker if the directions do not match.  Vertical edges have parent 0.  For 100 example parses, see Appendix~\ref{app:parses} of the supplementary material.}
   \label{fig:parses}
   \vspace{-6pt}
 
@@ -362,9 +371,9 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 \begin{figure}[t!]
   \small
   \centering
-  \includegraphics[width=\linewidth, keepaspectratio=true]{figure/precision_recall.png}
+  \includegraphics[width=0.7\textwidth, keepaspectratio=true]{figure/precision_recall.png}
   \caption{Convergence to the direction mapping obtained on the largest run.  Precision relative to that run is very high even for small datasets.  Recall grows as more link types are seen.}\label{fig:convergence}
-\vspace{-6pt}
+  \vspace{-6pt}
 \end{figure}
 
 
@@ -372,9 +381,9 @@ where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj}
 
 \begin{table*}[ht]
 % \renewcommand{\arraystretch}{1.2}    % more space between rows
-\hspace*{-1in}
-\input{figure/sample_link_analysis_coarse_table.tex}
-\caption{Our solution, i.e., our reconstruction of the ``intended'' direction for each link type in the English Link Grammar.  We also indicate the extent to which each of these link types (1) has a single dominant direction, (2) participates in multi-headed constructions, and (3) corresponds to CoNLL links of a predictable direction and type.  For space reasons, we show only the start of this table---the full table can be found in Appendix~\ref{app:linktypes} at \url{http://tidyurl.com/LinksToDAG_supplement}.}\label{tab:linktypes}
+  \hspace*{-1in}
+  \input{figure/sample_link_analysis_coarse_table.tex}
+  \caption{Our solution, i.e., our reconstruction of the ``intended'' direction for each link type in the English Link Grammar.  We also indicate the extent to which each of these link types (1) has a single dominant direction, (2) participates in multi-headed constructions, and (3) corresponds to CoNLL links of a predictable direction and type.  For space reasons, we show only the start of this table---the full table can be found in Appendix~\ref{app:linktypes} of the supplementary material.}\label{tab:linktypes}
 \end{table*}
 
 
@@ -399,9 +408,9 @@ We used only coarse link tags as our labels, keeping only the capital letters of
 \subsection{Linguistic Analysis}
 
 The resulting English corpus uses a syntactic annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in
-Appendix~\ref{app:linktypes}, while the actual parses are contrasted in Appendix~\ref{app:parses}.  By permission of the program chairs, these 
-appendices are available at the anonymous URL \url{http://tidyurl.com/LinksToDAG_supplement}.  Fragments are shown in 
-Table~\ref{tab:linktypes} and Figure~\ref{fig:parses}.
+Appendix~\ref{app:linktypes}, while the actual parses are contrasted in Appendix~\ref{app:parses}.  
+By permission of the program chairs, these appendices are available at the anonymous URL \url{http://tidyurl.com/LinksToDAG_supplement}.  
+Fragments are shown in Table~\ref{tab:linktypes} and Figure~\ref{fig:parses}.
 
 The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  Of course, a few of the differences are due to parser attachment errors.
 
