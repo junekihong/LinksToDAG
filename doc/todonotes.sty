@@ -22,13 +22,14 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{todonotes}
-    [2010/09/26 .dtx Todonotes source and documentation.]
+    [2012/07/25 .dtx Todonotes source and documentation.]
 
-\ProvidesPackage{todonotes}[2010/09/26]
+\ProvidesPackage{todonotes}[2012/07/25]
 \RequirePackage{ifthen}
 \RequirePackage{xkeyval}
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
+\usetikzlibrary{positioning}
 \RequirePackage{calc}
 \newcommand{\@todonotes@text}{}%
 \newcommand{\@todonotes@backgroundcolor}{orange}
@@ -37,6 +38,7 @@
 \newcommand{\@todonotes@textwidth}{\marginparwidth}
 \newcommand{\@todonotes@textsize}{\normalsize}
 \newcommand{\@todonotes@figwidth}{\columnwidth}
+\newcommand{\@todonotes@figheight}{4cm}
 \AtBeginDocument{
 \ifx\undefined\phantomsection
 \newcommand{\phantomsection}{}
@@ -115,13 +117,19 @@
     \@todonotes@SetTodoListName{Lista de tareas pendientes}%
     \@todonotes@SetMissingFigureText{Figura}%
     \@todonotes@SetMissingFigureUp{Figura}%
-    \@todonotes@SetMissingFigureDown{pendient}%
+    \@todonotes@SetMissingFigureDown{pendiente}%
 }
 \newcounter{@todonotes@numberoftodonotes}
 \newif{\if@todonotes@obeyDraft}
 \DeclareOptionX{obeyDraft}{\@todonotes@obeyDrafttrue}
 \newif{\if@todonotes@isDraft}
 \DeclareOptionX{draft}{\@todonotes@isDrafttrue}
+\DeclareOptionX{draftcls}{\@todonotes@isDrafttrue}
+\DeclareOptionX{draftclsnofoot}{\@todonotes@isDrafttrue}
+\newif{\if@todonotes@obeyFinal}
+\DeclareOptionX{obeyFinal}{\@todonotes@obeyFinaltrue}
+\newif{\if@todonotes@isFinal}
+\DeclareOptionX{final}{\@todonotes@isFinaltrue}
 \newif{\if@todonotes@disabled}
 \DeclareOptionX{disable}{\@todonotes@disabledtrue}
 \newif{\if@todonotes@colorinlistoftodos}
@@ -151,6 +159,8 @@
 \usetikzlibrary{shadows}}
 \define@key{todonotes.sty}%
     {figwidth}{\renewcommand{\@todonotes@figwidth}{#1}}
+\define@key{todonotes.sty}%
+    {figheight}{\renewcommand{\@todonotes@figheight}{#1}}
 \ProcessOptionsX*
 \if@todonotes@disabled
 \else
@@ -158,6 +168,12 @@
 \@todonotes@disabledtrue
 \if@todonotes@isDraft
 \@todonotes@disabledfalse
+\fi
+\fi
+\if@todonotes@obeyFinal
+\@todonotes@disabledfalse
+\if@todonotes@isFinal
+\@todonotes@disabledtrue
 \fi
 \fi
 \fi
@@ -191,6 +207,15 @@
 \newif\if@todonotes@line%
 \define@key{todonotes}{line}[]{\@todonotes@linetrue}%
 \define@key{todonotes}{noline}[]{\@todonotes@linefalse}%
+\newif\if@todonotes@fancyline\@todonotes@fancylinefalse%
+\define@key{todonotes}{fancyline}[]{\@todonotes@fancylinetrue}%
+\define@key{todonotes}{nofancyline}[]{\@todonotes@fancylinefalse}%
+\newcommand{\@todonotes@author}{}%
+\newif\if@todonotes@authorgiven%
+\define@key{todonotes}{author}{%
+    \renewcommand{\@todonotes@author}{#1}%
+    \@todonotes@authorgiventrue}%
+\define@key{todonotes}{noauthor}[]{\@todonotes@authorgivenfalse}%
 \newcommand{\@todonotes@caption}{}%
 \newif\if@todonotes@captiongiven%
 \define@key{todonotes}{caption}%
@@ -200,23 +225,29 @@
 \newcommand{\@todonotes@currentfigwidth}{\@todonotes@figwidth}
 \define@key{todonotes}%
     {figwidth}{\renewcommand{\@todonotes@currentfigwidth}{#1}}
+\newcommand{\@todonotes@currentfigheight}{\@todonotes@figheight}
+\define@key{todonotes}%
+    {figheight}{\renewcommand{\@todonotes@currentfigheight}{#1}}
 \presetkeys%
     {todonotes}%
     {linecolor=\@todonotes@linecolor,%
     backgroundcolor=\@todonotes@backgroundcolor,%
     bordercolor=\@todonotes@bordercolor,%
+    nofancyline,%
     nodisable,%
     noinline,%
     nocaption,%
+    noauthor,%
     figwidth=\@todonotes@figwidth,%
+    figheight=\@todonotes@figheight,%
     line, list, size=\@todonotes@textsize}{}%
 \if@todonotes@disabled%
     \newcommand{\listoftodos}[1][]{}
-    \newcommand{\@todo}[2][]{\ignorespaces}
+    \newcommand{\@todo}[2][]{}
     \newcommand{\missingfigure}[2][]{}
 \else % \if@todonotes@disabled
 \newcommand{\listoftodos}[1][\@todonotes@todolistname]
-    {\ifdefined\chapter\chapter*{#1}\else\section*{#1}\fi \@starttoc{tdo}}
+    {\@ifundefined{chapter}{\section*{#1}}{\chapter*{#1}} \@starttoc{tdo}}
 \newcommand{\l@todo}
     {\@dottedtocline{1}{0em}{2.3em}}
 \tikzstyle{notestyleraw} = [
@@ -260,7 +291,7 @@
     \else%
         \renewcommand{\@todonotes@caption}{#2}%
     \fi%
-    \@todonotes@addElementToListOfTodos
+    \@todonotes@addElementToListOfTodos%
 \fi%
 \if@todonotes@captiongiven%
     \if@todonotes@prependcaption%
@@ -268,15 +299,14 @@
     \fi%
 \fi%
 \if@todonotes@inlinenote%
-    \@todonotes@drawInlineNote
+    \@todonotes@drawInlineNote%
 \else%
-    \@todonotes@drawMarginNoteWithLine
-\fi %\if@todonotes@inlinenote
-\fi %\if@todonotes@localdisable
-\ignorespaces%
+    \@todonotes@drawMarginNoteWithLine%
+\fi%\if@todonotes@inlinenote
+\fi%\if@todonotes@localdisable
 }%
 \newcommand{\@todonotes@drawMarginNoteWithLine}{%
-\begin{tikzpicture}[remember picture, baseline=-0.75ex]%
+\begin{tikzpicture}[remember picture, overlay, baseline=-0.75ex]%
     \node [coordinate] (inText) {};%
 \end{tikzpicture}%
 \marginpar[{% Draw note in left margin
@@ -289,68 +319,119 @@
 }%
 \newcommand{\@todonotes@addElementToListOfTodos}{%
     \if@todonotes@colorinlistoftodos%
-        \addcontentsline{tdo}{todo}{\protect{%
+        \addcontentsline{tdo}{todo}{%
             \colorbox{\@todonotes@currentbackgroundcolor}%
                 {\textcolor{\@todonotes@currentbackgroundcolor}{o}}%
-            \ \@todonotes@caption}}%
+            \ \@todonotes@caption}%
     \else%
-        \addcontentsline{tdo}{todo}{\protect{\@todonotes@caption}}%
+        \addcontentsline{tdo}{todo}{\@todonotes@caption}%
     \fi}%
 \newcommand{\@todonotes@drawInlineNote}{%
     \if@todonotes@dviStyle%
         {\par\noindent\begin{tikzpicture}[remember picture]%
             \draw node[inlinenotestyle] {};\end{tikzpicture}\par}%
-        {\noindent \@todonotes@sizecommand \@todonotes@text}%
+            \if@todonotes@authorgiven%
+                {\noindent \@todonotes@sizecommand \@todonotes@author:\,\@todonotes@text}%
+            \else%
+                {\noindent \@todonotes@sizecommand \@todonotes@text}%
+            \fi
         {\par\noindent\begin{tikzpicture}[remember picture]%
             \draw node[inlinenotestyle] {};\end{tikzpicture}\par}%
     \else%
         {\par\noindent\begin{tikzpicture}[remember picture]%
-            \draw node[inlinenotestyle] {\@todonotes@sizecommand \@todonotes@text};%
+            \draw node[inlinenotestyle,font=\@todonotes@sizecommand]{%
+                \if@todonotes@authorgiven%
+                    {\noindent \@todonotes@sizecommand \@todonotes@author:\,\@todonotes@text}%
+                \else%
+                    {\noindent \@todonotes@sizecommand \@todonotes@text}%
+                \fi};%
             \end{tikzpicture}\par}%
     \fi}%
 \newcommand{\@todonotes@drawMarginNote}{%
 \if@todonotes@dviStyle%
     \begin{tikzpicture}[remember picture]%
         \draw node[notestyle] {};%
-    \end{tikzpicture}\\ %
+    \end{tikzpicture}\\%
     \begin{minipage}{\@todonotes@textwidth}%
-    \@todonotes@sizecommand \@todonotes@text%
+    \if@todonotes@authorgiven%
+      \@todonotes@sizecommand \@todonotes@author \@todonotes@text%
+    \else%
+      \@todonotes@sizecommand \@todonotes@text%
+    \fi%
     \end{minipage}\\%
     \begin{tikzpicture}[remember picture]%
         \draw node[notestyle] (inNote) {};%
     \end{tikzpicture}%
 \else%
-    \begin{tikzpicture}[remember picture]%
-        \draw node[notestyle] (inNote)%
-            {\@todonotes@sizecommand \@todonotes@text};%
+    \let\originalHbadness\hbadness%
+    \hbadness 100000%
+    \begin{tikzpicture}[remember picture,baseline=(X.base)]%
+        \node(X){\vphantom{X}};%
+        \draw node[notestyle,font=\@todonotes@sizecommand,anchor=north] (inNote) at (X.north)%
+            {\@todonotes@text};%
+        \if@todonotes@authorgiven%
+            \draw node[notestyle,font=\@todonotes@sizecommand,anchor=north] (inNote) at (X.north)%
+                {\@todonotes@sizecommand\@todonotes@author};%
+            \node(Y)[below=of X]{};%
+            \draw node[notestyle,font=\@todonotes@sizecommand,anchor=north] (inNote) at (X.south)%
+                {\@todonotes@text};%
+        \else%
+            \draw node[notestyle,font=\@todonotes@sizecommand,anchor=north] (inNote) at (X.north)%
+                {\@todonotes@text};%
+        \fi%
     \end{tikzpicture}%
+    \hbadness \originalHbadness%
 \fi}%
 \newcommand{\@todonotes@drawLineToRightMargin}{%
 \if@todonotes@line%
+\if@todonotes@fancyline%
+\tikz[remember picture,overlay]{%
+\tikzstyle{both}=[line width=3pt, draw, opacity=0.15]%
+\tikzstyle{line}=[shorten >=5pt, line cap=round]%
+\tikzstyle{head}=[shorten >=-1pt, dash pattern=on 0pt off 1pt, ->]%
+\foreach \s in {line,head}{%
+\draw[both,\s]%
+(inNote.north west).. controls +(0:0) and +(90:1.5)..([yshift=1ex] inText);%
+};%
+}%
+\else%
 \begin{tikzpicture}[remember picture, overlay]%
-        \draw[connectstyle]%
-        ([yshift=-0.2cm] inText)%
-        -| ([xshift=-0.2cm] inNote.west)%
-        -| (inNote.west);%
-    \end{tikzpicture}%
+\draw[connectstyle]%
+([yshift=-0.2cm] inText)%
+-| ([xshift=-0.2cm] inNote.west)%
+-| (inNote.west);%
+\end{tikzpicture}%
+\fi%
 \fi}%
-\newcommand{\@todonotes@drawLineToLeftMargin}{
+\newcommand{\@todonotes@drawLineToLeftMargin}{%
 \if@todonotes@line%
-    \begin{tikzpicture}[remember picture, overlay]%
-        \draw[connectstyle]%
-        ([yshift=-0.2cm] inText)%
-        -| ([xshift=0.2cm] inNote.east)%
-        -| (inNote.east);%
-    \end{tikzpicture}%
-\fi}
-\newcommand{\missingfigure}[2][]{
+\if@todonotes@fancyline%
+\tikz[remember picture,overlay]{%
+\tikzstyle{both}=[line width=3pt, draw, opacity=0.15]%
+\tikzstyle{line}=[shorten >=5pt, line cap=round]%
+\tikzstyle{head}=[shorten >=-1pt, dash pattern=on 0pt off 1pt,->]%
+\foreach \s in {line,head}{%
+\draw[both,\s]%
+(inNote.north east).. controls +(0:0) and +(90:1.5)..([yshift=1ex] inText);%
+};%
+}%
+\else%
+\begin{tikzpicture}[remember picture, overlay]%
+\draw[connectstyle]%
+([yshift=-0.2cm] inText)%
+-| ([xshift=0.2cm] inNote.east)%
+-| (inNote.east);%
+\end{tikzpicture}%
+\fi%
+\fi}%
+\newcommand{\missingfigure}[2][]{%
 \setkeys{todonotes}{#1}%
-\addcontentsline{tdo}{todo}{\@todonotes@MissingFigureText: \protect{#2}}%
+\addcontentsline{tdo}{todo}{\@todonotes@MissingFigureText: #2}%
 \par
 \noindent
 \begin{tikzpicture}
 \draw[fill=black!40, draw = white, line width=0pt]
-    (-2, -2.5) rectangle +(\@todonotes@currentfigwidth, 4cm);
+    (-2, -2.5) rectangle +(\@todonotes@currentfigwidth, \@todonotes@currentfigheight);
 \draw (2, -0.3) node[right, text
     width=\@todonotes@currentfigwidth-4.5cm] {#2};
 \draw[red, fill=white, rounded corners = 5pt, line width=10pt]
@@ -367,7 +448,7 @@
 \addcontentsline{toc}{\@ifundefined{chapter}{section}{chapter}}{\@todonotes@todolistname}
     \fi
 }
-\newcommand{\todo}[2][]{\@todo[#1]{#2}}
+\newcommand{\todo}[2][]{\@bsphack\@todo[#1]{#2}\@esphack\ignorespaces}%
 \endinput
 %%
 %% End of file `todonotes.sty'.
