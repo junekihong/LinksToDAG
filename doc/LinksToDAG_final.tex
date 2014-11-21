@@ -65,7 +65,7 @@
 
 
 
-\title{Deriving Multi-Headed Projective Dependency Parses from Link
+\title{Deriving Multi-Headed Planar Dependency Parses from Link
   Grammar Parses\thanks{This material is based upon work supported by the National
     Science Foundation under Grant No. 1423276.  The work was mainly
     conducted while the first author was at Johns Hopkins
@@ -99,10 +99,10 @@
 \begin{abstract}
 \noindent
 Under multi-headed dependency grammar, a parse is a connected DAG rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, 
-it is hard to train, test, or improve multi-headed parsers because few multi-headed corpora exist, particularly for the projective case.
+it is hard to train, test, or improve multi-headed parsers because few multi-headed corpora exist, particularly for the projective or planar case.
 % OLD
 % investigate the benefit of such parsers or to work on making them faster or more accurate.  
-To help fill this gap, we observe that link grammar already produces {\em undirected} projective graphs, and so we wanted to determine whether these could be converted into directionalized dependency parses.
+To help fill this gap, we observe that link grammar already produces {\em undirected} planar graphs, and so we wanted to determine whether these could be converted into directionalized dependency parses.
 % OLD
 % ... produces parses that are similar to multi-headed projective dependency parses, except that the links are undirected. 
 We use Integer Linear Programming to assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. 
@@ -115,6 +115,26 @@ The resulting parses in English appear reasonably linguistically plausible, thou
 \thispagestyle{empty}
 
 %\newpage
+
+\section{Motivation}
+
+Link Grammar \cite{SleatorTemperly91} is a syntactic formalism in which a parse of a sentence is an undirected, edge-labeled, planar graph.  The labeled edges of the graph represent syntactic relationships among the words.  The vertices of the graph are simply the words $1, 2, \ldots, n$ of the sentence, along with a distinguished ``root'' vertex 0.  
+
+The small Link Grammar community has invested effort in creating link grammars for several languages.  In this short paper, we consider whether their {\em undirected} parses can be converted automatically to {\em directed} ones.  We have four motivations:
+
+\begin{enumerate}
+
+\item We were curious about the relation between link grammar annotation and dependency grammar annotation.  We suspected that the link grammar parses could be actually interpreted as multi-headed dependency grammar parses.  Although the link grammar authors did not bother to specify directions for the different edge types, we suspected that they essentially had such directions in mind.
+
+\item Our problem provides a good case study for how to automatically enrich a corpus.  Hand-constructed grammars or corpora sometimes provide a lighter level of annotation than desired.  In our setting, the edges lack directions; in other settings, the syntactic categories may be coarser than desired, or some relations may be omitted.  One may want to automatically enrich the annotation in such cases, whether by doing some kind of learning \cite[et seq.]{matsuzaki-et-al-2005}, or by exploiting implicit constraints.  In this paper, we exploit implicit constraints of consistency and acyclicity.  
+
+\item The resulting parses may be useful data for evaluating new parsing {\em algorithms}.  There has been a good deal of recent research on projective dependency parsing, variously using global optimization or sequential classification. \noteJE{add citations} Some of these algorithms could be extended to the {\em multi-headed} case, which is of linguistic interest for reasons discussed below.  However, it is not clear how to evaluate such algorithms.  For training and testing, one needs a plausible sample of multi-headed planar dependency parses of real sentences.  Our method cheaply manufactures such a sample, to compensate for the lack of gold-standard data of this form.\footnote{A reasonable objection to this line of algorithmic work is that the projectivity or planarity restriction is linguistically questionable even for single-headed parsing, and even more so for multi-headed parsing.  So why not go straight to {\em non}-projective multi-headed parsing?  Mainly, because efficient algorithms often exist in the projective case, and these projective algorithms can be useful as an intermediate step in producing non-planar parses.  Since natural-language parses tend to be ``almost projective'' in practice (\cite{pitler}), one can use a fast projective parser as the first step in a coarse-to-fine or stacking architecture, in order to obtain preliminary edge scores that are supplied to a non-projective parser.  Another approach is 
+``pseudo-projectivization,'' where we reversibly transform non-projective parses into a projective annotation style so that projective parsers can be used.
+\noteJE{cite Pitler}}
+
+\item Our automatic method for reconstructing the latent directions had an unexpected benefit.  It uncovered an inconsistency in the English link grammar, regarding the handling of embedded sentences with missing (PRO) subjects.  
+
+\end{enumerate}
 
 \section{Multi-Headed Dependency Parsing}
 
