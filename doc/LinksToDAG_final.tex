@@ -289,7 +289,9 @@ Our objective tries to minimize the number of allowed directions (by link type--
 \begin{align}\label{eqn:obj}
 \min \left( \sum_{L} r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij} s_{ij}
 \end{align}
-where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj} is willing to tolerate up to 1/4 of those link tokens' using a disallowed direction before it prefers to allow {\em both} directions. \noteJE{check!}
+where $N_L$ is the number of link tokens with label $L$.  Objective \eqnref{obj} is willing to tolerate up to 1/4 of those link tokens' using a disallowed direction before it prefers to allow {\em both} directions. 
+\noteJE{check!}
+One could experiment with adjusting the constant 1/4; we selected that value simply because it seemed like a reasonable threshold {\em a priori}.
 % CUT FOR SPACE
 % (i.e., $r_L+\ell_L=2$).  
 
@@ -440,7 +442,7 @@ The resulting English corpus uses a syntactic annotation scheme that is somewhat
 Appendix~\ref{app:linktypes} of the supplementary material, while the actual parses are contrasted in Appendix~\ref{app:parses}.  Fragments of these appendices are shown in Table~\ref{tab:linktypes} and Figure~\ref{fig:parses}.
 % By permission of the program chairs, these appendices are available at the anonymous URL \url{http://tidyurl.com/LinksToDAG_supplement}.  
 
-The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  Of course, a few of the differences are due to parser attachment errors.
+The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  One could easily modify the ILP to explicitly encourage agreement with the CoNLL link directions (for word pairs that are linked in CoNLL).  Of course, a few of the differences are due to parser attachment errors.
 
 The main vexation is the handling of subject-verb links.  Under the English link grammar, the verb (or 0) that governs a clause will link to both the clause's subject and its last (main) verb.  This would permit our desired treatment of {\em ``Jill persuaded him to skip''}, in which {\em ``him''} has two parents.  But the ILP solution generally treats subjects as {\em parents} of verbs (thus we get {\em him} $\rightarrow$ {\em to}).  The reason for this is an inconsistency in the link grammar itself.\footnote{Specifically, the link grammar is inconsistent about how it handles clauses with missing subjects ({\em ``Jill wanted to skip''}).  In this case, the governing verb links to the clause's first (tensed) verb in lieu of its subject.  The problem is that it no longer also links to the clause's last (main) verb as it would if the subject were present.  Hence our method concludes that a VP is always headed by its first verb ({\em to} $\rightarrow$ {\em skip}).  That is a respectable convention on its own, but recall that unfortunately, the governing verb does {\em not} link to this first verb when the subject is present.  As a result, the only remaining possible parent for the first verb is the subject ({\em him} $\rightarrow$ {\em to} $\rightarrow$ {\em skip}).  This leads to the odd solution where subjects are treated as parents of verbs in general.  
 
