@@ -69,8 +69,7 @@
   Grammar Parses\thanks{This material is based upon work supported by the National
     Science Foundation under Grant No. 1423276.  The work was mainly
     conducted while the first author was at Johns Hopkins
-    University.\noteJE{also thank Russian link grammar people for
-      giving us data?  anyone else?}}}
+    University.\noteJE{anyone else to thank?}}}
 % Oriented link grammar: Creating a multi-headed dependency corpus.
 
 \author{
@@ -116,25 +115,23 @@ The resulting parses in English appear reasonably linguistically plausible, thou
 
 %\newpage
 
-\section{Motivation}
+\section{Motivation}\label{sec:motivation}
 
-Link Grammar \cite{SleatorTemperly91} is a syntactic formalism in which a parse of a sentence is an undirected, edge-labeled, planar graph.  The labeled edges of the graph represent syntactic relationships among the words.  The vertices of the graph are simply the words $1, 2, \ldots, n$ of the sentence, along with a distinguished ``root'' vertex 0.  
+Link Grammar \cite{sleator-temperley-1991} is a syntactic formalism in which a parse of a sentence is an undirected, edge-labeled, planar graph.  The labeled edges of the graph represent syntactic relationships among the words.  The vertices of the graph are simply the words $1, 2, \ldots, n$ of the sentence, along with a distinguished ``root'' vertex 0.  
 
-The small Link Grammar community has invested effort in creating link grammars for several languages.  In this short paper, we consider whether their {\em undirected} parses can be converted automatically to {\em directed} ones.  We have four motivations:
+The small Link Grammar community has invested effort in creating link grammars for several languages.  In this short paper, we consider whether their {\em undirected} parses can be converted automatically to {\em directed} ones.  We have three motivations:
 
 \begin{enumerate}
 
-\item We were curious about the relation between link grammar annotation and dependency grammar annotation.  We suspected that the link grammar parses could be actually interpreted as multi-headed dependency grammar parses.  Although the link grammar authors did not bother to specify directions for the different edge types, we suspected that they essentially had such directions in mind.
+\item We were curious about the relation between link grammar annotation and dependency grammar annotation.  We suspected that the link grammar parses could be interpreted as multi-headed dependency grammar parses.  Although the link grammar authors did not bother to specify directions for the different edge types, we suspected that they essentially had such directions in mind.  
 
-\item Our problem provides a good case study for how to automatically enrich a corpus.  Hand-constructed grammars or corpora sometimes provide a lighter level of annotation than desired.  In our setting, the edges lack directions; in other settings, the syntactic categories may be coarser than desired, or some relations may be omitted.  One may want to automatically enrich the annotation in such cases, whether by doing some kind of learning \cite[et seq.]{matsuzaki-et-al-2005}, or by exploiting implicit constraints.  In this paper, we exploit implicit constraints of consistency and acyclicity.  
+\item Our problem provides a good case study for how to automatically enrich a corpus.  Hand-constructed grammars or corpora sometimes provide a lighter level of annotation than desired.  In our setting, the edges lack directions; in other settings, the syntactic categories may be coarser than desired, or some relations may be omitted.  One may want to automatically enrich the annotation in such cases, whether by doing some kind of learning \cite[et seq.]{matsuzaki-et-al-2005}, or by exploiting implicit constraints.  In this paper, we use Integer Linear Programming to exploit implicit constraints of consistency and acyclicity.
 
-\item The resulting parses may be useful data for evaluating new parsing {\em algorithms}.  There has been a good deal of recent research on projective dependency parsing, variously using global optimization or sequential classification. \noteJE{add citations} Some of these algorithms could be extended to the {\em multi-headed} case, which is of linguistic interest for reasons discussed below.  However, it is not clear how to evaluate such algorithms.  For training and testing, one needs a plausible sample of multi-headed planar dependency parses of real sentences.  Our method cheaply manufactures such a sample, to compensate for the current lack of gold-standard data of this form.\footnote{A reasonable objection to this line of algorithmic work is that the projectivity or planarity restriction is linguistically questionable even for single-headed parsing, and even more so for multi-headed parsing.  So why not go straight to {\em non}-projective multi-headed parsing?  Mainly, because efficient algorithms often exist in the projective case, and these projective algorithms can be useful as an intermediate step in producing non-planar parses.  Since natural-language parses tend to be ``almost projective'' in practice (\cite{pitler}), one can use a fast projective parser as the first step in a coarse-to-fine or stacking architecture, in order to obtain preliminary edge scores that are supplied to a non-projective parser.  Another approach is 
-``pseudo-projectivization,'' where we reversibly transform non-projective parses into a projective annotation style so that projective parsers can be used.
-\noteJE{cite Pitler}}
-
-\item Our automatic method for reconstructing the latent directions had an unexpected benefit.  It uncovered an inconsistency in the English link grammar, regarding the handling of embedded sentences with missing (PRO) subjects.  
+\item The resulting parses may be useful data for experimenting with new parsing {\em algorithms}.  There has been a good deal of recent research on projective dependency parsing, variously using global optimization or sequential classification (see \cite{martins-et-al-2008,bohnet-2011,chen-li-zhang-2014} for surveys). Some of these algorithms could be extended to the {\em multi-headed} case, which is of linguistic and computational interest for reasons discussed below.  However, for training and testing such algorithms, one would need a plausible sample of multi-headed projective dependency parses of real sentences.  Our method cheaply manufactures such a sample, to compensate for the current lack of gold-standard data of this form.
 
 \end{enumerate}
+
+\noindent Our automatic method for reconstructing the latent directions also had an unexpected benefit.  It revealed an inconsistency in the hand-written English link grammar, regarding the handling of embedded sentences with missing (PRO) subjects.  
 
 \section{Multi-Headed Dependency Parsing}
 
@@ -144,44 +141,50 @@ In the special case $u=0$, the edge designates $v$ as playing some special top-l
 
 As discussed by \newcite{kuhlmann-nivre-2006,gomezrodriguez-nivre-2013}, one might impose various requirements on the parse graph:
 \begin{itemize}[noitemsep]
-\item {\sc Single-Head}: each word has $\leq 1$ parent
-\item {\sc Acyclic}: there are no directed cycles
-\item {\sc Connected}: each pair of words has a undirected path between them
-\item {\sc Reachable}: each word can be reached from 0 by a directed path ($\Rightarrow$ {\sc Connected})
-\item {\sc Planar}: edges may not ``cross''\footnote{That is, if there are edges between $i,j$ and between $u,v$, where $i < u < j$, then {\sc Planar} requires $i \leq v \leq j$.}
+\item {\sc Single-Head}: Each word has $\leq 1$ parent.
+\item {\sc Acyclic}: There are no directed cycles.
+\item {\sc Connected}: Each pair of words has a undirected path between them.
+\item {\sc Reachable}: Each word can be reached from 0 by a directed path (which implies {\sc Connected}).  Note that 0 may have multiple children.
+\item {\sc Planar}: edges may not ``cross.''  That is, if there are edges between $i,j$ and between $u,v$, where $i < u < j$, then {\sc Planar} requires $i \leq v \leq j$.
 \end{itemize}
-It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.\footnote{{\sc Projective} basically means {\sc Planar} + {\sc Reachable}.  Note: It does not prevent 0 from having multiple children.}  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
+It is common to impose all of these requirements at once, leading to a {\em projective dependency parser} that produces projective trees rooted at 0.  However, parsing algorithms can be devised that relax any or all of the requirements \cite{gomezrodriguez-nivre-2013}.  
 
-In this paper, we are interested in relaxing the {\sc Single-Head} requirement while preserving all the others.  This means that the parse can have more than $n$ edges, allowing it to express more relationships between words.  In English, for example, here are some constructions that seem to call for a multi-headed analysis.  
+In this paper, we are interested in relaxing the {\sc Single-Head} requirement while preserving all the others.  This is the setting of {\em multi-headed projective dependency parsing}.  Just as in the single-headed case, the other requirements ensure that all edges are projective.  (A projective edge is one where the parent is an ancestor of all words between the parent and the child \cite{nivre-slides}.)
+
+Relaxing {\sc Single-Head} means that the parse can have more than $n$ edges, allowing it to express more relationships between words.  
+In English, for example, here are some constructions that seem to call for a multi-headed analysis:
 \begin{description}
 \item[control] In {\em ``Jill likes to skip,''} the word {\em Jill} is the subject of two verbs.  In {\em ``Jill persuaded Jack to skip,''} {\em Jack} is the object of one verb and the subject of another.  Without recognizing this, our parser would miss the syntactic invariants that {\em skip} always has a subject and {\em persuaded} always has an object.  It would also be unable to exploit the selectional preferences of both verbs to help disambiguate the parse.  This is why we prefer to make the parser aware of multi-headedness, rather than using a single-headed parser and then extracting the additional semantic roles from its output.
 \item[relativization] In {\em ``The boy that Jill skipped with fell down,''} the word {\em boy} is the object of {\em with} as well as the subject of {\em fell}.  Without recognizing this, we would miss the syntactic invariant that {\em with} always has an object.  
 \item[conjunction] In {\em ``Jack and Jill went up the hill,''} {\em Jack} and {\em Jill} serve as the two arguments to {\em and}, but they are also semantically subjects of {\em went}.  Without recognizing this, we would have no (local) reason for expecting the arguments of {\em and} to be nouns.
 \end{description}
 
-In linguistics, it is common to analyze some of these structures using trees with ``empty categories.''  The subject of {\em skip} is taken to be a silent morpheme {\em PRO}:
+\noindent In linguistics, it is common to analyze some of these structures using trees with ``empty categories.''  The subject of {\em skip} is taken to be a silent morpheme {\em PRO}:
 {\em ``Jill$_i$ likes PRO$_i$ to skip.''}  However, this is no longer a tree if one considers the implicit undirected edge between {\em Jill} and {\em PRO} (denoted by their shared index $i$).  Our simpler representation contracts this coreference edge, eliminating {\em PRO} and creating a {\em Jill} $\leftarrow$ {\em skip} link.  
+
+\medskip
+
+An anonymous reviewer objects to research on projective parsing algorithms, since the {\sc Planar} restriction is linguistically questionable even for single-headed parsing, and even more so for multi-headed parsing.  However, efficient algorithms often exist in the projective case, and these projective algorithms---which are typically first developed on a projective corpus of the sort that we will construct---can be useful even when the true parses are not quite projective.
+Natural-language parses have a low rate of non-projective edges \cite{nivre-slides} and the non-projective parses tend to be ``almost projective'' \cite{pitler-et-al-2013}.  Thus, one can apply a fast projective parser as an approximate method, or as one ingredient in a more complex model \cite{martins-et-al-2013}, or as the first step in a coarse-to-fine or stacking architecture \cite{rush-petrov-2012,martins-et-al-2008} in order to obtain preliminary edge scores that are then supplied to a non-projective parser.  Another approach is to transform non-projective parses into a projective annotation style so that projective parsers can be used \cite{nivre-nilsson-2005,nivre-2009}.  
 
 \section{Link Grammars}
 
-Graph representations of syntactic and semantic structure have been widely considered of late \cite{demarneffe-manning-2008,ivanova-et-al-2012,AMR-2013,oepen-et-al-2014}.
-
-A few past NLP papers have explored multi-headed dependency parsing \cite{buchkromann-2006,mcdonald-pereira-2006,sagae-tsujii-2008,gomezrodriguez-nivre-2013}.  Unfortunately, there seem to be no annotated corpora in this form other than the Danish Dependency Treebank \cite{kromann-2003}; these papers  sometimes converted corpora from other formats such as HPSG.
+Graph representations of syntactic and semantic structure have been widely considered of late \cite{demarneffe-manning-2008,demarneffe-et-al-2013,ivanova-et-al-2012,AMR-2013,oepen-et-al-2014}.  A few past NLP papers have explored multi-headed dependency parsing \cite{buchkromann-2006,mcdonald-pereira-2006,sagae-tsujii-2008,gomezrodriguez-nivre-2013}.  They constructed their multi-headed dependency corpora by automatically converting from other formats such as HPSG.  Currently there seem to be no corpora that were directly annotated in this form, other than the Danish Dependency Treebank \cite{kromann-2003}.
 
 % ADDRESSED BY ABOVE?
 % \NoteJE{We should acknowledge that another option would be to post-process either CoNLL parses or our link parses to automatically add more multi-heading, e.g., to handle control phenomena ("John wants to skip" or "Jane ran for office in order to change the tax laws" should have John/Jane be the subject of two verbs).  However, that requires per-language}
 
-All of these options result in non-projective parses, so the parsers must use non-projective or pseudo-projective algorithms.
-
-It seems at first that no one has worked out annotation conventions for {\em projective} multi-headed dependency parsing.  However, this is only half-true.  Link Grammar \cite{SleatorTemperly91} is a grammar-based formalism for projective dependency parsing with {\em undirected} links.  It produces undirected connected planar graphs.  Annotation conventions are implicit in the detailed lexicon for the Link Grammar Parser,\noteJE{check caps}%
-\footnote{\url{http://www.abisource.com/projects/link-grammar/dict/introduction.html}.  The 122 link types in the English lexicon are documented at \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html}.} 
-which specifies for every word a constraint on the {\em sequence} of labeled leftward and rightward edges attached to it.  As remarked by \newcite{eisner-2000-iwptbook}, this is analogous to dependency grammar's use of head automata to constrain a word's sequence of left and right children.  For example, in {\em ``The boy that Jill skipped with fell down,''} the word {\em with} uses a lexical entry that requires it to link to a governing verb to the left, an extracted object farther to the left, and nothing to the right.  Each entry has a hand-assigned cost in \{0,1,2\} and the parser finds the parse of minimum total cost.
-% Information about cost is in this message from Linas Vepstas on 2014-02-01: 
-%   https://groups.google.com/d/msg/link-grammar/eeJw1Ofgc9U/diqPYSwuFfoJ
+The above work considered non-projective parses.  It seems at first that no one has worked out annotation conventions for {\em projective} multi-headed dependency parsing.  However, this is only half-true.  Link Grammar \cite{sleator-temperley-1991} is a grammar-based formalism for projective dependency parsing with {\em undirected} links.  It produces undirected connected planar graphs.  Annotation conventions are implicit in the detailed lexicon for the Link Grammar Parser \cite{LINK-1999}.  The 122 link types in the English lexicon are documented at \url{http://www.abisource.com/projects/link-grammar/dict/summarize-links.html},
+which specifies for every word a constraint on the {\em sequence} of labeled leftward and rightward edges attached to it.  As remarked by \newcite{eisner-2000-iwptbook}, this is analogous to dependency grammar's use of head automata to constrain a word's sequence of left and right children.  For example, in {\em ``The boy that Jill skipped with fell down,''} the word {\em with} uses a lexical entry that requires it to link to a governing verb to the left, an extracted object farther to the left, and nothing to the right.  Each entry has a hand-assigned cost in \{0,1,2\}, and the parser finds the parse of minimum total cost \cite{LINK-1999,vepstas-2014}.
 
 Given a link grammar parse, it would be straightforward to convert it to an acyclic dependency parse by orienting all edges rightward.  However, the result may violate the {\sc Reachable} constraint.  Instead we could orient all edges by depth-first search from the root node, which yields a DAG satisfying all our constraints.  However, this might result in inconsistent annotation conventions, with some \texttt{S}-labeled links pointing from subject to verb and others from verb to subject.  
 
-We supposed that the link grammar lexicon designers actually had a consistent direction in mind for each edge type.  We would expect verbs to point to their subject arguments in dependency grammar, and so we surmise that all \texttt{S} links are intended to point leftward (from verb to subject: {\em ``Jack $\stackrel{\texttt{S}}{\leftarrow}$ is falling''}).  The link grammar designers take care to use a distinct \texttt{SI} label in cases of subject-verb inversion, and we surmise that \texttt{SI} links are intended to point rightward (again from verb to subject: {\em ``Is $\stackrel{\texttt{SI}}{\rightarrow}$ Jack falling?''}).
+In the English link grammar, an \texttt{S} edge encodes a ``subject-verb'' relation {\em whose left word serves as the subject}.  We would expect verbs to point to their subject arguments in dependency grammar, and so we surmise that all \texttt{S} links should be interpreted as pointing leftward (from verb to subject: {\em ``\mbox{Jack $\stackrel{\texttt{S}}{\leftarrow}$ is} falling''}).
+
+In general, we supposed that the link grammar lexicon designers actually had a {\em consistent} direction in mind for each {\em edge label}.  This does not imply that English subjects must always appear to the left of the verb!  The link grammar designers took care to use a distinct \texttt{SI} label in cases of subject-verb inversion, and we surmise that \texttt{SI} links are intended to point rightward (again from verb to subject: {\em ``\mbox{Is $\stackrel{\texttt{SI}}{\rightarrow}$ Jack} falling?''}).  Similarly, different edge labels are used for English ``object-verb'' relations according to whether it is the left or the right word that serves as the object.  These labels are presumably intended to encode different edge directions.
+
+% PREVIOUS ATTEMPT
+% This does not rule out variation in the word order used to express a semantic relation.  For example, the English link grammar allows both SVO and VSO sentences, but with different edge labels.  An \texttt{S} edge encodes a ``subject-verb'' relation whose the left word serves as the subject, while an \texttt{SI} edge encodes the same relation when the the right word serves as the subject.  
 
 Our goal in this paper is to recover these implicit directions by global optimization.  We seek a fixed mapping from labels to directions such that link grammar parses become directed dependency parses that satisfy all of our constraints.
 
@@ -191,8 +194,8 @@ Our first thought was to seek a direction mapping such that no parsed word seque
 % However, working directly with the link grammar lexicon format is somewhat tricky. We also feared
 However, we feared that there would not be a feasible solution---because of errors in the lexicon or linguistically unnatural word sequences not anticipated by the grammar designers.  In this case it would be unclear how to relax our constraints.
 
-Thus, we chose to use a sample of {\em actual} sentences parsed by the link grammar, and to seek a direction mapping so that {\em these} parses would not violate our constraints after directions were imposed.  \noteJE{clarify per reviewer comment}
-If no such mapping exists, then we are willing to orient a few edge tokens in the wrong direction to ensure that the parses are still well-formed---but we minimize the number of such violations.  In this way, the empirical distribution of sentences guides our assignment of directions.  The resulting directed corpus could be used for research on multi-headed dependency parsing.
+Thus, rather than considering all theoretically possible word sequences, we chose to use a sample of {\em naturally occurring} sentences parsed by the link grammar, and to seek a direction mapping so that {\em these} parses would not violate our constraints after directions were imposed. 
+If no such mapping exists, then we are willing to orient a few edge tokens in the wrong direction to ensure that the parses are still well-formed---but we minimize the number of such violations.  In this way, the empirical distribution of sentences guides our assignment of directions.  We are releasing the resulting multi-headed directed corpus via our personal websites. \noteJE{is this the best way?}
 
 % Link grammars are a grammatical system equivalent to context-free grammars that assign linking requirements to every given word. A link parser then tries to satisfy all of these requirements for every word of a sentence while still maintaining planarity. The resulting links describe the relationships between constituents in a parse. 
 
@@ -209,10 +212,13 @@ We used the English sentences from the CoNLL 2007 Shared Task \cite{CONLL-SHARED
 %We also used a prefix of the Russian National Corpus,\footnote{That is, a prefix when considering the files in Unix sort order by filename.  We dropped sentences with $\leq 2$ words, as well as file 22592319, which appeared to contain charts.} which is unparsed.
 We also used a prefix of the Russian News Commentary data from the ACL 2013 Shared Task of Machine Translation,\footnote{\url{http://www.statmt.org/wmt13/training-monolingual-nc-v8.tgz}} which is unparsed.
 
-We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is not perfect: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only \input{figure/russian_sentence_count.tex}(of \input{figure/russian_original_sentence_count.tex}$\!\!$) Russian sentences, discarding the other sentences\footnote{When the link parser fails, it outputs a disconnected graph representing its best effort parse within a time limit. We removed these sentences because our ILP encoding tries to satisfy the edges of an entire connected parse. \NoteJE{no, we removed them because we have no confidence that the link grammar is doing anything reasonable in this case} Given a solution, it would be possible to return to these disconnected parses, directionalize the edges, and include them along with the rest of the corpus. It would also be possible to include these sentences for the ILP to solve by modifying the ILP to satisfy the edges of all disconnected components of a parse.}
+We generated link parses using the AbiWord/CMU link grammar parser version 5.0.8 \cite{LINKPARSER-2014}.  The parser's coverage is less than ideal: we obtained connected parses for only \input{figure/conll_analysis_sentences_total.tex}(of \input{figure/conll_analysis_sentences_original.tex}$\!\!$) English sentences and only \input{figure/russian_sentence_count.tex}(of \mbox{\input{figure/russian_original_sentence_count.tex}$\!\!$)} Russian sentences, discarding the other sentences.\footnote{When the link parser fails, it outputs a disconnected graph representing its best effort parse within a time limit. We removed these sentences for fear that the parses would be unreliable.
+% REMARK BY JUNEKI, PROBABLY TOO DISTRACTING
+% our ILP encoding tries to satisfy the edges of an entire connected parse. Given a solution, it would be possible to return to these disconnected parses, directionalize the edges, and include them along with the rest of the corpus. It would also be possible to include these sentences for the ILP to solve by modifying the ILP to satisfy the edges of all disconnected components of a parse.
+}
 These two languages have the most mature lexicons at present, although lexicons for 7 other languages are available.  
 
-The link grammar parses have \input{figure/conll_analysis_edge_percent.tex}more edges overall, indicating that their directed versions will have a few multi-headed constructions per sentence.  They
+On English, the link grammar parses have \input{figure/conll_analysis_edge_percent.tex}more edges overall, indicating that their directed versions will have a few multi-headed constructions per sentence.  They
 do differ in style from the single-headed CoNLL parses of the same English sentences.  Only \input{figure/conll_analysis_precision.tex}of the links match CoNLL arcs, and only \input{figure/conll_analysis_recall.tex}of the CoNLL arcs match links.
 % DATA FOR THE ABOVE
 % \begin{figure}[ht!]
@@ -431,15 +437,15 @@ We used only coarse link tags as our labels, keeping only the capital letters of
 \subsection{Linguistic Analysis}
 
 The resulting English corpus uses a syntactic annotation scheme that is somewhat different from the CoNLL annotations.  Differences are tabulated in
-Appendix~\ref{app:linktypes}.  The actual parses are contrasted in Appendix~\ref{app:parses}, and fragments of these are shown in Table~\ref{tab:linktypes} and Figure~\ref{fig:parses}.
-%By permission of the program chairs, these appendices are available at the anonymous URL \url{http://tidyurl.com/LinksToDAG_supplement}.  
-
+Appendix~\ref{app:linktypes} of the supplementary material, while the actual parses are contrasted in Appendix~\ref{app:parses}.  Fragments of these appendices are shown in Table~\ref{tab:linktypes} and Figure~\ref{fig:parses}.
+% By permission of the program chairs, these appendices are available at the anonymous URL \url{http://tidyurl.com/LinksToDAG_supplement}.  
 
 The link grammar results in multi-headed treatments of infinitivals, compound determiners, relative clauses, and embedding.  The other annotation differences are generally reasonable, e.g., letting {\em 's} be the head of a possessive, and different handling of punctuation and lists.  Of course, a few of the differences are due to parser attachment errors.
 
-The main vexation is the handling of subject-verb links.  Under the English link grammar, the verb (or 0) that governs a clause will link to both the clause's subject and its last (main) verb.  This would permit our desired treatment of {\em ``Jill persuaded him to skip''}, in which {\em ``him''} has two parents.  But the ILP solution generally treats subjects as {\em parents} of verbs (thus we get {\em him} $\rightarrow$ {\em to}), owing to inconsistencies in the link grammar itself.\footnote{Why?  When the subject is missing ({\em ``Jill wanted to skip''}), the governing verb now links instead to the clause's first (tensed) verb but {\em no longer} to the last as well.  That means that a VP must be headed by its first verb ({\em to} $\rightarrow$ {\em skip}).  As a result, when the subject is present, it must be the {\em parent} of the first verb ({\em him} $\rightarrow$ {\em to} $\rightarrow$ {\em skip}), since no other parent is available.  ({\em Note:} Subjects are not {\em always} parents.  The construction {\em ``It was impossible, they said''} is handled inconsistently by the link grammar:
-the subject ({\em ``they''}) links only to the verb ({\em ``said''}) and so must be its child, no other parent being available.)}
+The main vexation is the handling of subject-verb links.  Under the English link grammar, the verb (or 0) that governs a clause will link to both the clause's subject and its last (main) verb.  This would permit our desired treatment of {\em ``Jill persuaded him to skip''}, in which {\em ``him''} has two parents.  But the ILP solution generally treats subjects as {\em parents} of verbs (thus we get {\em him} $\rightarrow$ {\em to}).  The reason for this is an inconsistency in the link grammar itself.\footnote{Specifically, the link grammar is inconsistent about how it handles clauses with missing subjects ({\em ``Jill wanted to skip''}).  In this case, the governing verb links to the clause's first (tensed) verb in lieu of its subject.  The problem is that it no longer also links to the clause's last (main) verb as it would if the subject were present.  Hence our method concludes that a VP is always headed by its first verb ({\em to} $\rightarrow$ {\em skip}).  That is a respectable convention on its own, but recall that unfortunately, the governing verb does {\em not} link to this first verb when the subject is present.  As a result, the only remaining possible parent for the first verb is the subject ({\em him} $\rightarrow$ {\em to} $\rightarrow$ {\em skip}).  This leads to the odd solution where subjects are treated as parents of verbs in general.  
 
+Note that subjects are not {\em always} parents, due to another inconsistency in the link grammar.  In the construction {\em ``It was impossible, they said''}, the subject ({\em ``they''}) is inconsistently not linked to 0 but only to the verb ({\em ``said''}) and so must be the verb's child, no other parent being available.}
+Fixing the link grammar would presumably correct the link direction.  As noted in section~\ref{sec:motivation}, it is arguably a positive result that our method was able to detect a problem in the grammar engineering.
 
 % Multiheaded:
 % IV (890/891) - multiheaded treatment of infinitivals
@@ -500,9 +506,8 @@ ILP may {\em in general} be a valuable technology for enriching existing annotat
 \end{bibliography}
 
 
-\appendix
 \clearpage
-\onecolumn
+\appendix
 
 % OLD
 % \section{ILP Formulation}
