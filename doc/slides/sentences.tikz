@@ -1,0 +1,31 @@
+\begin{subfigure}[b]{0.4850\textwidth}
+	\begin{dependency}
+		\begin{deptext}
+			{\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize RB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize .} \\
+			the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+			- \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+		\end{deptext}
+		\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
+		\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
+		\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{4}{\small ADV}
+		\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small ADV}
+		\depedge[edge below, edge style = {red, thick}]{3}{6}{I}
+		\depedge[edge above, edge style = {blue, thick}]{3}{6}{\small VC}
+		\depedge[edge above, edge style = {blue, dotted}, edge unit distance =1.5ex]{3}{10}{\small P}
+		\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
+		\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
+		\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
+		\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small ADV}
+		\depedge[edge below, edge style = {orange, thick}]{6}{7}{P}
+		\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small VC}
+		\depedge[edge below, edge style = {red, thick}]{8}{9}{J}
+		\depedge[edge above, edge style = {blue, thick}]{8}{9}{\small PMOD}
+		\deproot[edge below, edge style = {red, dotted}]{2}{W}
+		\deproot[edge below, edge style = {orange, ultra thick, dotted}]{7}{WV}
+		\deproot[edge below, edge style = {red, dotted}]{10}{X}
+		\depedge[edge below, edge style = {red, dotted}]{6}{4}{E}
+		\depedge[edge below, edge style = {red, dotted}]{6}{5}{E}
+	\end{dependency}
+\end{subfigure}
+
