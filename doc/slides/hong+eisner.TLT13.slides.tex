@@ -194,13 +194,14 @@
 \section{Link Grammars}
 
 \frame{\frametitle{Link Grammars}
-  \begin{enumerate}
+  \begin{itemize}
     \item Grammar-based formalism for projective dependency parsing with undirected links
-  \end{enumerate}
+    \item We set out to discover if the undirected links are actually directed relationships.
+  \end{itemize}
 }
 
 
-\frame{\frametitle{Link Grammars}
+\frame{\frametitle{Link Grammars: Example Parse}
 \begin{figure}
   \begin{dependency}[edge style={-}]
 	\begin{deptext}
@@ -225,7 +226,7 @@
 
 }
 
-\frame{\frametitle{Link Grammars}
+\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph}
 \begin{figure}
   \begin{dependency}
 	\begin{deptext}
@@ -281,7 +282,7 @@
 	\depedge[edge below, thick, edge style = {red}]{6}{5}{E}
   \end{dependency}
 
-  \caption*{Compare resulting dependency parse with Penn Treebank annotations}
+  \caption*{Compare resulting dependency parse with CoNLL 2007 shared task}
 \end{figure}
 
 
@@ -320,42 +321,268 @@
 	\depedge[edge below, edge style = {red, dotted}]{6}{5}{E}
   \end{dependency}
 
-  \caption*{Compare resulting dependency parse with Penn Treebank annotations}
+  \caption*{Compare resulting dependency parse with CoNLL 2007 shared task}
 \end{figure}
 
 
 }
 
 
-\section{ILP}
-\frame{\frametitle{Integer Linear Programming}
+%\section{ILP}
+%\frame{\frametitle{Integer Linear Programming}
 
-\NoteJH{Will the audience know about ILP?}
+%\NoteJH{Will the audience know about ILP?}
 
-
-}
+%}
 
 
 \section{ILP Model}
-\frame{\frametitle{Integer Linear Programming Model}
+\frame{\frametitle{Integer Linear Programming Model: Variables}
+
+For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_{ij}$ and $x_{ji}$.
+
+\NoteJH{TODO: Incomplete slide. Need to describe things like depth of the variable, label}
+}
+
+
+\frame{\frametitle{Integer Linear Programming Model: Encoded Constraints}
+
+\begin{itemize}
+  \item Connectedness
+  \item Acyclicity
+  \item Consistency of Directionalized Links
+\end{itemize}
 
 \NoteJH{Take from the paper.}
+}
+
+
+
+\subsection{Connectedness, Acyclicity}
+\frame{\frametitle{Connectedness, Acyclicity}
+\begin{itemize}
+  \item[] Connectedness
+    \begin{align}
+      \sum_u x_{uv} & \geq 1
+    \end{align}
+
+  \item[] Acyclic
+    \begin{align}
+      (\forall_u)\; d_v + (1 + n_v) \cdot (1 - x_{uv}) & \geq 1+d_u
+    \end{align}
+\end{itemize}
 
 }
+
+
+\frame{\frametitle{Consistence of Directionalized Links}
+\begin{itemize}
+  \item[] Consistency of Directionalized Links
+    \begin{align}\label{direction+slack}
+      x_{ij} &\leq r_L + s_{ij} &
+      x_{ji} &\leq \ell_L + s_{ij}
+    \end{align}
+
+    \begin{align}\label{eqn:obj}
+      \min \left( \sum_L r_L + \ell_L \right)
+    \end{align}
+
+    %$$x_{ij} \leq r_L + s_{ij} $$
+    %$$x_{ji} \leq \ell_L + s_{ij}$$
+    %$$\min \left( \sum_L r_L + \ell_L \right)$$
+
+\end{itemize}
+}
+
+\frame{\frametitle{Consistence of Directionalized Links with Slack}
+\begin{itemize}
+  \item[] Consistency of Directionalized Links
+    \begin{align}\label{direction+slack}
+      x_{ij} &\leq r_L + s_{ij} &
+      x_{ji} &\leq \ell_L + s_{ij}
+    \end{align}
+
+    \begin{align}\label{eqn:obj}
+      \min \left( \sum_L r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij}s_{ij}
+    \end{align}
+
+    %$$x_{ij} \leq r_L + s_{ij} $$
+    %$$x_{ji} \leq \ell_L + s_{ij}$$
+    %$$\min \left( \sum_L r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij}s_{ij}$$
+
+\end{itemize}
+}
+
+
+
 
 
 
 \section{Experiments and Results}
-\frame{\frametitle{Experiments and Results}
+%\frame{\frametitle{Experiments and Results}
+%\begin{itemize}
+%  \item 18,577 English sentences with gold CoNLL. 
+%  \item 18,577 unlabeled Russian sentences.
+%\end{itemize}
+%}
+
+\frame{\frametitle{Data Sets}
+\begin{itemize}
+  \item[] 18,577 English sentences with 10,960 connected parses
+  \item[] 18,577 unlabeled Russian sentences with 4,913 connected parses
+\end{itemize}
 
 }
 
+\frame{\frametitle{On the English data set}
+\begin{itemize}
+\item[] Link Data has 8\% additional edges over the CoNLL.
+\item[] 52\% of links match CoNLL arcs
+\item[] 57\% of CoNLL arcs match links
+\end{itemize}
+
+\NoteJH{I skipped the ``Stability of Results'' section}
+}
+
+\frame{\frametitle{ILP Results}
+  \begin{itemize}
+    \item[] Link types that allowed both directions:
+      \begin{itemize}
+        \item[] $\frac{7}{113} = 6.19\%$ 
+      \end{itemize}
+
+    \item[] Link tokens that required disallowed direction via slack:
+      \begin{itemize}
+        \item[] $\frac{4043}{195000} = 2.07\%$ 
+      \end{itemize}
+    \item[]
+  \end{itemize}
+}
+
+\frame{\frametitle{ILP Results}
+  \begin{itemize}
+    \item[] Link types that allowed both directions:
+      \begin{itemize}
+        \item[] $\frac{7}{113} = 6.19\%$ 
+      \end{itemize}
+
+    \item[] Link tokens that required disallowed direction via slack:
+      \begin{itemize}
+        \item[] $\frac{4043}{195000} = 2.07\%$ 
+      \end{itemize}
+    \item[] The link labels mostly have a consistent direction.
+  \end{itemize}
+}
+
+
+
+
+\frame{\frametitle{Link Results}
+  \begin{itemize}
+    \item Subject-Verb links are backwards.
+  \end{itemize}
+
+\begin{figure}
+  \begin{dependency}
+	\begin{deptext}
+	  {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize RB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize .} \\
+	  the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	  - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+	\end{deptext}
+	\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
+	\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
+	\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
+	\depedge[edge above, edge style = {blue, dotted}]{3}{4}{\small ADV}
+	\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small ADV}
+	\depedge[edge below, edge style = {red, thick}]{3}{6}{I}
+	\depedge[edge above, edge style = {blue, thick}]{3}{6}{\small VC}
+	\depedge[edge above, edge style = {blue, dotted}, edge unit distance =1.5ex]{3}{10}{\small P}
+	\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
+	\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
+	\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
+	\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small ADV}
+	\depedge[edge below, edge style = {orange, thick}]{6}{7}{P}
+	\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small VC}
+	\depedge[edge below, edge style = {red, thick}]{8}{9}{J}
+	\depedge[edge above, edge style = {blue, thick}]{8}{9}{\small PMOD}
+	\deproot[edge below, edge style = {red, dotted}]{2}{W}
+	\deproot[edge below, edge style = {orange, ultra thick, dotted}]{7}{WV}
+	\deproot[edge below, edge style = {red, dotted}]{10}{X}
+	\depedge[edge below, edge style = {red, dotted}]{6}{4}{E}
+	\depedge[edge below, edge style = {red, dotted}]{6}{5}{E}
+  \end{dependency}
+\end{figure}
+
+\begin{itemize}
+\item[] %This is probably due to an inconsistency of the Link Grammar, discovered by our method.
+\end{itemize}
+
+}
+
+
+
+
+
+\frame{\frametitle{Link Results}
+  \begin{itemize}
+    \item Subject-Verb links are backwards.
+  \end{itemize}
+
+\begin{figure}
+  \begin{dependency}
+	\begin{deptext}
+	  {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize RB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize .} \\
+	  the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	  - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+	\end{deptext}
+	%\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
+	\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
+	\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
+	%\depedge[edge above, edge style = {blue, dotted}]{3}{4}{\small ADV}
+	%\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small ADV}
+	%\depedge[edge below, edge style = {red, thick}]{3}{6}{I}
+	%\depedge[edge above, edge style = {blue, thick}]{3}{6}{\small VC}
+	%\depedge[edge above, edge style = {blue, dotted}, edge unit distance =1.5ex]{3}{10}{\small P}
+	%\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
+	%\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
+	%\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
+	%\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small ADV}
+	%\depedge[edge below, edge style = {orange, thick}]{6}{7}{P}
+	%\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small VC}
+	%\depedge[edge below, edge style = {red, thick}]{8}{9}{J}
+	%\depedge[edge above, edge style = {blue, thick}]{8}{9}{\small PMOD}
+	%\deproot[edge below, edge style = {red, dotted}]{2}{W}
+	%\deproot[edge below, edge style = {orange, ultra thick, dotted}]{7}{WV}
+	%\deproot[edge below, edge style = {red, dotted}]{10}{X}
+	%\depedge[edge below, edge style = {red, dotted}]{6}{4}{E}
+	%\depedge[edge below, edge style = {red, dotted}]{6}{5}{E}
+  \end{dependency}
+\end{figure}
+
+\begin{itemize}
+\item This is due to an inconsistency of the Link Grammar, discovered by our method. \NoteJH{The reason why is in footnote 6 of page 10 in our paper. Reread after sleeping.}
+\end{itemize}
+
+\NoteJH{Should I include a section of the appendix table? Which rows should I include?}
+}
 
 
 \section{Conclusions}
 \frame{\frametitle{Conclusions}
-
+  \begin{itemize}
+  \item Link Grammar parses can be oriented into connected DAGs
+  \item New corpora for building multi-headed dependency parsers
+  \item ILP can be used to build or annotate corpora
+  \end{itemize}
 }
+
+
+\frame{\frametitle{}
+  \begin{itemize}
+  \item[] Questions?
+  \end{itemize}
+}
+
 
 
 %\nocite{*}
