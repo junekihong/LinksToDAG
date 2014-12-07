@@ -118,7 +118,7 @@
       \begin{deptext}
         The \& boy \& that \& Jill \& skipped \& with \& fell \& down \\
       \end{deptext}
-      \deproot[edge above, thick, hide label, edge unit distance = 1.5ex]{7}{}
+      \deproot[edge above, thick, hide label, edge unit distance = 2ex]{7}{}
       \depedge[edge above, thick, hide label]{2}{1}{}
       \depedge[edge above, thick, hide label]{2}{3}{}
       \depedge[edge above, thick, hide label]{3}{5}{}
@@ -140,7 +140,7 @@
       \begin{deptext}
         Jack \& and \& Jill \& went \& up \& the \& hill \\
       \end{deptext}
-      \deproot[edge above, thick, hide label, edge unit distance = 1.5ex]{4}{}
+      \deproot[edge above, thick, hide label, edge unit distance = 2ex]{4}{}
       \depedge[edge above, thick, hide label]{2}{1}{}
       \depedge[edge above, thick, hide label]{2}{3}{}
       \depedge[edge above, thick, hide label]{4}{2}{}
@@ -194,31 +194,31 @@
 %}
 
 
-\section{Non Projectivity}
-\frame{\frametitle{We do not address: Non-Projectivity}
-\begin{itemize}
-  \item Projectivity assumptions allow us to have efficient parsing algorithms that utilize dynamic programming
-  \item English is mostly projective
-\end{itemize}
+%\section{Non Projectivity}
+%\frame{\frametitle{We do not address: Non-Projectivity}
+%\begin{itemize}
+%  \item Projectivity assumptions allow us to have efficient parsing algorithms that utilize dynamic programming
+%  \item English is mostly projective
+%\end{itemize}
 
-\NoteJH{Should I mention non-projectivity? This slide is mostly here because of a reviewer comment.}
-}
+%\NoteJH{Should I mention non-projectivity? This slide is mostly here because of a reviewer comment.}
+%}
 
-\frame{\frametitle{We do not address: Non-Projectivity}
-\begin{itemize}
-  \item Projectivity assumptions allow us to have efficient parsing algorithms that utilize dynamic programming
-  \item English is mostly projective
-\end{itemize}
+%\frame{\frametitle{We do not address: Non-Projectivity}
+%\begin{itemize}
+%  \item Projectivity assumptions allow us to have efficient parsing algorithms that utilize dynamic programming
+%  \item English is mostly projective
+%\end{itemize}
 
-\begin{figure}
-  \includegraphics[width=0.7\linewidth]{multiheaded}
-  \caption*{But not always}
-  \NoteJH{image taken from Chris Dyer's slide: http://demo.clab.cs.cmu.edu/fa2014-11711/images/0/0e/Depparsing.pdf}
-  \NoteJH{I should also ask Chris for permission to use this}
-\end{figure}
+%\begin{figure}
+%  \includegraphics[width=0.7\linewidth]{multiheaded}
+%  \caption*{But not always}
+%  \NoteJH{image taken from Chris Dyer's slide: http://demo.clab.cs.cmu.edu/fa2014-11711/images/0/0e/Depparsing.pdf}
+%  \NoteJH{I should also ask Chris for permission to use this}
+%\end{figure}
 
 
-}
+%}
 
 
 \section{Link Grammars}
@@ -369,16 +369,11 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
 
 
 \section{ILP Model}
-\frame{\frametitle{Integer Linear Programming Model: Variables}
-
-For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_{ij}$ and $x_{ji}$.
-
-\NoteJH{TODO: Incomplete slide. Need to describe things like depth of the variable, label}
-}
 
 
-\frame{\frametitle{Integer Linear Programming Model: Encoded Constraints}
+\frame{\frametitle{Integer Linear Programming Model}
 
+Encoded Constraints:
 \begin{itemize}
   \item Connectedness
   \item Acyclicity
@@ -386,6 +381,39 @@ For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_
 \end{itemize}
 
 \NoteJH{Take from the paper.}
+}
+
+
+
+\frame{\frametitle{Integer Linear Programming Model}
+
+For each sentence, for each edge $i,j$, where $i < j$
+
+\begin{figure}
+  \begin{dependency}[edge style={-}]
+    \begin{deptext}
+      . \& . \& . \& $i$ \& . \& . \& . \& $j$ \& . \& . \& . \\
+    \end{deptext}
+    \depedge[edge above, thick, edge unit distance = 1.1ex]{4}{8}{L}
+  \end{dependency}
+\end{figure}
+
+Variables:
+
+\begin{itemize}
+\item $x_{ij}, x_{ji} \in \mathbb{Z} \geq 0$ representing the orientation of each link
+
+$x_{ij} + x_{ji} = 1$
+
+%\item $x_{ij} + x_{ji} = 1$ (A link can only be oriented left or right)
+
+\end{itemize}
+
+
+
+
+
+%\NoteJH{TODO: Incomplete slide. Need to describe things like depth of the variable, label}
 }
 
 
@@ -398,7 +426,11 @@ For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_
       \sum_u x_{uv} & \geq 1
     \end{align}
 
-  \item[] Acyclic
+  \item[] Acyclicity
+    \begin{itemize}
+      \item a
+    \end{itemize}
+
     \begin{align}
       (\forall_u)\; d_v + (1 + n_v) \cdot (1 - x_{uv}) & \geq 1+d_u
     \end{align}
@@ -487,7 +519,10 @@ For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_
       \begin{itemize}
         \item[] $\frac{4043}{195000} = 2.07\%$ 
       \end{itemize}
-    \item[]
+  \end{itemize}
+
+  \begin{itemize}
+  \item[]
   \end{itemize}
 }
 
@@ -502,7 +537,10 @@ For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_
       \begin{itemize}
         \item[] $\frac{4043}{195000} = 2.07\%$ 
       \end{itemize}
-    \item[] The link labels mostly have a consistent direction.
+  \end{itemize}
+
+  \begin{itemize}
+  \item[] The link labels mostly have a consistent direction.
   \end{itemize}
 }
 
