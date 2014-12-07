@@ -42,7 +42,7 @@
   \end{itemize}
 }
 
-\section{Motivation}
+
 \frame{\frametitle{Motivation}
   \begin{itemize}
     \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
@@ -50,7 +50,6 @@
   \end{itemize}
 }
 
-\section{Motivation}
 \frame{\frametitle{Motivation}
   \begin{itemize}
     \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
@@ -59,7 +58,6 @@
   \end{itemize}
 }
 
-\section{Motivation}
 \frame{\frametitle{Motivation}
   \begin{itemize}
     \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
@@ -87,8 +85,9 @@
       \begin{deptext}
         Jill \& likes \& to \& skip \\
       \end{deptext}
+      \deproot[edge above, thick, hide label, edge unit distance = 1.5ex]{2}{}
       \depedge[edge above, thick, hide label]{2}{1}{}
-      \depedge[edge below, ultra thick, hide label, edge style = {purple}, edge unit distance = 1.5ex]{4}{1}{}
+      \depedge[edge below, ultra thick, hide label, edge style = {purple}, edge unit distance = 1.2ex]{4}{1}{}
       \depedge[edge above, thick, hide label]{2}{3}{}
       \depedge[edge above, thick, hide label]{3}{4}{}
     \end{dependency}
@@ -100,6 +99,7 @@
       \begin{deptext}
         Jill \& persuaded \& Jack \& to \& skip \\
       \end{deptext}
+      \deproot[edge above, thick, hide label, edge unit distance = 1.5ex]{2}{}
       \depedge[edge above, thick, hide label]{2}{1}{}
       \depedge[edge above, thick, hide label]{2}{3}{}
       \depedge[edge above, thick, hide label]{3}{4}{}
@@ -118,12 +118,13 @@
       \begin{deptext}
         The \& boy \& that \& Jill \& skipped \& with \& fell \& down \\
       \end{deptext}
+      \deproot[edge above, thick, hide label, edge unit distance = 1.5ex]{7}{}
       \depedge[edge above, thick, hide label]{2}{1}{}
       \depedge[edge above, thick, hide label]{2}{3}{}
-      \depedge[edge above, thick, hide label]{3}{4}{}
-      \depedge[edge above, thick, hide label]{4}{5}{}
+      \depedge[edge above, thick, hide label]{3}{5}{}
+      \depedge[edge above, thick, hide label]{5}{4}{}
       \depedge[edge above, thick, hide label]{5}{6}{}
-      \depedge[edge above, thick, hide label]{2}{7}{}
+      \depedge[edge above, thick, hide label, edge unit distance = 1.8ex]{7}{2}{}
       \depedge[edge above, thick, hide label]{7}{8}{}
       \depedge[edge below, ultra thick, hide label, edge style = {purple}, edge unit distance = 1.5ex]{6}{2}{}
     \end{dependency}
@@ -139,6 +140,7 @@
       \begin{deptext}
         Jack \& and \& Jill \& went \& up \& the \& hill \\
       \end{deptext}
+      \deproot[edge above, thick, hide label, edge unit distance = 1.5ex]{4}{}
       \depedge[edge above, thick, hide label]{2}{1}{}
       \depedge[edge above, thick, hide label]{2}{3}{}
       \depedge[edge above, thick, hide label]{4}{2}{}
@@ -407,8 +409,8 @@ For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_
 \begin{itemize}
   \item[] Consistency of Directionalized Links
     \begin{align}\label{direction+slack}
-      x_{ij} &\leq r_L + s_{ij} &
-      x_{ji} &\leq \ell_L + s_{ij}
+      x_{ij} &\leq r_L &
+      x_{ji} &\leq \ell_L 
     \end{align}
 
     \begin{align}\label{eqn:obj}
@@ -427,7 +429,7 @@ For each sentence, for each edge $i,j$ where $i < j$, we introduce variables $x_
   \item[] Consistency of Directionalized Links
     \begin{align}\label{direction+slack}
       x_{ij} &\leq r_L + s_{ij} &
-      x_{ji} &\leq \ell_L + s_{ij}
+      x_{ji} &\leq \ell_L + s_{ij} 
     \end{align}
 
     \begin{align}\label{eqn:obj}
