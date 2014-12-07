@@ -398,12 +398,12 @@ For each sentence, for each edge $i,j$, where $i < j$
   \end{dependency}
 \end{figure}
 
-Variables:
 
+
+Variables: 
 \begin{itemize}
-\item $x_{ij}, x_{ji} \in \mathbb{Z} \geq 0$ representing the orientation of each link
-
-$x_{ij} + x_{ji} = 1$
+\item[] $x_{ij}, x_{ji} \in \mathbb{Z} \geq 0$: orientation of each link
+\item[] $x_{ij} + x_{ji} = 1$
 
 %\item $x_{ij} + x_{ji} = 1$ (A link can only be oriented left or right)
 
@@ -418,7 +418,6 @@ $x_{ij} + x_{ji} = 1$
 
 
 
-\subsection{Connectedness, Acyclicity}
 \frame{\frametitle{Connectedness, Acyclicity}
 \begin{itemize}
   \item[] Connectedness
@@ -428,7 +427,9 @@ $x_{ij} + x_{ji} = 1$
 
   \item[] Acyclicity
     \begin{itemize}
-      \item a
+      \item[] Given that node $u$ is the parent of $v$
+      \item[] $n_v$: length of the sentence containing node $v$
+      \item[] $d_v \in [0, n_v]$: depth of the node from the root of the sentence
     \end{itemize}
 
     \begin{align}
@@ -439,40 +440,52 @@ $x_{ij} + x_{ji} = 1$
 }
 
 
-\frame{\frametitle{Consistence of Directionalized Links}
+\frame{\frametitle{Consistency of Directionalized Links}
 \begin{itemize}
   \item[] Consistency of Directionalized Links
+    \begin{itemize}
+      \item[] $r_L, \ell_L \in \{0,1\}$: whether links with label $L$ allowed left/right
+    \end{itemize}
     \begin{align}\label{direction+slack}
       x_{ij} &\leq r_L &
       x_{ji} &\leq \ell_L 
     \end{align}
-
     \begin{align}\label{eqn:obj}
       \min \left( \sum_L r_L + \ell_L \right)
     \end{align}
+    \begin{itemize}
+      \item[]  
+      \item[]  
+    \end{itemize}
 
-    %$$x_{ij} \leq r_L + s_{ij} $$
-    %$$x_{ji} \leq \ell_L + s_{ij}$$
-    %$$\min \left( \sum_L r_L + \ell_L \right)$$
+    \begin{itemize}
+      \item[]
+    \end{itemize}
 
 \end{itemize}
 }
 
-\frame{\frametitle{Consistence of Directionalized Links with Slack}
+\frame{\frametitle{Consistency of Directionalized Links with Slack}
 \begin{itemize}
   \item[] Consistency of Directionalized Links
+    \begin{itemize}
+      \item[] $r_L, \ell_L \in \{0,1\}$: whether links with label $L$ allowed left/right
+    \end{itemize}
     \begin{align}\label{direction+slack}
       x_{ij} &\leq r_L + s_{ij} &
       x_{ji} &\leq \ell_L + s_{ij} 
     \end{align}
-
     \begin{align}\label{eqn:obj}
       \min \left( \sum_L r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij}s_{ij}
     \end{align}
+    \begin{itemize}
+      \item[] $s_{ij} \in \mathbb{R} \geq 0$: slack variable 
+      \item[] $N_L$: Number of link tokens with label $L$
+    \end{itemize}
 
-    %$$x_{ij} \leq r_L + s_{ij} $$
-    %$$x_{ji} \leq \ell_L + s_{ij}$$
-    %$$\min \left( \sum_L r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij}s_{ij}$$
+    \begin{itemize}
+      \item[] Slack allows a few links with label $L$ in disallowed directions
+    \end{itemize}
 
 \end{itemize}
 }
@@ -514,15 +527,13 @@ $x_{ij} + x_{ji} = 1$
       \begin{itemize}
         \item[] $\frac{7}{113} = 6.19\%$ 
       \end{itemize}
-
     \item[] Link tokens that required disallowed direction via slack:
       \begin{itemize}
         \item[] $\frac{4043}{195000} = 2.07\%$ 
       \end{itemize}
   \end{itemize}
-
   \begin{itemize}
-  \item[]
+  \item[]  
   \end{itemize}
 }
 
@@ -532,13 +543,11 @@ $x_{ij} + x_{ji} = 1$
       \begin{itemize}
         \item[] $\frac{7}{113} = 6.19\%$ 
       \end{itemize}
-
     \item[] Link tokens that required disallowed direction via slack:
       \begin{itemize}
         \item[] $\frac{4043}{195000} = 2.07\%$ 
       \end{itemize}
   \end{itemize}
-
   \begin{itemize}
   \item[] The link labels mostly have a consistent direction.
   \end{itemize}
@@ -547,11 +556,7 @@ $x_{ij} + x_{ji} = 1$
 
 
 
-\frame{\frametitle{Link Results}
-  \begin{itemize}
-    \item Subject-Verb links are backwards.
-  \end{itemize}
-
+\frame{\frametitle{Link Results: Subject-Verb links are backwards}
 \begin{figure}
   \begin{dependency}
 	\begin{deptext}
@@ -591,13 +596,7 @@ $x_{ij} + x_{ji} = 1$
 
 
 
-
-
-\frame{\frametitle{Link Results}
-  \begin{itemize}
-    \item Subject-Verb links are backwards.
-  \end{itemize}
-
+\frame{\frametitle{Link Results: Subject-Verb links are backwards}
 \begin{figure}
   \begin{dependency}
 	\begin{deptext}
@@ -605,27 +604,27 @@ $x_{ij} + x_{ji} = 1$
 	  the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
 	  - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
 	\end{deptext}
-	%\deproot[edge above, edge style = {blue, dotted}]{3}{\small ROOT}
+	\deproot[edge above]{3}{\small ROOT}
 	\depedge[edge below, edge style = {red, ultra thick}]{2}{3}{S}
 	\depedge[edge above, edge style = {blue, ultra thick}]{3}{2}{\small SBJ}
-	%\depedge[edge above, edge style = {blue, dotted}]{3}{4}{\small ADV}
-	%\depedge[edge above, edge style = {blue, dotted}]{3}{5}{\small ADV}
-	%\depedge[edge below, edge style = {red, thick}]{3}{6}{I}
-	%\depedge[edge above, edge style = {blue, thick}]{3}{6}{\small VC}
-	%\depedge[edge above, edge style = {blue, dotted}, edge unit distance =1.5ex]{3}{10}{\small P}
-	%\depedge[edge below, edge style = {red, thick}]{2}{1}{D}
-	%\depedge[edge above, edge style = {blue, thick}]{2}{1}{\small NMOD}
-	%\depedge[edge below, edge style = {red, thick}]{7}{8}{MV}
-	%\depedge[edge above, edge style = {blue, thick}]{7}{8}{\small ADV}
-	%\depedge[edge below, edge style = {orange, thick}]{6}{7}{P}
-	%\depedge[edge above, edge style = {blue, thick}]{6}{7}{\small VC}
-	%\depedge[edge below, edge style = {red, thick}]{8}{9}{J}
-	%\depedge[edge above, edge style = {blue, thick}]{8}{9}{\small PMOD}
-	%\deproot[edge below, edge style = {red, dotted}]{2}{W}
-	%\deproot[edge below, edge style = {orange, ultra thick, dotted}]{7}{WV}
-	%\deproot[edge below, edge style = {red, dotted}]{10}{X}
-	%\depedge[edge below, edge style = {red, dotted}]{6}{4}{E}
-	%\depedge[edge below, edge style = {red, dotted}]{6}{5}{E}
+	\depedge[edge above]{3}{4}{\small ADV}
+	\depedge[edge above]{3}{5}{\small ADV}
+	\depedge[edge below]{3}{6}{I}
+	\depedge[edge above]{3}{6}{\small VC}
+	\depedge[edge above, edge unit distance =1.5ex]{3}{10}{\small P}
+	\depedge[edge below]{2}{1}{D}
+	\depedge[edge above]{2}{1}{\small NMOD}
+	\depedge[edge below]{7}{8}{MV}
+    \depedge[edge above]{7}{8}{\small ADV}
+	\depedge[edge below]{6}{7}{P}
+	\depedge[edge above]{6}{7}{\small VC}
+	\depedge[edge below]{8}{9}{J}
+	\depedge[edge above]{8}{9}{\small PMOD}
+	\deproot[edge below]{2}{W}
+    \deproot[edge below]{7}{WV}
+	\deproot[edge below]{10}{X}
+	\depedge[edge below]{6}{4}{E}
+	\depedge[edge below]{6}{5}{E}
   \end{dependency}
 \end{figure}
 
