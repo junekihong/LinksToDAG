@@ -512,24 +512,24 @@ Variables:
 %  \item[] 18,577 English sentences with 10,960 connected parses
 %  \item[] 18,577 unlabeled Russian sentences with 4,913 connected parses
 %\end{itemize}
-\begin{table}[h]
-\begin{tabular}{|l|l|l|}
-\hline
-                    & \# Sentences & \# Connected Parses \\ \hline
-English             & 18,577        & 10,960               \\ \hline
-Russian (unlabeled) & 18,577        & 4,913                \\ \hline
-\end{tabular}
-\end{table}
-
-On the English data set:
-
-\begin{itemize}
-\item[] Link Data has 8\% additional edges over the CoNLL.
-\item[] 52\% of links match CoNLL arcs
-\item[] 57\% of CoNLL arcs match links
-\end{itemize}
-
-\NoteJH{I skipped the ``Stability of Results'' section}
+  \begin{table}[h]
+    \begin{tabular}{|l|l|l|}
+      \hline
+      & \# Sentences & \# Connected Parses \\ \hline
+      English             & 18,577        & 10,960               \\ \hline
+      Russian (unlabeled) & 18,577        & 4,913                \\ \hline
+    \end{tabular}
+  \end{table}
+  
+  On the English data set:
+  
+  \begin{itemize}
+  \item[] Link Data has 8\% additional edges over the CoNLL.
+  \item[] 52\% of links match CoNLL arcs
+  \item[] 57\% of CoNLL arcs match links
+  \end{itemize}
+  
+  \NoteJH{I skipped the ``Stability of Results'' section}
 }
 
 %\frame{\frametitle{On the English data set}
@@ -543,15 +543,23 @@ On the English data set:
 %}
 
 \frame{\frametitle{ILP Results}
+%  \begin{table}[h]
+%    \begin{tabular}{|l|l||l|}
+%      \hline
+%      & & out of total \\ \hline
+%      Link types & & \\allowing both directions & 7 & 113 \\ \hline
+%      Link tokens & & \\requiring disallowed direction & & \\via slack & 4043 & 195,000 \\ \hline
+%    \end{tabular}
+%  \end{table}
   \begin{itemize}
-    \item[] Link types that allowed both directions:
-      \begin{itemize}
-        \item[] $\frac{7}{113} = 6.19\%$ 
-      \end{itemize}
-    \item[] Link tokens that required disallowed direction via slack:
-      \begin{itemize}
-        \item[] $\frac{4043}{195000} = 2.07\%$ 
-      \end{itemize}
+  \item[] Link types that allowed both directions:
+    \begin{itemize}
+    \item[] 7 / 113 = 6.19\%
+    \end{itemize}
+  \item[] Link tokens that required disallowed direction via slack:
+    \begin{itemize}
+    \item[] 4043 / 195,000 = 2.07\%
+    \end{itemize}
   \end{itemize}
   \begin{itemize}
   \item[]  
@@ -562,11 +570,13 @@ On the English data set:
   \begin{itemize}
     \item[] Link types that allowed both directions:
       \begin{itemize}
-        \item[] $\frac{7}{113} = 6.19\%$ 
+      \item[] 7 / 113 = 6.19\%
+      %\item[] $\frac{7}{113} = 6.19\%$ 
       \end{itemize}
     \item[] Link tokens that required disallowed direction via slack:
       \begin{itemize}
-        \item[] $\frac{4043}{195000} = 2.07\%$ 
+        %\item[] $\frac{4043}{195000} = 2.07\%$ 
+        \item[] 4043 / 195,000 = 2.07\%
       \end{itemize}
   \end{itemize}
   \begin{itemize}
