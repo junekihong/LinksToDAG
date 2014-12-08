@@ -1,0 +1,175 @@
+%
+% File acl2014.tex
+%
+% Contact: koller@ling.uni-potsdam.de, yusuke@nii.ac.jp
+%%
+%% Based on the style files for ACL-2013, which were, in turn,
+%% Based on the style files for ACL-2012, which were, in turn,
+%% based on the style files for ACL-2011, which were, in turn, 
+%% based on the style files for ACL-2010, which were, in turn, 
+%% based on the style files for ACL-IJCNLP-2009, which were, in turn,
+%% based on the style files for EACL-2009 and IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt]{article}
+\usepackage{acl2014}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{xspace}
+\usepackage{enumitem}
+\usepackage[small]{caption}
+\usepackage{longtable}
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{soul}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+%\usepackage{caption}
+\usepackage{subcaption}
+
+%\usepackage{tikz-dependency}
+
+\newcommand{\eqnref}[1]{\eqref{eqn:#1}}
+\bibliographystyle{acl2014}
+
+
+\usepackage[disable]{todonotes}   % insert [disable] to disable all notes
+% Note that these macros accept optional arguments such as 
+% [size=\small,bordercolor=red].
+\newcommand{\Note}[4][]{\todo[author=#2,color=#3,fancyline,#1]{#4}}
+\newcommand{\noteJH}[2][]{\Note[size=\small,#1]{JH}{blue!40}{#2}}
+\newcommand{\noteJE}[2][]{\Note[size=\small,#1]{JE}{green!40}{#2}}   
+\newcommand{\notewho}[3][]{\Note[size=\small,#1]{#2}{orange!40}{#3}}  % extra arg with miscellaneous author
+\newcommand{\NoteJH}[2][]{\noteJH[inline,#1]{#2}}
+\newcommand{\NoteJE}[2][]{\noteJE[inline,#1]{#2}}
+\newcommand{\Notewho}[3][]{\notewho[inline,#1]{#2}{#3}}  % extra arg with miscellaneous author
+
+
+\title{Deriving Multi-Headed Planar Dependency Parses from Link
+  Grammar Parses\thanks{This material is based upon work supported by the National
+    Science Foundation under Grant No. 1423276.  The work was mainly
+    conducted while the first author was at Johns Hopkins
+    University.\noteJE{anyone else to thank?}}}
+% Oriented link grammar: Creating a multi-headed dependency corpus.
+
+%\author{Juneki Hong and Jason Eisner\\
+%   Department of Computer Science \\
+%   Johns Hopkins University \\
+%   Baltimore, MD 21218, USA \\ 
+%   {\tt \{juneki,jason\}@cs.jhu.edu} \\
+%}
+
+
+\author{
+  Juneki Hong \\
+  Language Technologies Institute\\
+  Carnegie Mellon University\\
+  Pittsburgh, PA 15213, USA\\
+  {\texttt{juneki@cs.cmu.edu}}
+  \And
+  Jason Eisner\\
+  Department of Computer Science\\
+  Johns Hopkins University\\
+  Baltimore, MD 21218, USA \\
+  {\texttt{jason@cs.jhu.edu}}
+}
+
+
+
+\date{}
+
+%\setlength\titlebox{6.5cm}    % Expanding the titlebox
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\noindent
+Under multi-headed dependency grammar, a parse is a connected DAG rather than a tree.  Such formalisms can be more syntactically and semantically expressive.  However, it is hard to train, test, or improve multi-headed parsers because few multi-headed corpora exist, particularly for the projective or planar case. 
+To help fill this gap, we observe that link grammar already produces {\em undirected} planar graphs, and so we wanted to determine whether these could be converted into directionalized dependency parses. 
+
+Link Grammar \cite{sleator-temperley-1991} is a syntactic formalism in which a parse of a sentence is an undirected, edge-labeled, planar graph.  The labeled edges of the graph represent syntactic relationships among the words.  
+%The vertices of the graph are simply the words $1, 2, \ldots, n$ of the sentence, along with a distinguished ``root'' vertex 0.  
+The small Link Grammar community has invested effort in creating link grammars for several languages.  In this short paper, we consider whether their {\em undirected} parses can be converted automatically to {\em directed} ones.  We have three motivations:
+
+\begin{enumerate}
+
+\item We were curious about the relation between link grammar annotation and dependency grammar annotation.  We suspected that the link grammar parses could be interpreted as multi-headed dependency grammar parses.  Although the link grammar authors did not bother to specify directions for the different edge types, we suspected that they essentially had such directions in mind.  
+
+\item Our problem provides a good case study for how to automatically enrich a corpus.  Hand-constructed grammars or corpora sometimes provide a lighter level of annotation than desired.  In our setting, the edges lack directions; in other settings, the syntactic categories may be coarser than desired, or some relations may be omitted.  One may want to automatically enrich the annotation in such cases, whether by doing some kind of learning \cite[et seq.]{matsuzaki-et-al-2005}, or by exploiting implicit constraints.  
+
+\item The resulting parses may be useful data for experimenting with new parsing {\em algorithms}.  There has been a good deal of recent research on projective dependency parsing, variously using global optimization or sequential classification (see \cite{martins-et-al-2008,bohnet-2011,chen-li-zhang-2014} for surveys). Some of these algorithms could be extended to the {\em multi-headed} case, which is of linguistic and computational interest.  However, for training and testing such algorithms, one would need a plausible sample of multi-headed projective dependency parses of real sentences.  Our method cheaply manufactures such a sample, to compensate for the current lack of gold-standard data of this form.
+
+\end{enumerate}
+
+
+We use Integer Linear Programming to exploit implicit constraints of consistency and acyclicity, and assign consistent directions to the labeled links in a corpus of several thousand parses produced by the Link Grammar Parser, which has broad-coverage hand-written grammars of English as well as Russian and other languages.  
+
+We find that such directions can indeed be consistently assigned in a way that yields valid multi-headed dependency parses. The resulting parses in English appear reasonably linguistically plausible, though differing in style from CoNLL-style parses of the same sentences; we discuss the differences.  
+
+
+\newpage
+
+%\end{abstract}
+
+
+\begin{bibliography}{LinksToDAG_final}
+
+%\bibliographystyle{acl2014}
+
+%\bibliography{LinksToDAG}
+\end{bibliography}
+
+
+\clearpage
+\appendix
+
+% OLD
+% \section{ILP Formulation}
+% We present our ILP formulation. 
+% 
+% \begin{figure}[!htb]
+%   \small
+%   \begin{align*}
+%     \text{Sets:}&&\\
+%     &\textsc{link}_{\textsc{sentence},\textsc{label}, i,j} \in \textsc{links} &\\
+%     &\textsc{label} \in \textsc{labels}&\\ 
+%     &\textsc{dir} = \{\textsc{left}, \textsc{right}\} &\\
+%     \text{Params:}&&\\
+%     &\textsc{m}_\textsc{length} = \max (\forall{\textsc{link}_{\textsc{sentence}, i,j}} \max(i,j)) &\\
+%     %&\textsc{count}_{\textsc{label}, \textsc{dir}} = \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 &\\
+%     &\textsc{cost}_{\textsc{label}} = \frac{100}{ \sum_{\textsc{link}_{\textsc{label},\textsc{dir}}}1 } &\\
+%     \text{Variables:}&&\\
+%     &\textsc{slack}_{\textsc{link}} \geq 0 &\\ 
+%     &\textsc{depth}_{\textsc{sentence},i} \geq 0 &\\
+%     &\textsc{allowed}_{\textsc{label},\textsc{dir}} = \{0,1\}&\\
+%     &\textsc{arc}_{\textsc{link}} = \{0,1\} &\\
+%     \text{minimize:}& &\\ 
+%     &\sum_{\textsc{label}, \textsc{dir}} (\textsc{allowed}_{\textsc{label},\textsc{dir}}) + \textsc{cost}_{\textsc{label}} \cdot \sum_\textsc{link} \textsc{slack}_{\textsc{link}} &\\
+%     &&\\
+%     \text{subject to: }& &\\
+%     &\text{Links go in the allowed directions, except for slack}&\\
+%     &\forall{\textsc{link}_{i,j,\textsc{label}}}: 1-\textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{left}} + \textsc{slack}_{\textsc{link}} &\\
+%     &\forall{\textsc{link}_{i,j,\textsc{label}}}: \textsc{arc}_{\textsc{link}} \leq \textsc{allowed}_{\textsc{label}, \textsc{right}} + \textsc{slack}_{\textsc{link}} &\\
+%     &\text{Depth constraints for acyclicity}&\\
+%     &\forall{\textsc{link}_{\textsc{sentence},i}}: \textsc{depth}_{\textsc{sentence},\text{root}} \leq \textsc{depth}_{\textsc{sentence},i} &\\
+%     &\forall{\textsc{link}_{\textsc{sentence},i,j}}: \textsc{depth}_{\textsc{sentence},i} + \textsc{m}_\textsc{length}\cdot\textsc{arc}_{\textsc{sentence},i,j} \geq \textsc{depth}_{\textsc{sentence},j} + 1 &\\
+%     &\forall{\textsc{link}_{\textsc{sentence},i,j}}: \textsc{depth}_{\textsc{sentence},j} + \textsc{m}_\textsc{length}\cdot(1-\textsc{arc}_{\textsc{sentence},i,j}) \geq \textsc{depth}_{\textsc{sentence},i} + 1 &\\
+%     &\text{Every token has a parent}&\\
+%     &\forall{\textsc{link}_{\textsc{sentence},i \neq \textsc{root}}}: \sum_{\textsc{link}_{\textsc{sentence},i,j}} (1-\textsc{arc}_{\textsc{sentence},i,j}) + \sum_{\textsc{link}_{\textsc{sentence},j,i}}(\textsc{arc}_{\textsc{sentence},j,i}) \geq 1&\\
+%   \end{align*}
+%   \caption{\small The ILP formulation.}
+% \end{figure}
+% 
+% 
+% \clearpage
+
+
+
+\end{document}
