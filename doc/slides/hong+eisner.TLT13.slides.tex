@@ -39,6 +39,9 @@
 \frame{\frametitle{Motivation}
   \begin{itemize}
     \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
+    \item[]  
+    \item[]  
+    \item[]  
   \end{itemize}
 }
 
@@ -47,6 +50,8 @@
   \begin{itemize}
     \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
     \item Such a corpus could be automatically annotated using Integer Linear Programming
+    \item[]  
+    \item[]  
   \end{itemize}
 }
 
@@ -55,6 +60,7 @@
     \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
     \item Such a corpus could be automatically annotated using Integer Linear Programming
     \item We explored whether the Link Grammar could be adapted for this purpose.
+    \item[]  
   \end{itemize}
 }
 
@@ -502,14 +508,21 @@ Variables:
 %}
 
 \frame{\frametitle{Data Sets}
-\begin{itemize}
-  \item[] 18,577 English sentences with 10,960 connected parses
-  \item[] 18,577 unlabeled Russian sentences with 4,913 connected parses
-\end{itemize}
+%\begin{itemize}
+%  \item[] 18,577 English sentences with 10,960 connected parses
+%  \item[] 18,577 unlabeled Russian sentences with 4,913 connected parses
+%\end{itemize}
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+\hline
+                    & \# Sentences & \# Connected Parses \\ \hline
+English             & 18,577        & 10,960               \\ \hline
+Russian (unlabeled) & 18,577        & 4,913                \\ \hline
+\end{tabular}
+\end{table}
 
-}
+On the English data set:
 
-\frame{\frametitle{On the English data set}
 \begin{itemize}
 \item[] Link Data has 8\% additional edges over the CoNLL.
 \item[] 52\% of links match CoNLL arcs
@@ -518,6 +531,16 @@ Variables:
 
 \NoteJH{I skipped the ``Stability of Results'' section}
 }
+
+%\frame{\frametitle{On the English data set}
+%\begin{itemize}
+%\item[] Link Data has 8\% additional edges over the CoNLL.
+%\item[] 52\% of links match CoNLL arcs
+%\item[] 57\% of CoNLL arcs match links
+%\end{itemize}
+
+%
+%}
 
 \frame{\frametitle{ILP Results}
   \begin{itemize}
