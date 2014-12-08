@@ -1,0 +1,11 @@
+                       +---------IV--------+
+    +--------WV--------+-----TOo-----+     |
+    +---Wd---+----Ss---+---Ox---+    +--I--+
+    |        |         |        |    |     |
+LEFT-WALL Jill.f persuaded.v-d him to.r skip.v 
+
+    +--------WV-------+------IV-----+
+    +---Wd---+---Ss---+---TO--+--I--+
+    |        |        |       |     |
+LEFT-WALL Jill.f wanted.v-d to.r skip.v 
+
