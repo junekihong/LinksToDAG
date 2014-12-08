@@ -619,10 +619,6 @@ Variables:
   \end{dependency}
 \end{figure}
 
-\begin{itemize}
-\item[] %This is probably due to an inconsistency of the Link Grammar, discovered by our method.
-\end{itemize}
-
 }
 
 
@@ -659,9 +655,46 @@ Variables:
   \end{dependency}
 \end{figure}
 
+}
+
+
+\frame{\frametitle{Link Results: Subject-Verb links are backwards}
+
 \begin{itemize}
 \item This is due to an inconsistency of the Link Grammar, discovered by our method. 
 \end{itemize}
+
+\begin{figure}
+  \begin{dependency}
+	\begin{deptext}
+	  Jill \& wanted \& to \& skip \\
+	\end{deptext}
+    \deproot[edge above, edge unit distance=2ex]{1}{W}
+    \deproot[edge above, edge unit distance=2ex]{2}{WV}
+	\depedge[edge above]{2}{1}{S}
+	\depedge[edge above]{2}{3}{TO}
+	\depedge[edge above]{3}{4}{I}
+	\depedge[edge above]{2}{4}{IV}
+  \end{dependency}
+\end{figure}
+
+\begin{figure}
+  \begin{dependency}
+	\begin{deptext}
+	  Jill \& persuaded \& him \& to \& skip \\
+	\end{deptext}
+    \deproot[edge above, edge unit distance=2ex]{1}{W}
+    \deproot[edge above, edge unit distance=2ex]{2}{WV}
+	\depedge[edge above]{2}{1}{S}
+	\depedge[edge above]{2}{3}{O}
+	\depedge[edge above]{2}{4}{TO}
+	\depedge[edge above]{4}{5}{I}
+	\depedge[edge above]{2}{5}{IV}
+  \end{dependency}
+\end{figure}
+
+
+
 
 \NoteJH{Should I include a section of the appendix table? Which rows should I include?}
 }
