@@ -1,0 +1,82 @@
+linkparser> Jill thought he was skipping
+Found 18 linkages (9 had no P.P. violations)
+      Linkage 1, cost vector = (UNUSED=0 DIS= 2.00 LEN=7)
+
+    +--------WV-------+-----CV-----+          
+    +---Wd---+---Ss---+---Ce--+-Ss-+---Pg*b--+
+    |        |        |       |    |         |
+LEFT-WALL Jill.f thought.v-d he was.v-d skipping.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 2, cost vector = (UNUSED=0 DIS= 2.00 LEN=8)
+
+    +--------WV-------+----------CV----------+
+    +---Wd---+---Ss---+---Ce--+-Ss-+---Pg*b--+
+    |        |        |       |    |         |
+LEFT-WALL Jill.f thought.v-d he was.v-d skipping.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 3, cost vector = (UNUSED=0 DIS= 2.00 LEN=10)
+
+    +-------------------WV-------------------+
+    |                 +-----CV-----+         |
+    +---Wd---+---Ss---+---Ce--+-Ss-+---Pg*b--+
+    |        |        |       |    |         |
+LEFT-WALL Jill.f thought.v-d he was.v-d skipping.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 4, cost vector = (UNUSED=0 DIS= 4.00 LEN=7)
+
+    +--------WV-------+-----CV-----+          
+    +---Wd---+---Ss---+---Ce--+-Ss-+---Ost---+
+    |        |        |       |    |         |
+LEFT-WALL Jill.f thought.v-d he was.v-d skipping.g 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 5, cost vector = (UNUSED=0 DIS= 4.00 LEN=7)
+
+    +--------WV-------+-----CV-----+          
+    +---Wd---+---Ss---+---Ce--+-Ss-+---Osm---+
+    |        |        |       |    |         |
+LEFT-WALL Jill.f thought.v-d he was.v-d skipping.g 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 6, cost vector = (UNUSED=0 DIS= 6.00 LEN=6)
+
+            +-----CV-----+          
+   +---Ss---+---Ce--+-Ss-+---Pg*b--+
+   |        |       |    |         |
+Jill.f thought.v-d he was.v-d skipping.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 7, cost vector = (UNUSED=0 DIS= 6.00 LEN=7)
+
+            +----------CV----------+
+   +---Ss---+---Ce--+-Ss-+---Pg*b--+
+   |        |       |    |         |
+Jill.f thought.v-d he was.v-d skipping.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 8, cost vector = (UNUSED=0 DIS= 8.00 LEN=6)
+
+            +-----CV-----+          
+   +---Ss---+---Ce--+-Ss-+---Ost---+
+   |        |       |    |         |
+Jill.f thought.v-d he was.v-d skipping.g 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 9, cost vector = (UNUSED=0 DIS= 8.00 LEN=6)
+
+            +-----CV-----+          
+   +---Ss---+---Ce--+-Ss-+---Osm---+
+   |        |       |    |         |
+Jill.f thought.v-d he was.v-d skipping.g 
+
