@@ -132,38 +132,10 @@
 \subsection{Motivation}
 \frame{\frametitle{Motivation}
   \begin{itemize}
-    \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
-    \item[]  
-    \item[]  
-    \item[]  
-  \end{itemize}
-}
-
-
-\frame{\frametitle{Motivation}
-  \begin{itemize}
-    \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
-    \item Such a corpus could be automatically annotated using Integer Linear Programming
-    \item[]  
-    \item[]  
-  \end{itemize}
-}
-
-\frame{\frametitle{Motivation}
-  \begin{itemize}
-    \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
-    \item Such a corpus could be automatically annotated using Integer Linear Programming
-    \item We explored whether the Link Grammar could be adapted for this purpose.
-    \item[]  
-  \end{itemize}
-}
-
-\frame{\frametitle{Motivation}
-  \begin{itemize}
-    \item A multiheaded dependency corpus would be useful for testing new parsing algorithms
-    \item Such a corpus could be automatically annotated using Integer Linear Programming
-    \item We explored whether the Link Grammar could be adapted for this purpose.
-    \item The results of this are mixed, but provides a good case study.
+    \uncover<1->{\item A multiheaded dependency corpus would be useful for testing new parsing algorithms}
+    \uncover<2->{\item Such a corpus could be automatically annotated using Integer Linear Programming}
+    \uncover<3->{\item We explored whether the Link Grammar could be adapted for this purpose.}
+    \uncover<4->{\item The results of this are mixed, but provides a good case study.}
   \end{itemize}
 }
 
@@ -536,35 +508,18 @@ Variables:
 %    \end{tabular}
 %  \end{table}
   \begin{itemize}
-  \item[] Link types that allowed both directions:
-    \begin{itemize}
-    \item[] 7 / 113 = 6.19\%
-    \end{itemize}
-  \item[] Link tokens that required disallowed direction via slack:
-    \begin{itemize}
-    \item[] 4043 / 195,000 = 2.07\%
-    \end{itemize}
-  \end{itemize}
-  \begin{itemize}
-  \item[]  
-  \end{itemize}
-}
-
-\frame{\frametitle{ILP Results}
-  \begin{itemize}
     \item[] Link types that allowed both directions:
       \begin{itemize}
-      \item[] 7 / 113 = 6.19\%
-      %\item[] $\frac{7}{113} = 6.19\%$ 
+        \item[] 7 / 113 = 6.19\%
       \end{itemize}
     \item[] Link tokens that required disallowed direction via slack:
       \begin{itemize}
-        %\item[] $\frac{4043}{195000} = 2.07\%$ 
-        \item[] 4043 / 195,000 = 2.07\%
+      \item[] 4043 / 195,000 = 2.07\%
       \end{itemize}
   \end{itemize}
   \begin{itemize}
-  \item[] The link labels mostly have a consistent direction.
+    \uncover<1>{\item[]}
+    \uncover<2->{\item[] The link labels mostly have a consistent direction.}
   \end{itemize}
 }
 
