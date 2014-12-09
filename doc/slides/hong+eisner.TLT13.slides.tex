@@ -28,14 +28,14 @@
 \newcommand{\Notewho}[3][]{\notewho[inline,#1]{#2}{#3}}  % extra arg with miscellaneous author
 
 
-%\setbeamerfont{page number in head/foot}{}
-%\setbeamertemplate{footline}[frame number]
+\setbeamerfont{page number in head/foot}{}
+\setbeamertemplate{footline}[frame number]
 
 \begin{document}
 \title{Deriving Multi-Headed Planar Dependency Parses from Link Grammar Parses}
 \author{Juneki Hong, Jason Eisner}
 \date{\today}
-\frame{\titlepage \NoteJH{Include pictures of us?}}
+\frame{\titlepage} %\NoteJH{Include pictures of us?}
 
 \section{Motivation}
 
@@ -400,45 +400,23 @@ Variables:
 }
 
 
-\frame{\frametitle{Consistency of Directionalized Links}
+\frame{\frametitle{Consistency of Directionalized Links \onslide<2->{with Slack}}
 \begin{itemize}
   \item[] Consistency of Directionalized Links
     \begin{itemize}
       \item[] $r_L, \ell_L \in \{0,1\}$: whether links with label $L$ allowed left/right
     \end{itemize}
+    
     \begin{align}\label{direction+slack}
-      x_{ij} &\leq r_L &
-      x_{ji} &\leq \ell_L 
+      x_{ij} &\leq r_L \onslide<2->{ + s_{ij}} &
+      x_{ji} &\leq \ell_L \onslide<2->{ + s_{ij}}
     \end{align}
+
     \begin{align}\label{eqn:obj}
-      \min \left( \sum_L r_L + \ell_L \right)
+      \min \left( \sum_L r_L + \ell_L \right) \onslide<2->{\cdot \frac{N_L}{4} + \sum_{ij}s_{ij}}
     \end{align}
-    \begin{itemize}
-      \item[]  
-      \item[]  
-    \end{itemize}
 
-    \begin{itemize}
-      \item[]
-    \end{itemize}
-
-\end{itemize}
-}
-
-\frame{\frametitle{Consistency of Directionalized Links with Slack}
-\begin{itemize}
-  \item[] Consistency of Directionalized Links
-    \begin{itemize}
-      \item[] $r_L, \ell_L \in \{0,1\}$: whether links with label $L$ allowed left/right
-    \end{itemize}
-    \begin{align}\label{direction+slack}
-      x_{ij} &\leq r_L + s_{ij} &
-      x_{ji} &\leq \ell_L + s_{ij} 
-    \end{align}
-    \begin{align}\label{eqn:obj}
-      \min \left( \sum_L r_L + \ell_L \right) \cdot \frac{N_L}{4} + \sum_{ij}s_{ij}
-    \end{align}
-    \begin{itemize}
+    \onslide<2->{\begin{itemize}
       \item[] $s_{ij} \in \mathbb{R} \geq 0$: slack variable 
       \item[] $N_L$: Number of link tokens with label $L$
     \end{itemize}
@@ -446,13 +424,10 @@ Variables:
     \begin{itemize}
       \item[] Slack allows a few links with label $L$ in disallowed directions
     \end{itemize}
+    }
 
 \end{itemize}
 }
-
-
-
-
 
 
 \section{Experiments and Results}
