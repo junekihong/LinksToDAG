@@ -1,3 +1,56 @@
+Parses returned for: "Jill wanted him to skip"
+
+linkparser> Jill wanted him to skip
+Found 8 linkages (5 had no P.P. violations)
+      Linkage 1, cost vector = (UNUSED=0 DIS= 0.00 LEN=9)
+
+                      +--------IV-------+
+    +--------WV-------+----TOo----+     |
+    +---Wd---+---Ss---+--Ox--+    +--I--+
+    |        |        |      |    |     |
+LEFT-WALL Jill.f wanted.v-d him to.r skip.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 2, cost vector = (UNUSED=0 DIS= 1.00 LEN=7)
+
+    +--------WV-------+----MVi----+      
+    +---Wd---+---Ss---+--Ox--+    +--I--+
+    |        |        |      |    |     |
+LEFT-WALL Jill.f wanted.v-d him to.r skip.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 3, cost vector = (UNUSED=0 DIS= 3.00 LEN=10)
+
+    +-----------------WV----------------+
+    |                 +----MVi----+     |
+    +---Wd---+---Ss---+--Ox--+    +--I--+
+    |        |        |      |    |     |
+LEFT-WALL Jill.f wanted.v-d him to.r skip.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 4, cost vector = (UNUSED=0 DIS= 4.00 LEN=8)
+
+            +--------IV-------+
+            +----TOo----+     |
+   +---Ss---+--Ox--+    +--I--+
+   |        |      |    |     |
+Jill.f wanted.v-d him to.r skip.v 
+
+Press RETURN for the next linkage.
+linkparser> 
+            Linkage 5, cost vector = (UNUSED=0 DIS= 5.00 LEN=6)
+
+            +----MVi----+      
+   +---Ss---+--Ox--+    +--I--+
+   |        |      |    |     |
+Jill.f wanted.v-d him to.r skip.v 
+
+
+
+
 Here are all the different parses returned for: "Jill persuaded him to skip"
 
 
