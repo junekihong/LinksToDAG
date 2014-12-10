@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{longtable}
 
 \usepackage{tikz-dependency}
 
@@ -188,58 +189,54 @@
 \frame{\frametitle{Link Grammars}
   \begin{itemize}
     \item[] Grammar-based formalism for projective dependency parsing with undirected links
-    %\item We set out to discover if the undirected links are actually directed relationships.
   \end{itemize}
 }
 
-
 \frame{\frametitle{Link Grammars: Example Parse}
-\begin{figure}
-  \begin{dependency}[edge style={-}]
-	\begin{deptext}
-	  - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
-	  the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
-	\end{deptext}
-	\depedge[edge above, thick, edge style = {red}]{2}{3}{S}
-	\depedge[edge above, thick, edge style = {red}]{3}{6}{I}
-	\depedge[edge above, thick, edge style = {red}]{2}{1}{D}
-	\depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
-	\depedge[edge above, thick, edge style = {red}]{6}{7}{P}
-	\depedge[edge above, thick, edge style = {red}]{8}{9}{J}
-	\deproot[edge above, thick, edge style = {red}]{2}{W}
-	\deproot[edge above, thick, edge style = {red}]{7}{WV}
-	\deproot[edge above, thick, edge style = {red}]{10}{X}
-	\depedge[edge above, thick, edge style = {red}]{6}{4}{E}
-	\depedge[edge above, thick, edge style = {red}]{6}{5}{E}
-  \end{dependency}
-  \caption*{Link Parse of a sentence from Penn Tree Bank}
-\end{figure}
-
-
+  \begin{figure}
+    \begin{dependency}[edge style={-}]
+	  \begin{deptext}
+	    - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+	    the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	  \end{deptext}
+	  \depedge[edge above, thick, edge style = {red}]{2}{3}{S}
+	  \depedge[edge above, thick, edge style = {red}]{3}{6}{I}
+	  \depedge[edge above, thick, edge style = {red}]{2}{1}{D}
+	  \depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
+	  \depedge[edge above, thick, edge style = {red}]{6}{7}{P}
+	  \depedge[edge above, thick, edge style = {red}]{8}{9}{J}
+	  \deproot[edge above, thick, edge style = {red}]{2}{W}
+	  \deproot[edge above, thick, edge style = {red}]{7}{WV}
+	  \deproot[edge above, thick, edge style = {red}]{10}{X}
+	  \depedge[edge above, thick, edge style = {red}]{6}{4}{E}
+	  \depedge[edge above, thick, edge style = {red}]{6}{5}{E}
+    \end{dependency}
+    \caption*{Link Parse of a sentence from Penn Tree Bank}
+  \end{figure}
 }
 
 \frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph}
-\begin{figure}
-  \begin{dependency}
-	\begin{deptext}
-	  - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
-	  the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
-	\end{deptext}
-	\depedge[edge above, thick, edge style = {red}]{2}{3}{S}
-	\depedge[edge above, thick, edge style = {red}]{3}{6}{I}
-	\depedge[edge above, thick, edge style = {red}]{2}{1}{D}
-	\depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
-	\depedge[edge above, thick, edge style = {red}]{6}{7}{P}
-	\depedge[edge above, thick, edge style = {red}]{8}{9}{J}
-	\deproot[edge above, thick, edge style = {red}]{2}{W}
-	\deproot[edge above, thick, edge style = {red}]{7}{WV}
-	\deproot[edge above, thick, edge style = {red}]{10}{X}
-	\depedge[edge above, thick, edge style = {red}]{6}{4}{E}
-	\depedge[edge above, thick, edge style = {red}]{6}{5}{E}
-  \end{dependency}
-
-  \caption*{Directionalize the edges}
-\end{figure}
+  \begin{figure}
+    \begin{dependency}
+	  \begin{deptext}
+	    - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+	    the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	  \end{deptext}
+	  \depedge[edge above, thick, edge style = {red}]{2}{3}{S}
+	  \depedge[edge above, thick, edge style = {red}]{3}{6}{I}
+	  \depedge[edge above, thick, edge style = {red}]{2}{1}{D}
+	  \depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
+	  \depedge[edge above, thick, edge style = {red}]{6}{7}{P}
+	  \depedge[edge above, thick, edge style = {red}]{8}{9}{J}
+	  \deproot[edge above, thick, edge style = {red}]{2}{W}
+	  \deproot[edge above, thick, edge style = {red}]{7}{WV}
+	  \deproot[edge above, thick, edge style = {red}]{10}{X}
+	  \depedge[edge above, thick, edge style = {red}]{6}{4}{E}
+	  \depedge[edge above, thick, edge style = {red}]{6}{5}{E}
+    \end{dependency}
+    
+    \caption*{Directionalize the edges}
+  \end{figure} 
 }
 
 
@@ -493,11 +490,27 @@ Variables:
       \end{itemize}
   \end{itemize}
   \begin{itemize}
-    \uncover<1>{\item[]}
     \uncover<2->{\item[] The link labels mostly have a consistent direction.}
+    \uncover<3->{\item[] The direction is often the same as CoNLL when there is a corresponding arc}
   \end{itemize}
 }
 
+
+
+\frame{\frametitle{ILP Results: Top 25 Most Occuring Labels}
+  \input{link_table_filtered.tex}
+}
+
+%\frame{\frametitle{ILP Results: Top 25 Most Occuring Labels}
+%  \input{link_table_filtered_part2.tex}
+%}
+
+\frame{\frametitle{ILP Results: Stability of Results}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{precision_recall}
+  \end{figure}
+}
 
 
 
