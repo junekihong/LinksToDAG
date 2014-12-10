@@ -440,25 +440,32 @@ Variables:
 %  \item[] 18,577 English sentences with 10,960 connected parses
 %  \item[] 18,577 unlabeled Russian sentences with 4,913 connected parses
 %\end{itemize}
-  \begin{table}[h]
+  
+  Data Sets taken from:
+  \begin{itemize}
+    \item[] CoNLL 2007 Shared Task (English)
+    \item[] ACL 2013 Shared Task of Machine Translation (Russian)
+  \end{itemize}
+
+  \begin{figure}[h]
+    \centering
     \begin{tabular}{|l|l|l|}
       \hline
-      & \# Sentences & \# Connected Parses \\ \hline
-      English             & 18,577        & 10,960               \\ \hline
-      Russian (unlabeled) & 18,577        & 4,913                \\ \hline
+       & Input Sentences & Output Connected Parses \\ \hline
+       English  & 18,577        & 10,960               \\ \hline
+       Russian & 18,577        & 4,913                \\ \hline
     \end{tabular}
-  \end{table}
-  
-  On the English data set:
-  
-  \begin{itemize}
-  \item[] Link Data has 8\% additional edges over the CoNLL.
-  \item[] 52\% of links match CoNLL arcs
-  \item[] 57\% of CoNLL arcs match links
-  \end{itemize}
-  
-  \NoteJH{I skipped the ``Stability of Results'' section}
+  \end{figure}
 }
+
+\frame{\frametitle{Stability of Results}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{precision_recall}
+  \end{figure}
+}
+
+
 
 %\frame{\frametitle{On the English data set}
 %\begin{itemize}
@@ -470,47 +477,46 @@ Variables:
 %
 %}
 
-\frame{\frametitle{ILP Results}
-%  \begin{table}[h]
-%    \begin{tabular}{|l|l||l|}
-%      \hline
-%      & & out of total \\ \hline
-%      Link types & & \\allowing both directions & 7 & 113 \\ \hline
-%      Link tokens & & \\requiring disallowed direction & & \\via slack & 4043 & 195,000 \\ \hline
-%    \end{tabular}
-%  \end{table}
+\frame{\frametitle{On the English Data Set:}
+  
+  \uncover<2->{Multiheadedness}
   \begin{itemize}
-    \item[] Link types that allowed both directions:
-      \begin{itemize}
-        \item[] 7 / 113 = 6.19\%
-      \end{itemize}
-    \item[] Link tokens that required disallowed direction via slack:
-      \begin{itemize}
-      \item[] 4043 / 195,000 = 2.07\%
-      \end{itemize}
+  \uncover<2->{\item[] Link Data has 8\% additional edges over the CoNLL.}
   \end{itemize}
+  
+  \uncover<3->{CoNLL Matches}
   \begin{itemize}
-    \uncover<2->{\item[] The link labels mostly have a consistent direction.}
-    \uncover<3->{\item[] The direction is often the same as CoNLL when there is a corresponding arc}
+  \uncover<3->{\item[] 52\% of links match CoNLL arcs
+  \item[] 57\% of CoNLL arcs match links}
   \end{itemize}
+
+  \uncover<4->{Directionality}%\uncover<5->{ is Mostly Consistent!}
+  \begin{itemize}
+  \uncover<4->{\item[] 6.19\% of link types allowed both directions %($\frac{7}{113}$)
+  \item[] 2.07\% of link tokens required disallowed direction via slack %($\frac{4043}{195,000}$)
+  }
+  \end{itemize}
+
+
+  %\uncover<4->{The link labels mostly have a consistent direction.}
+  %\uncover<5->{\item[] The direction is often the same as CoNLL when there is a corresponding arc}
+
 }
 
 
 
 \frame{\frametitle{ILP Results: Top 25 Most Occuring Labels}
-  \input{link_table_filtered.tex}
+
+  \begin{figure}
+    \centering
+    \input{link_table_filtered.tex}
+  \end{figure}
 }
 
 %\frame{\frametitle{ILP Results: Top 25 Most Occuring Labels}
 %  \input{link_table_filtered_part2.tex}
 %}
 
-\frame{\frametitle{ILP Results: Stability of Results}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.7\linewidth]{precision_recall}
-  \end{figure}
-}
 
 
 
@@ -622,8 +628,6 @@ Variables:
 
 
 
-
-\NoteJH{Should I include a section of the appendix table? Which rows should I include?}
 }
 
 
