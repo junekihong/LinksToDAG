@@ -40,6 +40,32 @@
 
 \section{Motivation}
 
+\frame{\frametitle{Single-headedness}
+  Dependency parse treebanks today are single-headed.
+
+
+\begin{figure}
+  \begin{dependency}
+	\begin{deptext}
+	  {\scriptsize DT} \& {\scriptsize NN} \& {\scriptsize MD} \& {\scriptsize RB} \& {\scriptsize RB} \& {\scriptsize VB} \& {\scriptsize VB} \& {\scriptsize IN} \& {\scriptsize NN} \& {\scriptsize .} \\
+	  the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	\end{deptext}
+	\deproot[edge above, thick, edge style = {blue}]{3}{\small ROOT}
+	\depedge[edge above, thick, edge style = {blue}]{3}{2}{\small SBJ}
+	\depedge[edge above, thick, edge style = {blue}]{3}{4}{\small ADV}
+	\depedge[edge above, thick, edge style = {blue}]{3}{5}{\small ADV}
+	\depedge[edge above, thick, edge style = {blue}]{3}{6}{\small VC}
+	\depedge[edge above, thick, edge style = {blue}, edge unit distance =1.5ex]{3}{10}{\small P}
+	\depedge[edge above, thick, edge style = {blue}]{2}{1}{\small NMOD}
+	\depedge[edge above, thick, edge style = {blue}]{7}{8}{\small ADV}
+	\depedge[edge above, thick, edge style = {blue}]{6}{7}{\small VC}
+	\depedge[edge above, thick, edge style = {blue}]{8}{9}{\small PMOD}
+  \end{dependency}
+  \caption*{Some example dependency parse.}
+\end{figure}
+
+}
+
 %\subsection{Multi-headed}
 \frame{\frametitle{Multi-headedness}
   Multi-headedness Can Capture Additional Linguistic Phenomenon
@@ -594,7 +620,8 @@ Variables:
 \frame{\frametitle{Link Results: Subject-Verb links are backwards}
 
 \begin{itemize}
-\item This is due to an inconsistency of the Link Grammar, discovered by our method. 
+\item In our paper we claimed this was due to an inconsistency of the Link Grammar, discovered by our method. 
+
 \end{itemize}
 
 \begin{figure}
