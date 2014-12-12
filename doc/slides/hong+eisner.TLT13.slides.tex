@@ -621,22 +621,68 @@ Variables:
 
 \begin{itemize}
 \item In our paper we claimed this was due to an inconsistency of the Link Grammar, discovered by our method. 
-
+\uncover<2->{\item We now think there is actually a simpler explanation.}
 \end{itemize}
 
-\begin{figure}
+
+%linkparser> 
+%linkparser> Jill made him go
+%Found 5 linkages (3 had no P.P. violations)
+%Linkage 1, cost vector = (UNUSED=0 DIS= 0.00 LEN=6)
+%
+%    +-------WV-------+----I*j---+
+%    +---Wd---+---Ss--+--Ox-+    |
+%    |        |       |     |    |
+%LEFT-WALL Jill.f made.v-d him go.v 
+
+
+\visible<3->{\begin{figure}
+\vspace{-6pt}
+\centering
   \begin{dependency}
 	\begin{deptext}
-	  Jill \& wanted \& to \& skip \\
+	  Jill \& made \& him \& go \\
 	\end{deptext}
     \deproot[edge above, edge unit distance=2ex]{1}{W}
     \deproot[edge above, edge unit distance=2ex]{2}{WV}
-	\depedge[edge above]{2}{1}{S}
-	\depedge[edge above]{2}{3}{TO}
-	\depedge[edge above]{3}{4}{I}
-	\depedge[edge above]{2}{4}{IV}
+	\depedge[edge above]{1}{2}{S}
+	\depedge[edge above]{2}{4}{I}
+	\depedge[edge above]{2}{3}{O}
   \end{dependency}
+  \caption*{Links with label I is forced to go right}
 \end{figure}
+
+
+\begin{figure}
+  \vspace{-12pt}
+  \begin{dependency}
+	\begin{deptext}
+	  Jill \& would \& go \\
+	\end{deptext}
+    \deproot[edge above, edge unit distance=2ex]{1}{W}
+    \deproot[edge above, edge unit distance=2ex]{3}{WV}
+	\depedge[edge above]{1}{2}{S}
+	\depedge[edge above]{2}{3}{I}
+  \end{dependency}
+  \caption*{If I is forced to go right, then S is as well}
+\end{figure}
+}
+}
+
+
+%\begin{figure}
+%  \begin{dependency}
+%	\begin{deptext}
+%	  Jill \& wanted \& to \& skip \\
+%	\end{deptext}
+%    \deproot[edge above, edge unit distance=2ex]{1}{W}
+%    \deproot[edge above, edge unit distance=2ex]{2}{WV}
+%	\depedge[edge above]{2}{1}{S}
+%	\depedge[edge above]{2}{3}{TO}
+%	\depedge[edge above]{3}{4}{I}
+%	\depedge[edge above]{2}{4}{IV}
+%  \end{dependency}
+%\end{figure}
 
 %\begin{figure}
 %  \begin{dependency}
@@ -653,24 +699,24 @@ Variables:
 %  \end{dependency}
 %\end{figure}
 
-\begin{figure}
-  \begin{dependency}
-	\begin{deptext}
-	  Jill \& thinks \& he \& will \& skip \\
-	\end{deptext}
-    \deproot[edge above, edge unit distance=2ex]{1}{W}
-    \deproot[edge above, edge unit distance=2ex]{2}{WV}
-	\depedge[edge above]{1}{2}{S}
-	\depedge[edge above]{2}{3}{C}
-	\depedge[edge above]{3}{4}{S}
-	\depedge[edge above]{4}{5}{I}
-	\depedge[edge above]{2}{5}{CV}
-  \end{dependency}
-\end{figure}
+%\begin{figure}
+%  \begin{dependency}
+%	\begin{deptext}
+%	  Jill \& thinks \& he \& will \& skip \\
+%	\end{deptext}
+%    \deproot[edge above, edge unit distance=2ex]{1}{W}
+%    \deproot[edge above, edge unit distance=2ex]{2}{WV}
+%	\depedge[edge above]{1}{2}{S}
+%	\depedge[edge above]{2}{3}{C}
+%	\depedge[edge above]{3}{4}{S}
+%	\depedge[edge above]{4}{5}{I}
+%	\depedge[edge above]{2}{5}{CV}
+%  \end{dependency}
+%\end{figure}
 
 
 
-}
+
 
 
 \section{Conclusions}
