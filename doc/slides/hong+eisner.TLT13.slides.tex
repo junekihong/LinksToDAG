@@ -39,11 +39,79 @@
 \date{\today}
 \frame{\titlepage} %\NoteJH{Include pictures of us?}
 
-\section{Motivation}
+\section{Introduction}
+\frame{\frametitle{Introduction}
+\begin{itemize}
+\item This talk is about automatically converting from one annotation style to another.
+\item The conversion could be hard, where information is fragmented or missing.
+
+%This is often useful.  You may want to do it yourself.  
+\item We use a general technique, Integer Linear Programming to recover this missing information.
+\end{itemize}
+}
+
+\frame{\frametitle{In Our Case: What We Started With}
+  \begin{figure}
+    \begin{dependency}[edge style={-}]
+	  \begin{deptext}
+	    - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+	    the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	  \end{deptext}
+	  \depedge[edge above, thick, edge style = {red}]{2}{3}{S}
+	  \depedge[edge above, thick, edge style = {red}]{3}{6}{I}
+	  \depedge[edge above, thick, edge style = {red}]{2}{1}{D}
+	  \depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
+	  \depedge[edge above, thick, edge style = {red}]{6}{7}{P}
+	  \depedge[edge above, thick, edge style = {red}]{8}{9}{J}
+	  \deproot[edge above, thick, edge style = {red}]{2}{W}
+	  \deproot[edge above, thick, edge style = {red}]{7}{WV}
+	  \deproot[edge above, thick, edge style = {red}]{10}{X}
+	  \depedge[edge above, thick, edge style = {red}]{6}{4}{E}
+	  \depedge[edge above, thick, edge style = {red}]{6}{5}{E}
+    \end{dependency}
+    \caption*{Link Grammar: Parse with undirected edges}
+  \end{figure}
+}
+
+\frame{\frametitle{What We Want:}
+  \begin{figure}
+    \begin{dependency}
+	  \begin{deptext}
+	    - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+	    the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+	  \end{deptext}
+	  \depedge[edge above, thick, edge style = {red}]{2}{3}{S}
+	  \depedge[edge above, thick, edge style = {red}]{3}{6}{I}
+	  \depedge[edge above, thick, edge style = {red}]{2}{1}{D}
+	  \depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
+	  \depedge[edge above, thick, edge style = {red}]{6}{7}{P}
+	  \depedge[edge above, thick, edge style = {red}]{8}{9}{J}
+	  \deproot[edge above, thick, edge style = {red}]{2}{W}
+	  \deproot[edge above, thick, edge style = {red}]{7}{WV}
+	  \deproot[edge above, thick, edge style = {red}]{10}{X}
+	  \depedge[edge above, thick, edge style = {red}]{6}{4}{E}
+	  \depedge[edge above, thick, edge style = {red}]{6}{5}{E}
+    \end{dependency}
+    \caption*{Multiheaded parse with directionalized edges}
+  \end{figure} 
+
+}
+
+\frame{\frametitle{Why We Want That}
+  \begin{itemize}
+    \item We want to develop parsing algorithms for parses that look like this
+    \item We couldn't figure out where to get the data to test them.
+  \end{itemize}
+}
+
+
+
 
 \frame{\frametitle{Single-headedness}
-  Dependency parse treebanks today are single-headed.
-
+  \begin{itemize}
+  \item Dependency parse treebanks today are either single-headed or not planar.
+  \item Stanford Dependencies are multiheaded but not planar
+  \end{itemize}
 
 \begin{figure}
   \begin{dependency}
@@ -65,10 +133,16 @@
   \caption*{Some example dependency parse.}
 \end{figure}
 
+\uncover<2->{\begin{center}
+    Link Grammar is almost a multiheaded planar corpora! We just need to directionalize the links.
+\end{center}}
 }
 
+
+
+\section{Motivation}
 %\subsection{Multi-headed}
-\frame{\frametitle{Multi-headedness}
+\frame{\frametitle{Why Multi-headedness?}
   Multi-headedness Can Capture Additional Linguistic Phenomenon
   \begin{itemize}
     \item Control
@@ -236,7 +310,7 @@
 
 
 
-\frame{\frametitle{Link Grammars: Example Parse}
+\frame{\frametitle{Link Grammars: Same Example Parse Again}
   \begin{figure}
     \begin{dependency}[edge style={-}]
 	  \begin{deptext}
@@ -259,7 +333,7 @@
   \end{figure}
 }
 
-\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph}
+\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph Again}
   \begin{figure}
     \begin{dependency}
 	  \begin{deptext}
@@ -766,6 +840,33 @@ Variables:
 %\end{figure}
 %}
 
+
+\frame{\frametitle{Link Results: Subject-Verb links are backwards}
+\begin{itemize}
+      %\item Different dependency formalisms disagree on whether a clause is headed by the aux verb or the main verb.
+  \item The Link Grammar seems to be inconsistent about whether the auxiliary verb or the main verb is the head of a clause. 
+  \item Sometimes the governing verb links to the auxilliary, and sometimes to the main, depending on the type of clause. 
+  \item But the governing verb usually links to the subject when there is one.
+  \item So this makes the subject a consistent choice to make the head of a clause.
+\end{itemize}
+
+%governing verb -\> subject -\> auxilliary verb -\> main
+
+\begin{center}
+  To fix this, we could edit the link grammar, link parses, or the ILP. %\\ Our technique is only as useful as the input given.
+\end{center}
+
+    %Question: Which do we pick?
+    %Answer: Neither! We actually pick the subject as the head of the clause! 
+    %Question: Why??
+    %Answer:
+    %    The LG folks seem to be inconsistent within their grammar about whether the aux verb or the main verb is the head of a clause. 
+    %        Sometimes the governing verb links to aux, and sometimes to main, depending on the type of clause.
+    %    But the governing verb usually links to the subject when there is one!
+    %    Therefore, the subject ends up being a consistent choice for the head of the clause.  We get governing_verb --> subject --> aux --> main as our annotation scheme.
+    %Question: Couldn't this be fixed?
+    %Answer: Of course it could.  You could edit the link grammar or the link parses or the ILP.  Our technique is only as useful as the input you give it ...  
+}
 
 
 \section{Conclusions}
