@@ -296,21 +296,21 @@
 }
 
 \subsection{Link Grammars Intro}
-\frame{\frametitle{Link Grammars}
+\frame{\frametitle{Link Grammars: How They Work}
   \includegraphics[width=\linewidth]{linkgrammar_example1.png}\footnote{These figures were clipped from the orginal Link Grammar paper: \\``Parsing English with a Link Grammar'' by Sleator and Temperley}
 }
 
-\frame{\frametitle{Link Grammars}
+\frame{\frametitle{Link Grammars: How They Work}
   \includegraphics[width=\linewidth]{linkgrammar_example2.png}
 }
 
-\frame{\frametitle{Link Grammars}
+\frame{\frametitle{Link Grammars: How They Work}
   \includegraphics[width=\linewidth]{linkgrammar_example3.png}
 }
 
 
 
-\frame{\frametitle{Link Grammars: Same Example Parse Again}
+\frame{\frametitle{Link Grammars: Same Example Parse From Before Again}
   \begin{figure}
     \begin{dependency}[edge style={-}]
 	  \begin{deptext}
@@ -333,7 +333,7 @@
   \end{figure}
 }
 
-\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph Again}
+\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph}
   \begin{figure}
     \begin{dependency}
 	  \begin{deptext}
@@ -844,18 +844,19 @@ Variables:
 \frame{\frametitle{Link Results: Subject-Verb links are backwards}
 \begin{itemize}
       %\item Different dependency formalisms disagree on whether a clause is headed by the aux verb or the main verb.
-  \item The Link Grammar seems to be inconsistent about whether the auxiliary verb or the main verb is the head of a clause. 
-  \item Sometimes the governing verb links to the auxilliary, and sometimes to the main, depending on the type of clause. 
-  \item But the governing verb usually links to the subject when there is one.
-  \item So this makes the subject a consistent choice to make the head of a clause.
+  \uncover<1->{\item The Link Grammar seems to be inconsistent about whether the auxiliary verb or the main verb is the head of a clause. }
+  \uncover<2->{\item Sometimes the governing verb links to the auxilliary, and sometimes to the main, depending on the type of clause. }
+  \uncover<3->{\item But the governing verb usually links to the subject when there is one.}
+  \uncover<4->{\item So this makes the subject a consistent choice to make the head of a clause.}
 \end{itemize}
 
 %governing verb -\> subject -\> auxilliary verb -\> main
 
+\uncover<5->{
 \begin{center}
   To fix this, we could edit the link grammar, link parses, or the ILP. %\\ Our technique is only as useful as the input given.
 \end{center}
-
+}
     %Question: Which do we pick?
     %Answer: Neither! We actually pick the subject as the head of the clause! 
     %Question: Why??
