@@ -14,6 +14,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{longtable}
+\usepackage{pdfpages}
 
 \usepackage{tikz-dependency}
 
@@ -102,7 +103,8 @@
       \depedge[edge above, thick, hide label]{2}{3}{}
       \depedge[edge above, thick, hide label]{3}{4}{}
       \depedge[edge above, thick, hide label]{4}{5}{}
-      \depedge[edge below, ultra thick, hide label, edge style = {purple}, edge unit distance = 1.5ex]{3}{5}{}
+      \depedge[edge below, ultra thick, hide label, edge style = {purple}, edge unit distance = 1.5ex]{5}{3}{}
+      \depedge[edge below, ultra thick, hide label, edge style = {purple}, edge unit distance = 1.5ex]{2}{5}{}
     \end{dependency}
     \caption*{Jack is the object of one verb and the subject of another}
   \end{figure}
@@ -214,9 +216,25 @@
 
 \frame{\frametitle{Link Grammars}
   \begin{itemize}
-    \item[] Grammar-based formalism for projective dependency parsing with undirected links
+  \item[] Grammar-based formalism for projective dependency parsing with undirected links
+  \item[] Orignal formalism and English Link Grammar created by Davy Temperley, Daniel Sleator, John Lafferty (1991)
   \end{itemize}
 }
+
+\subsection{Link Grammars Intro}
+\frame{\frametitle{Link Grammars}
+  \includegraphics[width=\linewidth]{linkgrammar_example1.png}\footnote{These figures were clipped from the orginal Link Grammar paper: \\``Parsing English with a Link Grammar'' by Sleator and Temperley}
+}
+
+\frame{\frametitle{Link Grammars}
+  \includegraphics[width=\linewidth]{linkgrammar_example2.png}
+}
+
+\frame{\frametitle{Link Grammars}
+  \includegraphics[width=\linewidth]{linkgrammar_example3.png}
+}
+
+
 
 \frame{\frametitle{Link Grammars: Example Parse}
   \begin{figure}
@@ -355,14 +373,35 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
 
 \section{ILP Model}
 
+\subsection{What is ILP?}
+\frame{\frametitle{What is Integer Linear Programming?}
+\begin{itemize}
+  \item Its an optimization problem where some or all of the variables are integers. 
+  \item The objective function and constraints are linear.
+  \item Its NP-Hard! But good solvers exist that work well most of the time.
+  \item Our ILP is encoded as a ZIMPL program and solved using the SCIP Optimization Suite
+\end{itemize}
+}
 
+
+\subsection{Corpus Building}
+\frame{\frametitle{Corpus Building Strategy}
+\begin{itemize}
+  \item We start with a corpus of link grammar parses.
+  \item We try to directionalize this corpus, choosing a direction for every link in every parse.
+  \item We use an Integer Linear Program to find consistent directions for every link
+\end{itemize}
+}
+
+\subsection{ILP Model}
 \frame{\frametitle{Integer Linear Programming Model}
-
 Encoded Constraints:
 \begin{itemize}
-  \item Connectedness
-  \item Acyclicity
-  \item Consistency of Directionalized Links
+  \item Connectedness\uncover<2->{: Every word has a link attaching it}
+  \item Acyclicity\uncover<2->{: No cycles!}
+  \item Consistency of Directionalized Links\uncover<2->{:
+
+    Similar links oriented the same way}
 \end{itemize}
 }
 
@@ -387,16 +426,11 @@ Variables:
 \begin{itemize}
 \item[] $x_{ij}, x_{ji} \in \mathbb{Z} \geq 0$: orientation of each link
 \item[] $x_{ij} + x_{ji} = 1$
-
-%\item $x_{ij} + x_{ji} = 1$ (A link can only be oriented left or right)
-
 \end{itemize}
+\uncover<2->{\begin{center}
+    A link can only be oriented left or right
+\end{center}}
 
-
-
-
-
-%\NoteJH{TODO: Incomplete slide. Need to describe things like depth of the variable, label}
 }
 
 
@@ -405,8 +439,11 @@ Variables:
 \begin{itemize}
   \item[] Connectedness
     \begin{align}
-      \sum_u x_{uv} & \geq 1
+      \sum_u x_{uv} & \geq 1 
     \end{align}
+    \uncover<2->{\begin{center}
+        A word has at least 1 parent
+    \end{center}}
 
   \item[] Acyclicity
     \begin{itemize}
@@ -418,6 +455,9 @@ Variables:
     \begin{align}
       (\forall_u)\; d_v + (1 + n_v) \cdot (1 - x_{uv}) & \geq 1+d_u
     \end{align}
+    \uncover<2->{\begin{center}
+        The depth of a child is greater than the depth of the parent
+    \end{center}}
 \end{itemize}
 
 }
@@ -485,9 +525,15 @@ Variables:
 }
 
 \frame{\frametitle{Stability of Results}
+
+  \begin{itemize}
+  \item We worried that the recovered direction mapping might be unstable and sensitive to the input corpus. 
+  \item We compared the results of increasing runs of sentences.
+  \end{itemize}
+
   \begin{figure}
     \centering
-    \includegraphics[width=0.7\linewidth]{precision_recall}
+    \includegraphics[width=0.6\linewidth]{precision_recall}
   \end{figure}
 }
 
@@ -507,7 +553,9 @@ Variables:
   
   \uncover<2->{Multiheadedness}
   \begin{itemize}
-  \uncover<2->{\item[] Link Data has 8\% additional edges over the CoNLL.}
+  \uncover<2->{\item[] Link Data has 8\% additional edges over the CoNLL. 
+
+    (average about 2 multiheaded words per sentence)}
   \end{itemize}
   
   \uncover<3->{CoNLL Matches}
@@ -620,10 +668,61 @@ Variables:
 \frame{\frametitle{Link Results: Subject-Verb links are backwards}
 
 \begin{itemize}
-\item In our paper we claimed this was due to an inconsistency of the Link Grammar, discovered by our method. 
-\uncover<2->{\item We now think there is actually a simpler explanation.}
+\item This is due to a possible inconsistency of the Link Grammar, discovered by our method. 
 \end{itemize}
 
+%    +-------WV-------+--------CV-------+
+%    +---Wd---+---Ss--+--Ce-+-Ss-+---I--+
+%    |        |       |     |    |      |
+%LEFT-WALL Jill.f thinks.v he will.v skip.v 
+
+\begin{figure}
+\vspace{-6pt}
+\centering
+  \begin{dependency}[edge style={-}]
+	\begin{deptext}
+	  Jill \& thinks \& he \& will \& skip\\
+	\end{deptext}
+    %\deproot[edge above, edge unit distance=2ex]{1}{W}
+    %\deproot[edge above, edge unit distance=2ex]{2}{WV}
+	\depedge[edge above]{1}{2}{S}
+	\depedge[edge above]{2}{3}{C}
+	\depedge[edge above]{3}{4}{S}
+	\depedge[edge above]{4}{5}{I}
+	\depedge[edge above]{2}{5}{CV}
+  \end{dependency}
+  %\caption*{Links with label I is forced to go right}
+\end{figure}
+
+
+
+%    +--------------WV-------------+
+%    +---Wd---+---Ss--+--MVi-+--I--+
+%    |        |       |      |     |
+%LEFT-WALL Jill.f thinks.v to.r skip.v 
+
+
+\begin{figure}
+\vspace{-6pt}
+\centering
+  \begin{dependency}[edge style={-}]
+	\begin{deptext}
+	  Jill \& hopes \& to \& skip\\ % Originally: Jill thinks to skip. The sentence was altered to be clearer.
+	\end{deptext}
+    %\deproot[edge above, edge unit distance=2ex]{1}{W}
+    %\deproot[edge above, edge unit distance=2ex]{2}{WV}
+	\depedge[edge above]{1}{2}{S}
+	\depedge[edge above]{2}{3}{MV}
+	\depedge[edge above]{3}{4}{I}
+  \end{dependency}
+  %\caption*{Links with label I is forced to go right}
+\end{figure}
+
+}
+
+
+
+%\frame{\frametitle{Possible simpler explanation}
 
 %linkparser> 
 %linkparser> Jill made him go
@@ -635,87 +734,37 @@ Variables:
 %    |        |       |     |    |
 %LEFT-WALL Jill.f made.v-d him go.v 
 
-
-\visible<3->{\begin{figure}
-\vspace{-6pt}
-\centering
-  \begin{dependency}
-	\begin{deptext}
-	  Jill \& made \& him \& go \\
-	\end{deptext}
-    \deproot[edge above, edge unit distance=2ex]{1}{W}
-    \deproot[edge above, edge unit distance=2ex]{2}{WV}
-	\depedge[edge above]{1}{2}{S}
-	\depedge[edge above]{2}{4}{I}
-	\depedge[edge above]{2}{3}{O}
-  \end{dependency}
-  \caption*{Links with label I is forced to go right}
-\end{figure}
-
-
-\begin{figure}
-  \vspace{-12pt}
-  \begin{dependency}
-	\begin{deptext}
-	  Jill \& would \& go \\
-	\end{deptext}
-    \deproot[edge above, edge unit distance=2ex]{1}{W}
-    \deproot[edge above, edge unit distance=2ex]{3}{WV}
-	\depedge[edge above]{1}{2}{S}
-	\depedge[edge above]{2}{3}{I}
-  \end{dependency}
-  \caption*{If I is forced to go right, then S is as well}
-\end{figure}
-}
-}
-
-
 %\begin{figure}
+%\vspace{-6pt}
+%\centering
 %  \begin{dependency}
 %	\begin{deptext}
-%	  Jill \& wanted \& to \& skip \\
-%	\end{deptext}
-%    \deproot[edge above, edge unit distance=2ex]{1}{W}
-%    \deproot[edge above, edge unit distance=2ex]{2}{WV}
-%	\depedge[edge above]{2}{1}{S}
-%	\depedge[edge above]{2}{3}{TO}
-%	\depedge[edge above]{3}{4}{I}
-%	\depedge[edge above]{2}{4}{IV}
-%  \end{dependency}
-%\end{figure}
-
-%\begin{figure}
-%  \begin{dependency}
-%	\begin{deptext}
-%	  Jill \& persuaded \& him \& to \& skip \\
-%	\end{deptext}
-%    \deproot[edge above, edge unit distance=2ex]{1}{W}
-%    \deproot[edge above, edge unit distance=2ex]{2}{WV}
-%	\depedge[edge above]{2}{1}{S}
-%	\depedge[edge above]{2}{3}{O}
-%	\depedge[edge above]{2}{4}{TO}
-%	\depedge[edge above]{4}{5}{I}
-%	\depedge[edge above]{2}{5}{IV}
-%  \end{dependency}
-%\end{figure}
-
-%\begin{figure}
-%  \begin{dependency}
-%	\begin{deptext}
-%	  Jill \& thinks \& he \& will \& skip \\
+%	  Jill \& made \& him \& go \\
 %	\end{deptext}
 %    \deproot[edge above, edge unit distance=2ex]{1}{W}
 %    \deproot[edge above, edge unit distance=2ex]{2}{WV}
 %	\depedge[edge above]{1}{2}{S}
-%	\depedge[edge above]{2}{3}{C}
-%	\depedge[edge above]{3}{4}{S}
-%	\depedge[edge above]{4}{5}{I}
-%	\depedge[edge above]{2}{5}{CV}
+%	\depedge[edge above]{2}{4}{I}
+%	\depedge[edge above]{2}{3}{O}
 %  \end{dependency}
+%  \caption*{Links with label I is forced to go right}
 %\end{figure}
 
 
-
+%\begin{figure}
+%  \vspace{-12pt}
+%  \begin{dependency}
+%	\begin{deptext}
+%	  Jill \& would \& go \\
+%	\end{deptext}
+%    \deproot[edge above, edge unit distance=2ex]{1}{W}
+%    \deproot[edge above, edge unit distance=2ex]{3}{WV}
+%	\depedge[edge above]{1}{2}{S}
+%	\depedge[edge above]{2}{3}{I}
+%  \end{dependency}
+%  \caption*{If I is forced to go right, then S is as well}
+%\end{figure}
+%}
 
 
 
