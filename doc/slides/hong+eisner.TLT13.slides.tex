@@ -291,7 +291,7 @@
 \frame{\frametitle{Link Grammars}
   \begin{itemize}
   \item[] Grammar-based formalism for projective dependency parsing with undirected links
-  \item[] Orignal formalism and English Link Grammar created by Davy Temperley, Daniel Sleator, John Lafferty (1991)
+  \item[] Orignal formalism and English Link Grammar created by Davy Temperley, Daniel Sleator, and John Lafferty (1991)
   \end{itemize}
 }
 
@@ -453,7 +453,7 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
   \item Its an optimization problem where some or all of the variables are integers. 
   \item The objective function and constraints are linear.
   \item Its NP-Hard! But good solvers exist that work well most of the time.
-  \item Our ILP is encoded as a ZIMPL program and solved using the SCIP Optimization Suite
+  \item Our ILP is encoded as a ZIMPL program and solved using the SCIP Optimization Suite\footnote{\url{http://scip.zib.de/}} 
 \end{itemize}
 }
 
@@ -667,8 +667,8 @@ Variables:
 
 
 
-
-\frame{\frametitle{Link Results: Subject-Verb links are backwards}
+\subsection{Subject-Verb Links}
+\frame{\frametitle{Link Results: Subject-Verb Links are Backwards}
 \begin{figure}
   \begin{dependency}
 	\begin{deptext}
@@ -704,7 +704,7 @@ Variables:
 
 
 
-\frame{\frametitle{Link Results: Subject-Verb links are backwards}
+\frame{\frametitle{Link Results: Subject-Verb Links are Backwards}
 \begin{figure}
   \begin{dependency}
 	\begin{deptext}
@@ -739,7 +739,7 @@ Variables:
 }
 
 
-\frame{\frametitle{Link Results: Subject-Verb links are backwards}
+\frame{\frametitle{Link Results: Subject-Verb Links are Backwards}
 
 \begin{itemize}
 \item This is due to a possible inconsistency of the Link Grammar, discovered by our method. 
@@ -841,7 +841,7 @@ Variables:
 %}
 
 
-\frame{\frametitle{Link Results: Subject-Verb links are backwards}
+\frame{\frametitle{Link Results: Subject-Verb Links are Backwards}
 \begin{itemize}
       %\item Different dependency formalisms disagree on whether a clause is headed by the aux verb or the main verb.
   \uncover<1->{\item The Link Grammar seems to be inconsistent about whether the auxiliary verb or the main verb is the head of a clause. }
@@ -874,8 +874,8 @@ Variables:
 \frame{\frametitle{Conclusions}
   \begin{itemize}
   \item Link Grammar parses can be oriented into connected DAGs
-  \item New corpora for building multi-headed dependency parsers
-  \item ILP can be used to build or annotate corpora
+  \item new corpora for building multi-headed dependency parsers
+  \item ILP can be used to build or annotate corpora. 
   \end{itemize}
 }
 
