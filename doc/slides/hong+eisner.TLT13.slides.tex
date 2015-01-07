@@ -291,13 +291,13 @@
 \frame{\frametitle{Link Grammars}
   \begin{itemize}
   \item[] Grammar-based formalism for projective dependency parsing with undirected links
-  \item[] Orignal formalism and English Link Grammar created by Davy Temperley, Daniel Sleator, and John Lafferty (1991)
+  \item[] Original formalism and English Link Grammar created by Davy Temperley, Daniel Sleator, and John Lafferty (1991)
   \end{itemize}
 }
 
 \subsection{Link Grammars Intro}
 \frame{\frametitle{Link Grammars: How They Work}
-  \includegraphics[width=\linewidth]{linkgrammar_example1.png}\footnote{These figures were clipped from the orginal Link Grammar paper: \\``Parsing English with a Link Grammar'' by Sleator and Temperley}
+  \includegraphics[width=\linewidth]{linkgrammar_example1.png}\footnote{These figures were clipped from the original Link Grammar paper: \\``Parsing English with a Link Grammar'' by Sleator and Temperley}
 }
 
 \frame{\frametitle{Link Grammars: How They Work}
@@ -390,7 +390,7 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
 	\depedge[edge above, thick, edge style = {red}]{6}{5}{E}
   \end{dependency}
 
-  \caption*{Top half is CoNLL. Bottom half is the directionalized link parse.}
+  \caption*{Bottom half is CoNLL. Top half is the directionalized link parse.}
 \end{figure}
 
 
@@ -430,7 +430,7 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
 	\depedge[edge above, edge style = {red, dotted}]{6}{5}{E}
   \end{dependency}
 
-  \caption*{Top half is CoNLL. Bottom half is the directionalized link parse.}
+  \caption*{Bottom half is CoNLL. Top half is the directionalized link parse.}
 \end{figure}
 
 
@@ -450,9 +450,9 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
 \subsection{What is ILP?}
 \frame{\frametitle{What is Integer Linear Programming?}
 \begin{itemize}
-  \item Its an optimization problem where some or all of the variables are integers. 
+  \item An optimization problem where some or all of the variables are integers. 
   \item The objective function and constraints are linear.
-  \item Its NP-Hard! But good solvers exist that work well most of the time.
+  \item In general, it's NP-Hard! But good solvers exist that work well most of the time.
   \item Our ILP is encoded as a ZIMPL program and solved using the SCIP Optimization Suite\footnote{\url{http://scip.zib.de/}} 
 \end{itemize}
 }
@@ -653,7 +653,7 @@ Variables:
 
 
 
-\frame{\frametitle{ILP Results: Top 25 Most Occuring Labels}
+\frame{\frametitle{ILP Results: Top 25 Most Occurring Labels}
 
   \begin{figure}
     \centering
