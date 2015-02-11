@@ -171,7 +171,7 @@ def conllOutput(sentence, wordTag, linkDep, linkLabel):
         LEMMA = BLANK
         CPOS = BLANK
         POS = BLANK
-        if word in wordTag.keys():
+        if word in wordTag.keys() and wordTag[word]:
             CPOS = wordTag[word]
         FEATS = BLANK
         
