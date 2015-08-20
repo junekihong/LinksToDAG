@@ -1,0 +1,71 @@
+\begin{tiny}
+\centering
+%\begin{longtable}[width=\textwidth]{|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|}
+  \hline
+  Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match\\\hline
+  %\endhead
+  
+  \textbf{B} & \textbf{100\% (1514/1515)} & \textbf{61\% (919/1515)} & \textbf{53\% (806/1515)} & \textbf{84\% (678/806)} \\
+  \hline
+\end{tabular}
+\end{tiny}
+
+%\begin{small}
+\begin{itemize}
+  \uncover<2->{
+  \item[] ``B'' link relative clauses
+  }
+\end{itemize}
+%\end{small}
+
+\begin{small}
+\uncover<2->{
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+  \begin{dependency}[edge style={-}]
+    \begin{deptext}
+      The \& dog \& I \& had \& chased \& was \& green \\
+    \end{deptext}
+    \depedge[edge above, edge style = {red, thick}]{2}{3}{R}
+    \depedge[edge above, edge style = {red, thick}]{3}{4}{S}
+    \depedge[edge above, edge style = {red, thick}]{4}{5}{PP}
+    \depedge[edge above, edge style = {orange, ultra thick}]{2}{5}{B}
+  \end{dependency}
+\end{subfigure}
+}
+\uncover<3->{
+  \begin{subfigure}[b]{0.48\textwidth}
+    \centering
+  \begin{dependency}[edge style={-}]
+    \begin{deptext}
+      I \& told \& him \& I \& had \& oranges \\
+    \end{deptext}
+    \depedge[edge above, edge style = {red, thick}, edge unit distance = 1.5ex]{2}{4}{CE}
+    \depedge[edge above, edge style = {red, thick}]{4}{5}{S}
+    \depedge[edge above, edge style = {orange, ultra thick}]{2}{5}{CV}
+  \end{dependency}
+\end{subfigure}
+}
+
+\end{small}
+
+
+\begin{tiny}
+\begin{tabular}{|l|l|l|l|l|l|}
+  \hline
+  Label & Rightward & Multiheaded & CoNLL Match & CoNLL Dir Match\\\hline
+  \textbf{CV} & \textbf{100\% (3237/3237)} & \textbf{100\% (3237/3237)} & \textbf{56\% (1827/3237)} & \textbf{28\% (512/1827)}  \\
+  \hline
+  %\end{longtable}
+\end{tabular}
+\end{tiny}
+
+%\begin{small}
+\begin{itemize}
+  \uncover<3->{
+  \item[] ``CV'' link conjunctions to main verbs of clauses.
+  }
+\end{itemize}
+
+%\end{small}

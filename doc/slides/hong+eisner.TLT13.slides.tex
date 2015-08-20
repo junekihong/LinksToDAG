@@ -35,18 +35,18 @@
 
 \begin{document}
 \title{Deriving Multi-Headed Planar Dependency Parses from Link Grammar Parses}
-\author{Juneki Hong, Jason Eisner}
-\date{\today}
+\author{Juneki Hong and Jason Eisner}
+\date{}%\today}
 \frame{\titlepage} %\NoteJH{Include pictures of us?}
 
 \section{Introduction}
 \frame{\frametitle{Introduction}
 \begin{itemize}
-\item This talk is about automatically converting from one annotation style to another.
-\item The conversion could be hard, where information is fragmented or missing.
+\item This talk is about converting from one annotation style to another.
+\item The conversion could be hard, where information is fragmented, missing, or ambiguous.
 
 %This is often useful.  You may want to do it yourself.  
-\item We use a general technique, Integer Linear Programming to recover this missing information.
+\item We use a general technique, Integer Linear Programming to help us do this conversion.
 \end{itemize}
 }
 
@@ -140,7 +140,7 @@
 
 
 
-\section{Motivation}
+\section{Motivation, Overview}
 %\subsection{Multi-headed}
 \frame{\frametitle{Why Multi-headedness?}
   Multi-headedness Can Capture Additional Linguistic Phenomenon
@@ -151,7 +151,7 @@
   \end{itemize}
 }
 
-\subsection{Control}
+\subsection{Control, Relativization, Conjunction}
 \frame{\frametitle{Control}
   \begin{figure}
     \begin{dependency}
@@ -185,7 +185,7 @@
 }
 
 
-\subsection{Relativization}
+%\subsection{Relativization}
 \frame{\frametitle{Relativization}
   \begin{figure}
     \begin{dependency}
@@ -207,7 +207,7 @@
 }
 
 
-\subsection{Conjunction}
+%\subsection{Conjunction}
 \frame{\frametitle{Conjunction}
   \begin{figure}
     \begin{dependency}
@@ -242,9 +242,18 @@
   \end{itemize}
 }
 
+\subsection{Corpus Building}
+\frame{\frametitle{Corpus Building Strategy}
+\begin{itemize}
+\item We start with some sentences and parse them with LG Parser
+\item We take the undirected parses and try to directionalize them.
+\item We use an ILP to assign consistent directions for each link type.
+\end{itemize}
 
-
-
+\begin{figure}
+  \includegraphics[width=\linewidth]{images/corpusbuilding}
+\end{figure}
+}
 
 
 
@@ -333,29 +342,29 @@
   \end{figure}
 }
 
-\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph}
-  \begin{figure}
-    \begin{dependency}
-	  \begin{deptext}
-	    - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
-	    the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
-	  \end{deptext}
-	  \depedge[edge above, thick, edge style = {red}]{2}{3}{S}
-	  \depedge[edge above, thick, edge style = {red}]{3}{6}{I}
-	  \depedge[edge above, thick, edge style = {red}]{2}{1}{D}
-	  \depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
-	  \depedge[edge above, thick, edge style = {red}]{6}{7}{P}
-	  \depedge[edge above, thick, edge style = {red}]{8}{9}{J}
-	  \deproot[edge above, thick, edge style = {red}]{2}{W}
-	  \deproot[edge above, thick, edge style = {red}]{7}{WV}
-	  \deproot[edge above, thick, edge style = {red}]{10}{X}
-	  \depedge[edge above, thick, edge style = {red}]{6}{4}{E}
-	  \depedge[edge above, thick, edge style = {red}]{6}{5}{E}
-    \end{dependency}
-    
-    \caption*{Directionalize the edges}
-  \end{figure} 
-}
+%\frame{\frametitle{Link Grammars: Converting into a Directed Acyclic Graph}
+%  \begin{figure}
+%    \begin{dependency}
+%	  \begin{deptext}
+%	    - \& n-u \& v \& e \& e \& v \& v-d \& r \& n-u \& - \\
+%	    the \& matter \& may \& never \& even \& be \& tried \& in \& court \& . \\
+%	  \end{deptext}
+%	  \depedge[edge above, thick, edge style = {red}]{2}{3}{S}
+%	  \depedge[edge above, thick, edge style = {red}]{3}{6}{I}
+%	  \depedge[edge above, thick, edge style = {red}]{2}{1}{D}
+%	  \depedge[edge above, thick, edge style = {red}]{7}{8}{MV}
+%	  \depedge[edge above, thick, edge style = {red}]{6}{7}{P}
+%	  \depedge[edge above, thick, edge style = {red}]{8}{9}{J}
+%	  \deproot[edge above, thick, edge style = {red}]{2}{W}
+%	  \deproot[edge above, thick, edge style = {red}]{7}{WV}
+%	  \deproot[edge above, thick, edge style = {red}]{10}{X}
+%	  \depedge[edge above, thick, edge style = {red}]{6}{4}{E}
+%	  \depedge[edge above, thick, edge style = {red}]{6}{5}{E}
+%    \end{dependency}
+%    
+%    \caption*{Directionalize the edges}
+%  \end{figure} 
+%}
 
 
 \frame{\frametitle{Link Grammars}
@@ -457,27 +466,33 @@ Compare resulting dependency parse with CoNLL 2007 shared task.
 \end{itemize}
 }
 
-
-\subsection{Corpus Building}
-\frame{\frametitle{Corpus Building Strategy}
-\begin{itemize}
-  \item We start with a corpus of link grammar parses.
-  \item We try to directionalize this corpus, choosing a direction for every link in every parse.
-  \item We use an Integer Linear Program to find consistent directions for every link
-\end{itemize}
-}
-
 \subsection{ILP Model}
 \frame{\frametitle{Integer Linear Programming Model}
 Encoded Constraints:
 \begin{itemize}
-  \item Connectedness\uncover<2->{: Every word has a link attaching it}
-  \item Acyclicity\uncover<2->{: No cycles!}
-  \item Consistency of Directionalized Links\uncover<2->{:
+  \item Acyclicity\uncover<2->{: (\textbf{No cycles!})}
+  \item Connectedness\uncover<3->{: (\textbf{Every word is reachable from a root})}
+  \item Consistency of Directionalized Links\uncover<4->{:
 
-    Similar links oriented the same way}
+    (\textbf{Similar links oriented the same way})}
 \end{itemize}
+
+\begin{figure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \uncover<2->{\includegraphics[width=\linewidth]{images/acyclic2}}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \uncover<3->{\includegraphics[width=\linewidth]{images/connectedness}}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \uncover<4->{\includegraphics[width=\linewidth]{images/consistency}}
+  \end{subfigure}
+  
+\end{figure}
+
+
 }
+
 
 
 
@@ -502,23 +517,15 @@ Variables:
 \item[] $x_{ij} + x_{ji} = 1$
 \end{itemize}
 \uncover<2->{\begin{center}
-    A link can only be oriented left or right
+    \textbf{An individual link token can either be oriented left or oriented right}
 \end{center}}
 
 }
 
 
 
-\frame{\frametitle{Connectedness, Acyclicity}
+\frame{\frametitle{Acyclicity, Connectedness}
 \begin{itemize}
-  \item[] Connectedness
-    \begin{align}
-      \sum_u x_{uv} & \geq 1 
-    \end{align}
-    \uncover<2->{\begin{center}
-        A word has at least 1 parent
-    \end{center}}
-
   \item[] Acyclicity
     \begin{itemize}
       \item[] Given that node $u$ is the parent of $v$
@@ -530,10 +537,17 @@ Variables:
       (\forall_u)\; d_v + (1 + n_v) \cdot (1 - x_{uv}) & \geq 1+d_u
     \end{align}
     \uncover<2->{\begin{center}
-        The depth of a child is greater than the depth of the parent
+        \textbf{The depth of a child is greater than the depth of the parent}
+    \end{center}}
+
+  \item[] Connectedness
+    \begin{align}
+      \sum_u x_{uv} & \geq 1 
+    \end{align}
+    \uncover<3->{\begin{center}
+        \textbf{A word has at least 1 parent}
     \end{center}}
 \end{itemize}
-
 }
 
 
@@ -541,7 +555,7 @@ Variables:
 \begin{itemize}
   \item[] Consistency of Directionalized Links
     \begin{itemize}
-      \item[] $r_L, \ell_L \in \{0,1\}$: whether links with label $L$ allowed left/right
+      \item[] $r_L, \ell_L \in \{0,1\}$: whether all links with label $L$ allowed left/right
     \end{itemize}
     
     \begin{align}\label{direction+slack}
@@ -549,6 +563,7 @@ Variables:
       x_{ji} &\leq \ell_L \onslide<2->{ + s_{ij}}
     \end{align}
 
+    Objective Function:
     \begin{align}\label{eqn:obj}
       \min \left( \sum_L r_L + \ell_L \right) \onslide<2->{\cdot \frac{N_L}{4} + \sum_{ij}s_{ij}}
     \end{align}
@@ -557,9 +572,10 @@ Variables:
       \item[] $s_{ij} \in \mathbb{R} \geq 0$: slack variable 
       \item[] $N_L$: Number of link tokens with label $L$
     \end{itemize}
-
+    }
+    \onslide<3->{
     \begin{itemize}
-      \item[] Slack allows a few links with label $L$ in disallowed directions
+      \item[] \textbf{Slack allows a few links with label $L$ in disallowed directions}
     \end{itemize}
     }
 
@@ -601,7 +617,7 @@ Variables:
 \frame{\frametitle{Stability of Results}
 
   \begin{itemize}
-  \item We worried that the recovered direction mapping might be unstable and sensitive to the input corpus. 
+  \item We were worried that the recovered direction mapping might be unstable and sensitive to the input corpus. 
   \item We compared the results of increasing runs of sentences.
   \end{itemize}
 
@@ -660,6 +676,21 @@ Variables:
     \input{link_table_filtered.tex}
   \end{figure}
 }
+
+\frame{\frametitle{ILP Results: Top 25 Most Occurring Labels}
+  \begin{figure}
+    \centering
+    \input{link_table_filtered_highlighted.tex}
+  \end{figure}
+}
+
+\frame{\frametitle{ILP Results: Top 25 Most Occurring Labels}
+  \begin{figure}
+    \centering
+    \input{link_table_filtered_highlighted_explanation.tex}
+  \end{figure}
+}
+
 
 %\frame{\frametitle{ILP Results: Top 25 Most Occuring Labels}
 %  \input{link_table_filtered_part2.tex}
@@ -874,8 +905,8 @@ Variables:
 \frame{\frametitle{Conclusions}
   \begin{itemize}
   \item Link Grammar parses can be oriented into connected DAGs
-  \item new corpora for building multi-headed dependency parsers
-  \item ILP can be used to build or annotate corpora. 
+  \item A new corpus available for building multi-headed dependency parsers
+  \item ILP can be used to help annotate incomplete or missing data in corpora. 
   \end{itemize}
 }
 
