@@ -4,7 +4,6 @@ COMMENTS FOR JUNEKI
 
 slide 11: ILP out of left field
 slide 14: say that crossing is not allowed, and why not!
-slides 21-22: could illustrate the principles!
 slide 24: connectedness formulation doesn't work without acyclicity
 slide 25: explain what happens if r_L == 0
 slide 27: spent too long?  Just pay attention to precision
@@ -24,6 +23,7 @@ Streamline: watch some TED talks and see how they make every word count ...
 ADDRESSED OR FIXED:
 slide 19: top/bottom reversed from caption.  Explain dashing convention
 slide 20: "ILP is NP-hard" -- maybe misleading
+slides 21-22: could illustrate the principles!
 slide 23: "can only be oriented left or right" - and must be oriented one of those!
 slide 29: "occuring"
 slide 34: good ending on last bullet point.  But claim was a bit too broad.
